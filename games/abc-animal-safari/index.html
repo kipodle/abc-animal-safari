@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ABC Animal Safari – Free ABC Game for Kids | Hog the Hedgehog</title>
+<link rel="canonical" href="https://hogthehedgehog.com/games/abc-animal-safari/">
+<meta name="description" content="A free ABC learning game where kids match letters to real animal photos across Safari, Sea, and Blue Animal themes.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%94%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap">
+<script src="animal-photos.js"></script>
+<script src="animal-photos-sea.js"></script>
+<script src="animal-photos-blue.js"></script>
+<style>
+  :root{
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --bg:#FBF1DE;
+    --bg2:#F4E4C2;
+    --card:#FFFFFF;
+    --card-edge:#F0DFC0;
+    --ink:#4A3B2A;
+    --ink-soft:#8A7660;
+    --green:#3F8F52;
+    --green-deep:#2C6B3B;
+    --gold:#F4B740;
+    --gold-deep:#D99A1F;
+    --purple:#7B5CF0;
+    --blue:#4D7CFE;
+    --coral:#F0714A;
+    --wrong:#E85C4A;
+    --wrong-deep:#C23F30;
+    --option-bg:#FFF8EA;
+    --option-edge:#F0DFC0;
+    --shadow: rgba(90,60,20,0.18);
+    --disabled:#D8C9AE;
+    --blob1:#E7D2A0;
+    --blob2:#CFE3C8;
+    --overlay-bg: rgba(40,28,14,0.55);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#241A12;
+      --bg2:#1C140E;
+      --card:#2E2119;
+      --card-edge:#42311F;
+      --ink:#F3E8D8;
+      --ink-soft:#C4B29A;
+      --green:#5FBF74;
+      --green-deep:#3FA65C;
+      --gold:#FFCB63;
+      --gold-deep:#F2A400;
+      --purple:#9C86FF;
+      --blue:#7FA3FF;
+      --coral:#FF8F6B;
+      --wrong:#FF8672;
+      --wrong-deep:#E8604A;
+      --option-bg:#33261B;
+      --option-edge:#4A3826;
+      --shadow: rgba(0,0,0,0.45);
+      --disabled:#5C4A36;
+      --blob1:#3A2C1C;
+      --blob2:#28331F;
+      --overlay-bg: rgba(10,7,4,0.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#241A12;
+    --bg2:#1C140E;
+    --card:#2E2119;
+    --card-edge:#42311F;
+    --ink:#F3E8D8;
+    --ink-soft:#C4B29A;
+    --green:#5FBF74;
+    --green-deep:#3FA65C;
+    --gold:#FFCB63;
+    --gold-deep:#F2A400;
+    --purple:#9C86FF;
+    --blue:#7FA3FF;
+    --coral:#FF8F6B;
+    --wrong:#FF8672;
+    --wrong-deep:#E8604A;
+    --option-bg:#33261B;
+    --option-edge:#4A3826;
+    --shadow: rgba(0,0,0,0.45);
+    --disabled:#5C4A36;
+    --blob1:#3A2C1C;
+    --blob2:#28331F;
+    --overlay-bg: rgba(10,7,4,0.7);
+  }
+
+  *{box-sizing:border-box;}
+  html, body{ height:100%; margin:0; }
+  body{
+    background:linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    color:var(--ink);
+    font-family:"Nunito",-apple-system,system-ui,sans-serif;
+    min-height:100%;
+    padding:18px 14px;
+    display:flex;
+    justify-content:center;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  .bg-decor{ position:fixed; inset:0; overflow:hidden; z-index:0; pointer-events:none; }
+  .blob{ position:absolute; border-radius:50%; filter:blur(2px); opacity:0.6; }
+  .blob1{ width:200px; height:200px; background:var(--blob1); top:-60px; left:-70px; animation:drift1 22s ease-in-out infinite; }
+  .blob2{ width:170px; height:170px; background:var(--blob2); top:38%; right:-80px; animation:drift2 26s ease-in-out infinite; }
+  .blob3{ width:140px; height:140px; background:var(--blob1); bottom:-50px; left:18%; animation:drift3 19s ease-in-out infinite; }
+  @keyframes drift1{ 0%,100%{ transform:translate(0,0) } 50%{ transform:translate(26px,36px) } }
+  @keyframes drift2{ 0%,100%{ transform:translate(0,0) } 50%{ transform:translate(-36px,28px) } }
+  @keyframes drift3{ 0%,100%{ transform:translate(0,0) } 50%{ transform:translate(22px,-22px) } }
+
+  .app{ width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px; position:relative; z-index:1; }
+  [hidden]{ display:none !important; }
+
+  /* ---------- Gate screen ---------- */
+  .back-link{ align-self:flex-start; font-family:"Nunito",sans-serif; font-weight:800; font-size:0.88rem; color:var(--green-deep); text-decoration:none; padding:6px 4px; }
+  .back-link:hover{ text-decoration:underline; }
+  .gate{
+    background:var(--card);
+    border:2px solid var(--card-edge);
+    border-radius:28px;
+    padding:28px 22px 26px;
+    box-shadow:0 8px 0 var(--card-edge);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    text-align:center;
+  }
+  .gate-mascot{ font-size:3.2rem; animation: bounce-mascot 1.8s ease-in-out infinite; transform-origin:bottom center; }
+  @keyframes bounce-mascot{ 0%,100%{ transform:translateY(0) rotate(-6deg) } 50%{ transform:translateY(-6px) rotate(6deg) } }
+  .gate h1{
+    font-family:"Baloo 2",sans-serif;
+    font-size:1.55rem;
+    margin:0;
+    color:var(--green-deep);
+    font-weight:800;
+    text-wrap:balance;
+  }
+  .gate h1 .accent{ color:var(--coral); }
+  .gate p.sub{
+    margin:0;
+    color:var(--ink-soft);
+    font-weight:700;
+    font-size:0.9rem;
+    max-width:340px;
+  }
+  .gate-form{ width:100%; display:flex; flex-direction:column; gap:12px; margin-top:4px; }
+  .field{ display:flex; flex-direction:column; gap:5px; text-align:left; }
+  .field label{
+    font-size:0.78rem;
+    font-weight:800;
+    color:var(--ink);
+    letter-spacing:0.01em;
+  }
+  .field input, .field select{
+    font-family:"Nunito",sans-serif;
+    font-size:1rem;
+    font-weight:700;
+    color:var(--ink);
+    background:var(--option-bg);
+    border:2px solid var(--option-edge);
+    border-radius:14px;
+    padding:12px 14px;
+    width:100%;
+    outline-offset:2px;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--green); }
+  .gate-submit{
+    margin-top:6px;
+    font-family:"Baloo 2",sans-serif;
+    font-weight:700;
+    font-size:1.1rem;
+    color:#fff;
+    background:linear-gradient(160deg, var(--green), var(--green-deep));
+    border:none;
+    border-radius:16px;
+    padding:14px 26px;
+    box-shadow:0 5px 0 var(--green-deep);
+    cursor:pointer;
+  }
+  .gate-submit:active{ transform:translateY(3px); box-shadow:0 2px 0 var(--green-deep); }
+  .gate-switch{ background:none; border:none; color:var(--green-deep); font-family:"Nunito",sans-serif; font-weight:800; font-size:0.85rem; text-decoration:underline; cursor:pointer; padding:6px; margin-top:-6px; }
+  .gate-note a{ color:var(--green-deep); font-weight:800; }
+  .gate-note{ margin:0; font-size:0.72rem; color:var(--ink-soft); font-weight:700; }
+  .gate-error{ color:var(--wrong-deep); font-weight:800; font-size:0.82rem; min-height:1.2em; }
+
+  /* ---------- header ---------- */
+  header{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .title-block{display:flex; align-items:center; gap:8px; line-height:1.1;}
+  .mascot{ font-size:1.7rem; display:inline-block; animation: bounce-mascot 1.8s ease-in-out infinite; transform-origin:bottom center; }
+  .title-text{ display:flex; flex-direction:column; }
+  .title-block h1{ font-family:"Baloo 2",sans-serif; font-size:1.3rem; margin:0; color:var(--green-deep); font-weight:800; }
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    font-size:0.72rem;
+    font-weight:800;
+    color:#fff;
+    background:var(--green);
+    border-radius:999px;
+    padding:3px 10px;
+    letter-spacing:0.02em;
+    width:fit-content;
+  }
+  .icon-btn{
+    width:42px;height:42px;
+    border-radius:50%;
+    border:none;
+    background:var(--card);
+    box-shadow:0 3px 0 var(--card-edge);
+    font-size:1.2rem;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    flex:0 0 auto;
+  }
+  .icon-btn:active{transform:translateY(2px); box-shadow:0 1px 0 var(--card-edge);}
+  .header-btns{display:flex; gap:8px;}
+
+  /* badge shelf */
+  .badge-shelf{
+    display:flex; align-items:center; gap:6px;
+    background:var(--card); border:2px solid var(--card-edge); border-radius:16px;
+    padding:8px 10px; min-height:20px;
+  }
+  .badge-shelf .shelf-label{ font-size:0.7rem; font-weight:800; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.04em; margin-right:2px; }
+  .badge-shelf .stars{display:flex; gap:2px; flex-wrap:wrap;}
+  .badge-shelf .stars svg{ animation: shelf-twinkle 2.4s ease-in-out infinite; }
+  .badge-shelf .stars svg:nth-child(2n){ animation-delay:.4s; }
+  .badge-shelf .stars svg:nth-child(3n){ animation-delay:.8s; }
+  @keyframes shelf-twinkle{ 0%,100%{ transform:scale(1) rotate(0deg) } 50%{ transform:scale(1.12) rotate(-6deg) } }
+  .badge-shelf .stars svg.new-badge{ animation: badge-land .6s ease; }
+  @keyframes badge-land{ 0%{ transform:scale(0) rotate(-40deg); opacity:0 } 60%{ transform:scale(1.3) rotate(10deg); opacity:1 } 100%{ transform:scale(1) rotate(0deg); } }
+
+  /* level + progress */
+  .level-row{ display:flex; justify-content:space-between; align-items:center; }
+  .level-row .level-count{ font-weight:800; color:var(--ink-soft); font-size:0.82rem; font-variant-numeric: tabular-nums; }
+  .progress-track{ display:flex; gap:5px; }
+  .progress-dot{ flex:1; height:10px; border-radius:6px; background:var(--option-bg); border:2px solid var(--option-edge); transition:background .25s, border-color .25s; }
+  .progress-dot.filled{ background:var(--green); border-color:var(--green-deep); }
+  .progress-dot.pop{ animation: dot-pop .4s ease; }
+  @keyframes dot-pop{ 0%{ transform:scale(1) } 50%{ transform:scale(1.5) } 100%{ transform:scale(1) } }
+
+  /* main card */
+  .card{
+    background:var(--card); border:2px solid var(--card-edge); border-radius:26px;
+    padding:18px 16px 20px; box-shadow:0 8px 0 var(--card-edge);
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+  }
+  .prompt{ text-align:center; font-weight:800; color:var(--ink); font-size:1rem; margin:0; text-wrap:balance; }
+
+  .letter-stage{ position:relative; width:120px; height:110px; display:flex; align-items:center; justify-content:center; }
+  .letter-glyph{
+    font-family:"Baloo 2",sans-serif; font-weight:800; font-size:5.4rem; line-height:1;
+    background:linear-gradient(160deg, var(--blue), var(--purple));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    user-select:none;
+    animation: letter-breathe 2.6s ease-in-out infinite;
+  }
+  .letter-stage.bump .letter-glyph{ animation: bump 0.5s ease; }
+  @keyframes letter-breathe{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.04) } }
+  @keyframes bump{ 0%{transform:scale(1)} 40%{transform:scale(1.16) rotate(-6deg)} 100%{transform:scale(1)} }
+  .eyes{ position:absolute; top:8%; left:50%; transform:translateX(-50%); display:flex; gap:12px; z-index:2; }
+  .eye{ width:22px; height:22px; background:#fff; border-radius:50%; box-shadow:0 2px 3px rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center; }
+  .pupil{ width:10px; height:10px; background:#2B2118; border-radius:50%; animation: eye-look 3.4s ease-in-out infinite; }
+  @keyframes eye-look{ 0%,100%{ transform:translate(0,0) } 20%{ transform:translate(2px,-1px) } 40%{ transform:translate(-2px,1px) } 60%{ transform:translate(1px,1px) } 80%{ transform:translate(-1px,-1px) } }
+
+  .options{ width:100%; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .options[data-count="4"]{ grid-template-columns:repeat(2,1fr); }
+
+  .opt{
+    position:relative; aspect-ratio:1/1; padding:0; border-radius:20px;
+    border:4px solid var(--option-edge); background:var(--option-bg);
+    cursor:pointer; overflow:hidden; transition:border-color .15s;
+    opacity:0; transform:scale(0.5);
+    animation: opt-in .45s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  .opt-inner{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:6px; animation: opt-float 2.6s ease-in-out infinite; }
+  .opt img{ width:100%; height:100%; object-fit:contain; object-position:center; display:block; pointer-events:none; }
+  @keyframes opt-in{ 0%{ opacity:0; transform:scale(0.5) rotate(-8deg); } 70%{ opacity:1; transform:scale(1.06) rotate(2deg); } 100%{ opacity:1; transform:scale(1) rotate(0deg); } }
+  @keyframes opt-float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+  .opt:active .opt-inner{ transform:scale(0.94); }
+  .opt.correct{ border-color:var(--green-deep); animation: pop .4s ease; }
+  .opt.correct .opt-inner{ animation:none; }
+  .opt.wrong{ border-color:var(--wrong-deep); animation: shake .4s ease; }
+  .opt.wrong .opt-inner{ animation:none; }
+  .opt.disabled{ opacity:0.4; cursor:default; }
+  .opt.disabled .opt-inner{ animation:none; }
+  @keyframes pop{ 0%{transform:scale(1)} 45%{transform:scale(1.12)} 100%{transform:scale(1)} }
+  @keyframes shake{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+
+  .feedback{ min-height:1.4em; font-family:"Baloo 2",sans-serif; font-weight:700; font-size:1rem; text-align:center; }
+  .feedback.good{ color:var(--green-deep); animation:feedback-pop .35s ease; }
+  .feedback.bad{ color:var(--wrong-deep); }
+  @keyframes feedback-pop{ 0%{ transform:scale(0.7); opacity:0 } 100%{ transform:scale(1); opacity:1 } }
+
+  footer{ text-align:center; font-size:0.72rem; color:var(--ink-soft); font-weight:700; }
+  footer button{ background:none; border:none; color:var(--green-deep); font-weight:800; font-size:0.72rem; text-decoration:underline; cursor:pointer; padding:6px; }
+
+  /* celebration overlay */
+  .overlay{ position:fixed; inset:0; background:var(--overlay-bg); display:flex; align-items:center; justify-content:center; padding:20px; z-index:50; }
+  .overlay[hidden]{ display:none; }
+  .celebrate-card{
+    background:var(--card); border-radius:28px; padding:26px 24px 24px; max-width:380px; width:100%;
+    max-height:calc(100vh - 40px); overflow-x:hidden; overflow-y:auto;
+    display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;
+    box-shadow:0 12px 0 var(--card-edge); position:relative;
+    animation: celebrate-in .45s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes celebrate-in{ 0%{ transform:scale(0.6); opacity:0 } 100%{ transform:scale(1); opacity:1 } }
+  .celebrate-card h2{ font-family:"Baloo 2",sans-serif; color:var(--green-deep); margin:4px 0 0; font-size:1.35rem; }
+  .celebrate-card p{ margin:0; color:var(--ink-soft); font-weight:700; font-size:0.92rem; }
+  .dance-hog{ font-size:2.8rem; animation: hog-dance 0.85s ease-in-out infinite; }
+  @keyframes hog-dance{
+    0%{ transform:translateY(0) rotate(-12deg) scale(1); }
+    25%{ transform:translateY(-10px) rotate(10deg) scale(1.08); }
+    50%{ transform:translateY(0) rotate(-8deg) scale(0.96); }
+    75%{ transform:translateY(-14px) rotate(12deg) scale(1.08); }
+    100%{ transform:translateY(0) rotate(-12deg) scale(1); }
+  }
+  .big-star{ width:120px; height:120px; animation: wiggle 1.4s ease-in-out infinite; }
+  @keyframes wiggle{ 0%,100%{transform:rotate(-6deg) scale(1)} 50%{transform:rotate(6deg) scale(1.06)} }
+  .badge-parade{ display:flex; gap:4px; justify-content:center; }
+  .badge-parade svg{ animation: badge-dance 0.85s ease-in-out infinite; }
+  @keyframes badge-dance{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-8px) rotate(-10deg); } }
+  .level-sign{
+    margin-top:2px; width:100%; padding:14px 16px; border-radius:20px;
+    background:linear-gradient(160deg, var(--blue), var(--purple)); color:#fff;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    box-shadow:0 6px 0 rgba(0,0,0,0.15);
+    animation: sign-pop 0.6s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes sign-pop{ 0%{ transform:scale(0.4) rotate(-8deg); opacity:0; } 60%{ transform:scale(1.08) rotate(3deg); opacity:1; } 100%{ transform:scale(1) rotate(0deg); opacity:1; } }
+  .level-sign-num{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.5rem; letter-spacing:0.02em; }
+  .level-sign-theme{ font-family:"Baloo 2",sans-serif; font-weight:700; font-size:0.95rem; opacity:0.95; }
+  .level-sign-icons{ font-size:1.3rem; letter-spacing:6px; margin-top:4px; }
+  .celebrate-card button{
+    margin-top:6px; font-family:"Baloo 2",sans-serif; font-weight:700; font-size:1rem; color:#fff;
+    background:linear-gradient(160deg, var(--green), var(--green-deep)); border:none; border-radius:16px;
+    padding:12px 26px; box-shadow:0 5px 0 var(--green-deep); cursor:pointer;
+  }
+  .celebrate-card button:active{ transform:translateY(3px); box-shadow:0 2px 0 var(--green-deep); }
+
+  .confirm-card{ padding:26px 24px 22px; gap:8px; }
+  .confirm-emoji{ font-size:2.6rem; }
+  .confirm-btns{ display:flex; gap:10px; margin-top:10px; width:100%; }
+  .confirm-btns button{ flex:1; margin-top:0; font-size:0.95rem; padding:12px 10px; }
+  .confirm-cancel{
+    background:var(--option-bg) !important;
+    color:var(--ink) !important;
+    box-shadow:0 5px 0 var(--option-edge) !important;
+  }
+  .confirm-cancel:active{ box-shadow:0 2px 0 var(--option-edge) !important; }
+
+  .confetti{ position:absolute; top:-10px; font-size:1.2rem; animation: fall linear forwards; }
+  @keyframes fall{ to{ transform:translateY(320px) rotate(200deg); opacity:0; } }
+
+  @media (prefers-reduced-motion: reduce){
+    .letter-glyph, .letter-stage.bump .letter-glyph, .opt, .opt-inner, .opt.correct, .opt.wrong, .big-star,
+    .confetti, .mascot, .gate-mascot, .blob1, .blob2, .blob3, .badge-shelf .stars svg, .progress-dot.pop,
+    .celebrate-card, .feedback.good, .pupil, .dance-hog, .badge-parade svg, .level-sign{ animation:none !important; }
+    .opt{ opacity:1; transform:none; }
+  }
+
+  @media (max-width:380px){
+    .letter-stage{ width:100px; height:96px; }
+    .letter-glyph{ font-size:4.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-decor" aria-hidden="true">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<div class="app">
+
+  <a class="back-link" href="/">&larr; Back to Hog the Hedgehog</a>
+
+  <div class="gate" id="gate">
+    <div class="gate-mascot" aria-hidden="true">🦔</div>
+    <h1 id="gateTitle">Enjoy the <span class="accent">Free</span> ABC Animal Game!</h1>
+    <p class="sub" id="gateSub">Hi grown-ups! Pop in your email and country so we can say hello, then your little one can start matching letters to animal friends.</p>
+    <form class="gate-form" id="gateForm">
+      <div class="field">
+        <label for="gateEmail">Parent's email</label>
+        <input type="email" id="gateEmail" name="email" placeholder="you@example.com" required>
+      </div>
+      <div class="field" id="countryField">
+        <label for="gateCountry">Country</label>
+        <select id="gateCountry" name="country" required>
+          <option value="" disabled selected>Select your country</option>
+        </select>
+      </div>
+      <button type="submit" class="gate-submit" id="gateSubmit">Let's Play! 🎉</button>
+      <p class="gate-error" id="gateError"></p>
+      <button type="button" class="gate-switch" id="gateSwitch">Already signed up? Just enter your email</button>
+      <p class="gate-note">We only use your email to share news about new animal games, and we never sell or share it. Kids: ask a grown-up to fill this in! <a href="/privacy/">Privacy</a></p>
+    </form>
+  </div>
+
+  <div id="gameWrap" hidden>
+    <header>
+      <div class="title-block">
+        <span class="mascot" aria-hidden="true">🦔</span>
+        <div class="title-text">
+          <h1>ABC Animal Safari</h1>
+          <span class="pill" id="levelLabel">Level 1 · Animal Safari</span>
+        </div>
+      </div>
+      <div class="header-btns">
+        <button class="icon-btn" id="muteBtn" aria-label="Toggle sound" title="Toggle sound">🔊</button>
+      </div>
+    </header>
+
+    <div class="badge-shelf" id="badgeShelf" aria-label="Badges earned">
+      <span class="shelf-label">Badges</span>
+      <span class="stars" id="starsRow"></span>
+    </div>
+
+    <div class="level-row">
+      <span class="level-count" id="levelCount">0 / 10</span>
+    </div>
+    <div class="progress-track" id="progressTrack"></div>
+
+    <div class="card">
+      <p class="prompt" id="prompt">Which animal starts with...</p>
+      <div class="letter-stage" id="letterStage">
+        <div class="eyes"><span class="eye"><span class="pupil"></span></span><span class="eye"><span class="pupil"></span></span></div>
+        <div class="letter-glyph" id="letterGlyph">A</div>
+      </div>
+      <div class="options" id="options" data-count="3"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <footer>
+      <span id="footerNote">Tap the animal that starts with the letter!</span>
+      &nbsp;·&nbsp;
+      <button id="resetBtn">Restart game</button>
+    </footer>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="celebrate-card" id="celebrateCard">
+    <div class="dance-hog" aria-hidden="true">🦔</div>
+    <svg class="big-star" id="bigStarSvg" viewBox="0 0 200 200"></svg>
+    <div class="badge-parade" id="badgeParade"></div>
+    <h2 id="celebrateTitle">You did it!</h2>
+    <p id="celebrateText">You earned a Magic Star badge for finishing Level 1!</p>
+    <div class="level-sign">
+      <span class="level-sign-num" id="levelSignNum">LEVEL 2</span>
+      <span class="level-sign-theme" id="levelSignTheme">Sea Animals</span>
+      <span class="level-sign-icons" id="levelSignIcons">🐬 🐙 🐠 🦈</span>
+    </div>
+    <button id="continueBtn">Keep playing!</button>
+  </div>
+</div>
+
+<div class="overlay" id="confirmOverlay" hidden>
+  <div class="celebrate-card confirm-card">
+    <div class="confirm-emoji" aria-hidden="true">🦔</div>
+    <h2 id="confirmText">Are you sure?</h2>
+    <div class="confirm-btns">
+      <button type="button" class="confirm-cancel" id="confirmCancelBtn">Cancel</button>
+      <button type="button" id="confirmOkBtn">Yes, restart</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SIGNUP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScWQktJealsgI9Btzh6-eHsOoHhidq51VVzVRkTsRik4CLfag/formResponse";
+  var SIGNUP_FIELD_EMAIL = "entry.1358276712";
+  var SIGNUP_FIELD_COUNTRY = "entry.376890493";
+
+  var COUNTRIES = ["United States","United Kingdom","Canada","Australia","Ireland","New Zealand","India","Singapore",
+  "Afghanistan","Albania","Algeria","Argentina","Armenia","Austria","Azerbaijan","Bahrain","Bangladesh","Belarus","Belgium",
+  "Bolivia","Bosnia and Herzegovina","Brazil","Brunei","Bulgaria","Cambodia","Cameroon","Chile","China","Colombia","Costa Rica",
+  "Croatia","Cyprus","Czechia","Denmark","Dominican Republic","Ecuador","Egypt","El Salvador","Estonia","Ethiopia","Fiji",
+  "Finland","France","Georgia","Germany","Ghana","Greece","Guatemala","Honduras","Hong Kong","Hungary","Iceland","Indonesia",
+  "Iraq","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Latvia","Lebanon","Lithuania","Luxembourg",
+  "Malaysia","Malta","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Myanmar","Nepal","Netherlands","Nigeria",
+  "North Macedonia","Norway","Oman","Pakistan","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania",
+  "Russia","Rwanda","Saudi Arabia","Serbia","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","Sweden",
+  "Switzerland","Taiwan","Tanzania","Thailand","Tunisia","Turkey","Uganda","Ukraine","United Arab Emirates","Uruguay",
+  "Uzbekistan","Venezuela","Vietnam","Zambia","Zimbabwe","Other"];
+
+  var SAFARI_NAMES = {
+    A:'Alligator', B:'Bear', C:'Cat', D:'Dog', E:'Elephant', F:'Fox', G:'Giraffe',
+    H:'Hedgehog', I:'Iguana', J:'Jellyfish', K:'Kangaroo', L:'Lion', M:'Monkey',
+    N:'Narwhal', O:'Owl', P:'Penguin', Q:'Quail', R:'Rabbit', S:'Sheep', T:'Tiger',
+    U:'Umbrellabird', V:'Vulture', W:'Whale', X:'X-ray Fish', Y:'Yak', Z:'Zebra'
+  };
+  var SEA_NAMES = {
+    A:'Angelfish', B:'Beluga Whale', C:'Clownfish', D:'Dolphin', E:'Eel', F:'Flounder',
+    G:'Grouper', H:'Hammerhead Shark', I:'Inkfish', J:'Jellyfish', K:'Krill', L:'Lobster',
+    M:'Manatee', N:'Nautilus', O:'Octopus', P:'Pufferfish', Q:'Queen Angelfish', R:'Ray',
+    S:'Starfish', T:'Sea Turtle', U:'Urchin', V:'Viperfish', W:'Walrus', X:'Xiphias',
+    Y:'Yellow Tang', Z:'Zebra Shark'
+  };
+  var BLUE_NAMES = {
+    B:'Blue Jay', C:'Blue Crab', D:'Blue Dragon', H:'Hyacinth Macaw', I:'Indigo Bunting',
+    K:'Kingfisher', L:'Blue Lobster', M:'Blue Morpho', P:'Peacock', S:'Blue Starfish',
+    T:'Blue Tang', W:'Blue Whale'
+  };
+
+  var PHOTOS_SAFARI = (typeof window.ANIMAL_PHOTOS === 'object' && window.ANIMAL_PHOTOS) || {};
+  var PHOTOS_SEA = (typeof window.ANIMAL_PHOTOS_SEA === 'object' && window.ANIMAL_PHOTOS_SEA) || {};
+  var PHOTOS_BLUE = (typeof window.ANIMAL_PHOTOS_BLUE === 'object' && window.ANIMAL_PHOTOS_BLUE) || {};
+
+  function lettersFor(names, photos){
+    return Object.keys(names).filter(function(l){ return !!photos[l]; });
+  }
+  var SAFARI_LETTERS = lettersFor(SAFARI_NAMES, PHOTOS_SAFARI);
+  var SAFARI_EASY_LETTERS = ['A','B','C','D','E','F','G','H','K','L','M','O','P','R','S','T','W','Z'].filter(function(l){ return SAFARI_LETTERS.indexOf(l)!==-1; });
+  var SEA_LETTERS = lettersFor(SEA_NAMES, PHOTOS_SEA);
+  var BLUE_LETTERS = lettersFor(BLUE_NAMES, PHOTOS_BLUE);
+
+  var THEMES = {
+    safari: { names: SAFARI_NAMES, photos: PHOTOS_SAFARI, allLetters: SAFARI_LETTERS, tag:'Animal Safari', icons:['🦁','🐘','🦒','🦓'] },
+    sea: { names: SEA_NAMES, photos: PHOTOS_SEA, allLetters: SEA_LETTERS, tag:'Sea Animals', icons:['🐬','🐙','🐠','🦈'] },
+    blue: { names: BLUE_NAMES, photos: PHOTOS_BLUE, allLetters: BLUE_LETTERS, tag:'Blue Animals', icons:['🦚','🦋','🐦','✨'] }
+  };
+
+  var THEME_ORDER = ['safari','sea','blue'];
+
+  // Levels are generated on the fly, so play can continue forever (level 500+, 5000+, ...).
+  // The 3 themes repeat in order; the first lap (levels 1-3) is a gentler intro
+  // (level 1 uses an easier safari letter set, 3 choices per question), and every
+  // lap after that stays at the full letter set with 4 choices.
+  function getLevel(levelNumber){
+    var theme = THEME_ORDER[(levelNumber - 1) % THEME_ORDER.length];
+    var themeObj = THEMES[theme];
+    var letters = (levelNumber === 1) ? SAFARI_EASY_LETTERS : themeObj.allLetters;
+    var choices = (levelNumber <= 3) ? 3 : 4;
+    return { number: levelNumber, name: 'Level ' + levelNumber, tag: themeObj.tag, theme: theme, letters: letters, choices: choices, target: 10 };
+  }
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t=a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+
+  /* ---------- Gate screen ---------- */
+  var gateEls = {
+    gate: document.getElementById('gate'),
+    gameWrap: document.getElementById('gameWrap'),
+    form: document.getElementById('gateForm'),
+    country: document.getElementById('gateCountry'),
+    email: document.getElementById('gateEmail'),
+    error: document.getElementById('gateError'),
+    title: document.getElementById('gateTitle'),
+    sub: document.getElementById('gateSub'),
+    countryField: document.getElementById('countryField'),
+    submit: document.getElementById('gateSubmit'),
+    toggle: document.getElementById('gateSwitch')
+  };
+
+  COUNTRIES.forEach(function(c){
+    var opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    gateEls.country.appendChild(opt);
+  });
+
+  function gatePassed(){
+    try{ return localStorage.getItem('abcSafariGatePassed') === '1'; }catch(e){ return false; }
+  }
+  function markGatePassed(){
+    try{ localStorage.setItem('abcSafariGatePassed', '1'); }catch(e){}
+  }
+
+  function submitSignup(email, country){
+    try{
+      var body = new URLSearchParams();
+      body.append(SIGNUP_FIELD_EMAIL, email);
+      body.append(SIGNUP_FIELD_COUNTRY, country);
+      fetch(SIGNUP_FORM_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      }).catch(function(){});
+    }catch(e){}
+  }
+
+  var returningMode = false;
+  function setReturningMode(on){
+    returningMode = on;
+    gateEls.error.textContent = '';
+    gateEls.countryField.hidden = on;
+    gateEls.country.required = !on;
+    gateEls.title.innerHTML = on ? 'Welcome back!' : 'Enjoy the <span class="accent">Free</span> ABC Animal Game!';
+    gateEls.sub.textContent = on
+      ? 'Enter the email you signed up with and your little one can keep playing.'
+      : 'Hi grown-ups! Pop in your email and country so we can say hello, then your little one can start matching letters to animal friends.';
+    gateEls.submit.textContent = on ? 'Continue playing! 🎉' : "Let's Play! 🎉";
+    gateEls.toggle.textContent = on ? "New here? Sign up instead" : 'Already signed up? Just enter your email';
+  }
+  gateEls.toggle.addEventListener('click', function(){ setReturningMode(!returningMode); });
+
+  try{
+    var savedEmail = localStorage.getItem('abcSafariEmail');
+    if(savedEmail){ gateEls.email.value = savedEmail; }
+  }catch(e){}
+
+  gateEls.form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var email = gateEls.email.value.trim();
+    var country = gateEls.country.value;
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if(!emailOk){
+      gateEls.error.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    if(!returningMode && !country){
+      gateEls.error.textContent = 'Please choose your country.';
+      return;
+    }
+    gateEls.error.textContent = '';
+    try{ localStorage.setItem('abcSafariEmail', email); }catch(e){}
+    markGatePassed();
+    gateEls.gate.hidden = true;
+    gateEls.gameWrap.hidden = false;
+    startGame();
+    if(!returningMode){ submitSignup(email, country); }
+  });
+
+  if(gatePassed()){
+    gateEls.gate.hidden = true;
+    gateEls.gameWrap.hidden = false;
+  }
+
+  /* ---------- Star badge SVG ---------- */
+  function starSvg(id){
+    return '<defs>' +
+      '<radialGradient id="g'+id+'" cx="38%" cy="32%" r="75%">' +
+        '<stop offset="0%" stop-color="#FFF3C4"/>' +
+        '<stop offset="55%" stop-color="#F4B740"/>' +
+        '<stop offset="100%" stop-color="#D99A1F"/>' +
+      '</radialGradient>' +
+    '</defs>' +
+    '<path d="M100 14 C108 40 112 52 128 60 C144 56 158 52 182 52 C166 68 156 78 152 94 C164 110 172 122 186 138 C166 134 152 132 136 138 C132 156 128 168 122 186 C112 170 106 160 100 148 C94 160 88 170 78 186 C72 168 68 156 64 138 C48 132 34 134 14 138 C28 122 36 110 48 94 C44 78 34 68 18 52 C42 52 56 56 72 60 C88 52 92 40 100 14 Z" ' +
+      'fill="url(#g'+id+')" stroke="#D99A1F" stroke-width="4" stroke-linejoin="round"/>' +
+    '<circle cx="76" cy="98" r="9" fill="#4A3B2A"/>' +
+    '<circle cx="124" cy="98" r="9" fill="#4A3B2A"/>' +
+    '<circle cx="68" cy="112" r="9" fill="#FF9E9E" opacity="0.8"/>' +
+    '<circle cx="132" cy="112" r="9" fill="#FF9E9E" opacity="0.8"/>' +
+    '<path d="M78 122 Q100 142 122 122" stroke="#4A3B2A" stroke-width="6" fill="none" stroke-linecap="round"/>';
+  }
+
+  var smallStarCounter = 0;
+  function smallStarHtml(isNew){
+    smallStarCounter++;
+    var id = 'sm'+smallStarCounter;
+    return '<svg viewBox="0 0 200 200" width="26" height="26" aria-hidden="true" class="'+(isNew?'new-badge':'')+'">'+starSvg(id)+'</svg>';
+  }
+
+  var state = { level:1, correct:0, badges:0, muted:false, question:null, locked:false };
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem('abcSafariState');
+      if(raw){
+        var saved = JSON.parse(raw);
+        if(typeof saved.level==='number') state.level = Math.max(1, saved.level);
+        else if(typeof saved.levelIndex==='number') state.level = Math.max(1, saved.levelIndex+1);
+        if(typeof saved.correct==='number') state.correct = saved.correct;
+        if(typeof saved.badges==='number') state.badges = saved.badges;
+        if(typeof saved.muted==='boolean') state.muted = saved.muted;
+      }
+    }catch(e){}
+  }
+  function saveState(){
+    try{
+      localStorage.setItem('abcSafariState', JSON.stringify({
+        level:state.level, correct:state.correct, badges:state.badges, muted:state.muted
+      }));
+    }catch(e){}
+  }
+
+  var audioCtx = null;
+  function tone(freq, start, dur, type){
+    if(state.muted) return;
+    try{
+      if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      var t0 = audioCtx.currentTime + start;
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = type||'sine';
+      osc.frequency.setValueAtTime(freq, t0);
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(0.18, t0+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(t0);
+      osc.stop(t0+dur+0.02);
+    }catch(e){}
+  }
+  function playCorrect(){ tone(523.25,0,0.18,'triangle'); tone(659.25,0.12,0.18,'triangle'); tone(783.99,0.24,0.25,'triangle'); }
+  function playWrong(){ tone(220,0,0.22,'sine'); }
+  function playFanfare(){
+    [523.25,659.25,783.99,1046.5].forEach(function(f,i){ tone(f, i*0.13, 0.28,'triangle'); });
+    [1046.5,1318.5,1568.0,2093.0].forEach(function(f,i){ tone(f, 0.58 + i*0.08, 0.2,'sine'); });
+  }
+
+  var els = {
+    levelLabel: document.getElementById('levelLabel'),
+    levelCount: document.getElementById('levelCount'),
+    progressTrack: document.getElementById('progressTrack'),
+    prompt: document.getElementById('prompt'),
+    letterStage: document.getElementById('letterStage'),
+    letterGlyph: document.getElementById('letterGlyph'),
+    options: document.getElementById('options'),
+    feedback: document.getElementById('feedback'),
+    starsRow: document.getElementById('starsRow'),
+    muteBtn: document.getElementById('muteBtn'),
+    resetBtn: document.getElementById('resetBtn'),
+    overlay: document.getElementById('overlay'),
+    confirmOverlay: document.getElementById('confirmOverlay'),
+    confirmText: document.getElementById('confirmText'),
+    confirmOkBtn: document.getElementById('confirmOkBtn'),
+    confirmCancelBtn: document.getElementById('confirmCancelBtn'),
+    bigStarSvg: document.getElementById('bigStarSvg'),
+    badgeParade: document.getElementById('badgeParade'),
+    celebrateTitle: document.getElementById('celebrateTitle'),
+    celebrateText: document.getElementById('celebrateText'),
+    levelSignNum: document.getElementById('levelSignNum'),
+    levelSignTheme: document.getElementById('levelSignTheme'),
+    levelSignIcons: document.getElementById('levelSignIcons'),
+    continueBtn: document.getElementById('continueBtn'),
+    celebrateCard: document.getElementById('celebrateCard'),
+    footerNote: document.getElementById('footerNote')
+  };
+
+  function renderBadges(justEarned){
+    var html = '';
+    for(var i=0;i<state.badges;i++) html += smallStarHtml(justEarned && i===state.badges-1);
+    els.starsRow.innerHTML = html || '<span style="font-size:0.76rem; color:var(--ink-soft); font-weight:700;">Play to earn your first star!</span>';
+  }
+
+  function renderLevel(){
+    var lvl = getLevel(state.level);
+    els.levelLabel.textContent = lvl.name + ' · ' + lvl.tag;
+    els.levelCount.textContent = state.correct + ' / ' + lvl.target;
+    var dots = '';
+    for(var i=0;i<lvl.target;i++){
+      var filled = i<state.correct;
+      var isNew = filled && i===state.correct-1;
+      dots += '<div class="progress-dot' + (filled ? ' filled':'') + (isNew ? ' pop':'') + '"></div>';
+    }
+    els.progressTrack.innerHTML = dots;
+  }
+
+  function pickQuestion(){
+    var lvl = getLevel(state.level);
+    var theme = THEMES[lvl.theme];
+    var letter = lvl.letters[Math.floor(Math.random()*lvl.letters.length)];
+    var others = shuffle(theme.allLetters.filter(function(l){ return l!==letter; }));
+    var distractors = others.slice(0, lvl.choices-1);
+    var optionLetters = shuffle([letter].concat(distractors));
+    return { letter:letter, options:optionLetters };
+  }
+
+  function renderQuestion(){
+    var lvl = getLevel(state.level);
+    var theme = THEMES[lvl.theme];
+    state.question = pickQuestion();
+    state.locked = false;
+    els.prompt.textContent = 'Which animal starts with the letter ' + state.question.letter + '?';
+    els.letterGlyph.textContent = state.question.letter;
+    els.letterStage.classList.remove('bump');
+    void els.letterStage.offsetWidth;
+    els.letterStage.classList.add('bump');
+    els.feedback.textContent = '';
+    els.feedback.className = 'feedback';
+    els.options.setAttribute('data-count', String(lvl.choices));
+    els.options.innerHTML = '';
+    state.question.options.forEach(function(letter, idx){
+      var btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.style.animationDelay = (idx*0.08) + 's';
+      btn.setAttribute('aria-label', theme.names[letter] || 'animal');
+      var inner = document.createElement('span');
+      inner.className = 'opt-inner';
+      inner.style.animationDelay = (idx*0.35) + 's';
+      var img = document.createElement('img');
+      img.src = theme.photos[letter];
+      img.alt = '';
+      img.draggable = false;
+      inner.appendChild(img);
+      btn.appendChild(inner);
+      btn.addEventListener('click', function(l, b){
+        return function(){ handleAnswer(l, b); };
+      }(letter, btn));
+      els.options.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(letter, btn){
+    if(state.locked) return;
+    var isCorrect = letter === state.question.letter;
+    if(isCorrect){
+      state.locked = true;
+      btn.classList.add('correct');
+      els.feedback.textContent = pickPraise();
+      els.feedback.className = 'feedback good';
+      playCorrect();
+      state.correct++;
+      saveState();
+      renderLevel();
+      var lvl = getLevel(state.level);
+      if(state.correct >= lvl.target){
+        setTimeout(levelUp, 650);
+      } else {
+        setTimeout(renderQuestion, 800);
+      }
+    } else {
+      btn.classList.add('wrong');
+      btn.classList.add('disabled');
+      btn.disabled = true;
+      els.feedback.textContent = 'Try again, you can do it!';
+      els.feedback.className = 'feedback bad';
+      playWrong();
+    }
+  }
+
+  var PRAISE = ['Yay! Great job!', 'Woohoo! You got it!', 'Awesome work!', 'Super safari skills!', 'That\'s right!'];
+  function pickPraise(){ return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
+
+  function levelUp(){
+    state.badges++;
+    var finishedLevel = getLevel(state.level);
+    state.level++;
+    var nextLevel = getLevel(state.level);
+    state.correct = 0;
+    saveState();
+    renderLevel();
+    renderBadges(true);
+    showCelebration(finishedLevel, nextLevel);
+  }
+
+  function buildBadgeParade(){
+    var html = '';
+    for(var i=0;i<5;i++){
+      smallStarCounter++;
+      var id = 'par'+smallStarCounter;
+      html += '<svg viewBox="0 0 200 200" width="30" height="30" aria-hidden="true" style="animation-delay:'+(i*0.09)+'s">'+starSvg(id)+'</svg>';
+    }
+    return html;
+  }
+
+  function showCelebration(finishedLevel, nextLevel){
+    els.bigStarSvg.innerHTML = starSvg('big');
+    els.celebrateTitle.textContent = 'You did it!';
+    els.celebrateText.textContent = 'You earned a Magic Star badge for finishing ' + finishedLevel.name + '!';
+    els.badgeParade.innerHTML = buildBadgeParade();
+    els.levelSignNum.textContent = 'LEVEL ' + nextLevel.number;
+    els.levelSignTheme.textContent = nextLevel.tag;
+    els.levelSignIcons.textContent = THEMES[nextLevel.theme].icons.join(' ');
+    els.overlay.hidden = false;
+    playFanfare();
+    spawnConfetti();
+  }
+
+  var CONFETTI_EMOJI = ['⭐','✨','🌟','🦔','🐧'];
+  function spawnConfetti(){
+    for(var i=0;i<36;i++){
+      var span = document.createElement('span');
+      span.className = 'confetti';
+      span.textContent = CONFETTI_EMOJI[Math.floor(Math.random()*CONFETTI_EMOJI.length)];
+      span.style.left = (5 + Math.random()*90) + '%';
+      span.style.animationDuration = (1.4 + Math.random()*1.2) + 's';
+      span.style.animationDelay = (Math.random()*0.5) + 's';
+      els.celebrateCard.appendChild(span);
+      (function(el){ setTimeout(function(){ el.remove(); }, 3200); })(span);
+    }
+  }
+
+  els.continueBtn.addEventListener('click', function(){
+    els.overlay.hidden = true;
+    renderQuestion();
+  });
+
+  els.muteBtn.addEventListener('click', function(){
+    state.muted = !state.muted;
+    els.muteBtn.textContent = state.muted ? '🔇' : '🔊';
+    saveState();
+  });
+
+  var confirmCallback = null;
+  function showConfirm(message, onConfirm){
+    els.confirmText.textContent = message;
+    confirmCallback = onConfirm;
+    els.confirmOverlay.hidden = false;
+  }
+  els.confirmOkBtn.addEventListener('click', function(){
+    els.confirmOverlay.hidden = true;
+    var cb = confirmCallback;
+    confirmCallback = null;
+    if(cb) cb();
+  });
+  els.confirmCancelBtn.addEventListener('click', function(){
+    els.confirmOverlay.hidden = true;
+    confirmCallback = null;
+  });
+
+  els.resetBtn.addEventListener('click', function(){
+    showConfirm('Start over from Level 1? You\'ll lose your stars.', function(){
+      state.level = 1;
+      state.correct = 0;
+      state.badges = 0;
+      saveState();
+      renderLevel();
+      renderBadges();
+      renderQuestion();
+    });
+  });
+
+  var gameStarted = false;
+  function startGame(){
+    if(gameStarted) return;
+    gameStarted = true;
+    els.muteBtn.textContent = state.muted ? '🔇' : '🔊';
+    renderLevel();
+    renderBadges();
+    renderQuestion();
+  }
+
+  loadState();
+  if(gatePassed()){
+    startGame();
+  }
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
