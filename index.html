@@ -393,7 +393,7 @@
       </div>
       <button type="submit" class="gate-submit">Let's Play! 🎉</button>
       <p class="gate-error" id="gateError"></p>
-      <p class="gate-note">We'll never spam you — just a quick hello about new animal games.</p>
+      <p class="gate-note">We only use your email to share news about new animal games, and we never sell or share it. Kids: ask a grown-up to fill this in!</p>
     </form>
   </div>
 
@@ -470,7 +470,9 @@
 (function(){
   "use strict";
 
-  var OWNER_EMAIL = "yoselee2023@gmail.com";
+  var SIGNUP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScWQktJealsgI9Btzh6-eHsOoHhidq51VVzVRkTsRik4CLfag/formResponse";
+  var SIGNUP_FIELD_EMAIL = "entry.1358276712";
+  var SIGNUP_FIELD_COUNTRY = "entry.376890493";
 
   var COUNTRIES = ["United States","United Kingdom","Canada","Australia","Ireland","New Zealand","India","Singapore",
   "Afghanistan","Albania","Algeria","Argentina","Armenia","Austria","Azerbaijan","Bahrain","Bangladesh","Belarus","Belgium",
@@ -567,24 +569,18 @@
     try{ localStorage.setItem('abcSafariGatePassed', '1'); }catch(e){}
   }
 
-  function openMailto(email, country){
-    var subject = 'New ABC Animal Safari Player';
-    var body = 'A parent just signed up to play ABC Animal Safari!\n\n' +
-      'Email: ' + email + '\n' +
-      'Country: ' + country + '\n' +
-      'When: ' + new Date().toLocaleString();
-    var uri = 'mailto:' + OWNER_EMAIL +
-      '?subject=' + encodeURIComponent(subject) +
-      '&body=' + encodeURIComponent(body);
+  function submitSignup(email, country){
     try{
-      var a = document.createElement('a');
-      a.href = uri;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      var body = new URLSearchParams();
+      body.append(SIGNUP_FIELD_EMAIL, email);
+      body.append(SIGNUP_FIELD_COUNTRY, country);
+      fetch(SIGNUP_FORM_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      }).catch(function(){});
     }catch(e){}
   }
 
@@ -606,7 +602,7 @@
     gateEls.gate.hidden = true;
     gateEls.gameWrap.hidden = false;
     startGame();
-    try{ openMailto(email, country); }catch(e){}
+    submitSignup(email, country);
   });
 
   if(gatePassed()){
