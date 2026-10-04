@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Personalized Stories – Hog the Hedgehog</title>
-<meta name="description" content="Personalized stories, worksheets and printables where your child is the hero. Coming soon from Hog the Hedgehog.">
+<title>Make a Personalized Story for Your Child – Hog the Hedgehog</title>
+<meta name="description" content="Create a free personalized story book, phonics pages, puzzles and coloring page starring your child. Download it as a PDF. Your photo never leaves your device.">
 <link rel="canonical" href="https://hogthehedgehog.com/stories/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%94%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/stories/story.css">
 </head>
 <body>
 
@@ -24,27 +25,89 @@
   </div>
 </header>
 
-<main class="wrap page">
-  <p><span class="tag soon">Coming soon</span></p>
-  <h1>Stories where your child is the hero</h1>
-  <p>Instead of "Learn the letter B", imagine: "Emma and Benny the Brachiosaurus are looking for five things that begin with B." That is the idea behind personalized stories: your child's name and favorite things woven into reading, phonics and puzzles.</p>
+<main class="wrap">
 
-  <h2>What it will include</h2>
-  <ul>
-    <li>A short story starring your child, based on what they love (dinosaurs, space, animals and more)</li>
-    <li>Coloring pages and printable worksheets</li>
-    <li>Phonics and reading exercises matched to their level</li>
-    <li>A simple progress report for parents</li>
-    <li>An optional printed hardcover book</li>
-  </ul>
+  <section class="intro" id="intro">
+    <h1>A story where your child is the hero</h1>
+    <p>Tell us about your child and we will make a personalized adventure book to read, color and play with. Your child appears in the story, the letter hunt, the puzzles and the daily challenges.</p>
+    <p><strong>Free.</strong> Download it as a PDF and print it at home.</p>
+  </section>
 
-  <h2>In the meantime</h2>
-  <p>Try the free ABC game and watch the videos on YouTube.</p>
-  <p>
-    <a class="btn" href="/games/abc-animal-safari/">Play the ABC game</a>
-    &nbsp;
-    <a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Watch on YouTube</a>
-  </p>
+  <form class="form-card" id="storyForm" novalidate>
+
+    <div class="row2">
+      <div>
+        <label class="lbl" for="childName">Child's name</label>
+        <input type="text" id="childName" maxlength="14" autocomplete="off" placeholder="Emma">
+      </div>
+      <div>
+        <label class="lbl" for="childAge">Age</label>
+        <select id="childAge"></select>
+      </div>
+    </div>
+
+    <fieldset>
+      <legend>Photo</legend>
+      <p class="hint">Optional. Your child appears on the cover and in the story. Choose a clear photo of their face.</p>
+      <div class="photo-box">
+        <div class="photo-prev" id="photoPrev" aria-hidden="true">📷</div>
+        <div class="photo-controls">
+          <input type="file" id="photoFile" accept="image/*" aria-label="Choose a photo">
+          <label>Zoom <input type="range" id="photoZoom" min="1" max="3" step="0.05" value="1" disabled></label>
+          <label>Move left / right <input type="range" id="photoX" min="-1" max="1" step="0.02" value="0" disabled></label>
+          <label>Move up / down <input type="range" id="photoY" min="-1" max="1" step="0.02" value="0" disabled></label>
+        </div>
+      </div>
+      <p class="privacy-line">🔒 Your photo stays on your device. It is only used in your browser to build the PDF and is never uploaded or saved.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>What do they love? <span class="hint">(choose 1 or 2)</span></legend>
+      <div class="chips" id="interestChips"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Reading level</legend>
+      <div class="chips" id="levelChips"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Any struggles? <span class="hint">(optional, helps the parent guide)</span></legend>
+      <div class="chips" id="struggleChips"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Favorite color</legend>
+      <div class="swatches" id="colorSwatches"></div>
+    </fieldset>
+
+    <p class="form-error" id="formError" role="alert"></p>
+    <div class="submit-row">
+      <button type="submit" class="btn" id="makeBtn">Make my book</button>
+    </div>
+  </form>
+
+  <section id="results" hidden>
+    <div class="result-bar">
+      <h2 id="resultTitle">Your book is ready</h2>
+      <button type="button" class="btn" id="btnPdf">Download PDF</button>
+      <button type="button" class="btn btn-light" id="btnPrint">Print</button>
+      <button type="button" class="btn btn-light" id="btnAgain">Make another</button>
+    </div>
+    <p class="pdf-status" id="pdfStatus" role="status"></p>
+    <ul class="included" id="included"></ul>
+    <div id="book"></div>
+    <div class="upsell">
+      <h3>Play the ABC game next</h3>
+      <p>Keep the learning going with free mini-games: match letters to real animal photos.</p>
+      <a class="btn" href="/games/abc-animal-safari/">Play ABC Animal Safari</a>
+    </div>
+    <div class="upsell">
+      <h3>Printed hardcover book <span class="tag soon">Coming soon</span></h3>
+      <p>Soon you will be able to order this story as a printed hardcover keepsake.</p>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -58,6 +121,8 @@
     </nav>
   </div>
 </footer>
+
+<script src="/stories/story.js"></script>
 
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
