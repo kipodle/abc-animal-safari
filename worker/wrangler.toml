@@ -1,0 +1,12 @@
+name = "hog-story-api"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+routes = [
+  { pattern = "api.hogthehedgehog.com", custom_domain = true }
+]
+
+[vars]
+MODEL = "claude-opus-5-5"
+ALLOWED_ORIGINS = "https://hogthehedgehog.com,https://www.hogthehedgehog.com"

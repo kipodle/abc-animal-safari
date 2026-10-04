@@ -81,6 +81,12 @@
       <div class="swatches" id="colorSwatches"></div>
     </fieldset>
 
+    <fieldset id="aiBox" hidden>
+      <legend>Make it one-of-a-kind <span class="hint">(optional)</span></legend>
+      <label class="chip"><input type="checkbox" id="useAi"><span>✨ Write the story with AI</span></label>
+      <p class="hint" style="margin-top:8px">If you turn this on, your child's first name, age, interests and reading level are sent to Claude (an AI by Anthropic) to write a new story. The photo is never sent. If the story writer can't be reached, you get the classic story instead.</p>
+    </fieldset>
+
     <p class="form-error" id="formError" role="alert"></p>
     <div class="submit-row">
       <button type="submit" class="btn" id="makeBtn">Make my book</button>

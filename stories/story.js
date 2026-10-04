@@ -6,6 +6,10 @@
    ============================================================ */
 var ORDER = ['dinosaurs','space','ocean','safari','robots','fairy'];
 
+// AI story writer (a small Cloudflare Worker that calls Claude). Turned off until the Worker is deployed.
+var AI_ENABLED = false;
+var AI_URL = 'https://api.hogthehedgehog.com/story';
+
 var THEMES = {
   dinosaurs: {
     label:'Dinosaur', title:'Dinosaur', emoji:'🦕', place:'Dino Valley',
@@ -571,6 +575,26 @@ function readForm(){
 }
 
 /* ============================================================
+   AI story (optional)
+   ============================================================ */
+function fetchAiPages(f){
+  var ctrl = new AbortController();
+  var timer = setTimeout(function(){ ctrl.abort(); }, 45000);
+  return fetch(AI_URL, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({name:f.name, age:f.age, level:f.level, theme:f.interests[0], theme2:f.interests[1], struggles:f.struggles}),
+    signal: ctrl.signal
+  }).then(function(r){
+    if(!r.ok) throw new Error('status ' + r.status);
+    return r.json();
+  }).then(function(d){
+    if(!d || !Array.isArray(d.pages) || d.pages.length !== 6) throw new Error('bad response');
+    return d.pages.map(function(x){ return String(x).slice(0, 420); });
+  }).finally(function(){ clearTimeout(timer); });
+}
+
+/* ============================================================
    Show the result
    ============================================================ */
 var current = null;
@@ -643,16 +667,32 @@ function render(m){
   $('results').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-$('storyForm').addEventListener('submit', function(ev){
+$('storyForm').addEventListener('submit', async function(ev){
   ev.preventDefault();
   var err = $('formError');
   err.textContent = '';
   var f = readForm();
   if(!f.name){ err.textContent = 'Please enter your child\'s name.'; $('childName').focus(); return; }
-  if(!/^[A-Za-zÀ-ɏ֐-׿؀-ۿ' \-]+$/.test(f.name)){ err.textContent = 'Please use letters only for the name.'; $('childName').focus(); return; }
+  if(!/^[A-Za-z\u00C0-\u024F\u0590-\u05FF\u0600-\u06FF' \-]+$/.test(f.name)){ err.textContent = 'Please use letters only for the name.'; $('childName').focus(); return; }
   if(f.interests.length < 1){ err.textContent = 'Please choose at least one thing they love.'; return; }
   stopSpeaking();
-  render(buildModel(f));
+  var m = buildModel(f);
+  var note = '';
+  var wantAi = AI_ENABLED && $('useAi') && $('useAi').checked;
+  var btn = $('makeBtn');
+  if(wantAi){
+    btn.disabled = true; btn.textContent = 'Writing ' + f.name + '\'s story...';
+    try{
+      var pages = await fetchAiPages(f);
+      m.pages = m.pages.map(function(p, i){ return {scene:p.scene, text:esc(pages[i])}; });
+      note = '✨ This story was written just for ' + f.name + ' by AI.';
+    } catch(e){
+      note = 'The story writer could not be reached, so here is a classic story instead.';
+    }
+    btn.disabled = false; btn.textContent = 'Make my book';
+  }
+  render(m);
+  if(note){ $('pdfStatus').textContent = note; }
 });
 
 $('btnAgain').addEventListener('click', function(){
@@ -732,6 +772,8 @@ $('btnPdf').addEventListener('click', async function(){
     btn.disabled = false;
   }
 });
+
+if(AI_ENABLED && $('aiBox')){ $('aiBox').hidden = false; }
 
 window.StoryGen = {makePdf: makePdf, buildModel: buildModel, buildSheets: buildSheets, render: render};
 
