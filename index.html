@@ -180,6 +180,7 @@
     cursor:pointer;
   }
   .gate-submit:active{ transform:translateY(3px); box-shadow:0 2px 0 var(--green-deep); }
+  .gate-switch{ background:none; border:none; color:var(--green-deep); font-family:"Nunito",sans-serif; font-weight:800; font-size:0.85rem; text-decoration:underline; cursor:pointer; padding:6px; margin-top:-6px; }
   .gate-note{ margin:0; font-size:0.72rem; color:var(--ink-soft); font-weight:700; }
   .gate-error{ color:var(--wrong-deep); font-weight:800; font-size:0.82rem; min-height:1.2em; }
 
@@ -378,21 +379,22 @@
 
   <div class="gate" id="gate">
     <div class="gate-mascot" aria-hidden="true">🦔</div>
-    <h1>Enjoy the <span class="accent">Free</span> ABC Animal Game!</h1>
-    <p class="sub">Hi grown-ups! Pop in your email and country so we can say hello, then your little one can start matching letters to animal friends.</p>
+    <h1 id="gateTitle">Enjoy the <span class="accent">Free</span> ABC Animal Game!</h1>
+    <p class="sub" id="gateSub">Hi grown-ups! Pop in your email and country so we can say hello, then your little one can start matching letters to animal friends.</p>
     <form class="gate-form" id="gateForm">
       <div class="field">
         <label for="gateEmail">Parent's email</label>
         <input type="email" id="gateEmail" name="email" placeholder="you@example.com" required>
       </div>
-      <div class="field">
+      <div class="field" id="countryField">
         <label for="gateCountry">Country</label>
         <select id="gateCountry" name="country" required>
           <option value="" disabled selected>Select your country</option>
         </select>
       </div>
-      <button type="submit" class="gate-submit">Let's Play! 🎉</button>
+      <button type="submit" class="gate-submit" id="gateSubmit">Let's Play! 🎉</button>
       <p class="gate-error" id="gateError"></p>
+      <button type="button" class="gate-switch" id="gateSwitch">Already signed up? Just enter your email</button>
       <p class="gate-note">We only use your email to share news about new animal games, and we never sell or share it. Kids: ask a grown-up to fill this in!</p>
     </form>
   </div>
@@ -553,7 +555,12 @@
     form: document.getElementById('gateForm'),
     country: document.getElementById('gateCountry'),
     email: document.getElementById('gateEmail'),
-    error: document.getElementById('gateError')
+    error: document.getElementById('gateError'),
+    title: document.getElementById('gateTitle'),
+    sub: document.getElementById('gateSub'),
+    countryField: document.getElementById('countryField'),
+    submit: document.getElementById('gateSubmit'),
+    toggle: document.getElementById('gateSwitch')
   };
 
   COUNTRIES.forEach(function(c){
@@ -584,6 +591,26 @@
     }catch(e){}
   }
 
+  var returningMode = false;
+  function setReturningMode(on){
+    returningMode = on;
+    gateEls.error.textContent = '';
+    gateEls.countryField.hidden = on;
+    gateEls.country.required = !on;
+    gateEls.title.innerHTML = on ? 'Welcome back!' : 'Enjoy the <span class="accent">Free</span> ABC Animal Game!';
+    gateEls.sub.textContent = on
+      ? 'Enter the email you signed up with and your little one can keep playing.'
+      : 'Hi grown-ups! Pop in your email and country so we can say hello, then your little one can start matching letters to animal friends.';
+    gateEls.submit.textContent = on ? 'Continue playing! 🎉' : "Let's Play! 🎉";
+    gateEls.toggle.textContent = on ? "New here? Sign up instead" : 'Already signed up? Just enter your email';
+  }
+  gateEls.toggle.addEventListener('click', function(){ setReturningMode(!returningMode); });
+
+  try{
+    var savedEmail = localStorage.getItem('abcSafariEmail');
+    if(savedEmail){ gateEls.email.value = savedEmail; }
+  }catch(e){}
+
   gateEls.form.addEventListener('submit', function(ev){
     ev.preventDefault();
     var email = gateEls.email.value.trim();
@@ -593,16 +620,17 @@
       gateEls.error.textContent = 'Please enter a valid email address.';
       return;
     }
-    if(!country){
+    if(!returningMode && !country){
       gateEls.error.textContent = 'Please choose your country.';
       return;
     }
     gateEls.error.textContent = '';
+    try{ localStorage.setItem('abcSafariEmail', email); }catch(e){}
     markGatePassed();
     gateEls.gate.hidden = true;
     gateEls.gameWrap.hidden = false;
     startGame();
-    submitSignup(email, country);
+    if(!returningMode){ submitSignup(email, country); }
   });
 
   if(gatePassed()){
