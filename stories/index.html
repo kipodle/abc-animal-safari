@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Make a Personalized Story for Your Child – Hog the Hedgehog</title>
-<meta name="description" content="Create a free personalized story book, phonics pages, puzzles and coloring page starring your child. Download it as a PDF. Your photo never leaves your device.">
+<title>Make a Letter Adventure Book for Your Child – Hog the Hedgehog</title>
+<meta name="description" content="Make a free printable letter adventure for your child: pick a letter and a world, and get a game-like book with 10 missions, puzzles, coloring and a certificate. Your photo never leaves your device.">
 <link rel="canonical" href="https://hogthehedgehog.com/stories/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%94%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap">
@@ -18,7 +18,7 @@
     <a class="brand" href="/"><span class="logo" aria-hidden="true">🦔</span> Hog the Hedgehog</a>
     <nav class="nav" aria-label="Main">
       <a href="/#games">Games</a>
-      <a href="/stories/" aria-current="page">Stories</a>
+      <a href="/stories/" aria-current="page">Adventures</a>
       <a href="/#about">About</a>
       <a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Watch on YouTube</a>
     </nav>
@@ -28,8 +28,8 @@
 <main class="wrap">
 
   <section class="intro" id="intro">
-    <h1>A story where your child is the hero</h1>
-    <p>Tell us about your child and we will make a personalized adventure book to read, color and play with. Your child appears in the story, the letter hunt, the puzzles and the daily challenges.</p>
+    <h1>A letter adventure starring your child</h1>
+    <p>Pick the letter your child is learning and a world they love. We make a printable book that feels like a game: 10 missions, a treasure hunt, puzzles, coloring, stars to collect and a certificate. Everything is about one letter, and your child is the hero.</p>
     <p><strong>Free.</strong> Download it as a PDF and print it at home.</p>
   </section>
 
@@ -47,8 +47,18 @@
     </div>
 
     <fieldset>
-      <legend>Photo</legend>
-      <p class="hint">Optional. Your child appears on the cover and in the story. Choose a clear photo of their face.</p>
+      <legend>Which letter are they learning?</legend>
+      <div class="letters" id="letterChips"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Choose the adventure world</legend>
+      <div class="chips" id="themeChips"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Photo <span class="hint">(optional)</span></legend>
+      <p class="hint">Your child appears on the cover, on every mission page and on the certificate. Choose a clear photo of their face.</p>
       <div class="photo-box">
         <div class="photo-prev" id="photoPrev" aria-hidden="true">📷</div>
         <div class="photo-controls">
@@ -62,34 +72,13 @@
     </fieldset>
 
     <fieldset>
-      <legend>What do they love? <span class="hint">(choose 1 or 2)</span></legend>
-      <div class="chips" id="interestChips"></div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Reading level</legend>
-      <div class="chips" id="levelChips"></div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Any struggles? <span class="hint">(optional, helps the parent guide)</span></legend>
-      <div class="chips" id="struggleChips"></div>
-    </fieldset>
-
-    <fieldset>
       <legend>Favorite color</legend>
       <div class="swatches" id="colorSwatches"></div>
     </fieldset>
 
-    <fieldset id="aiBox" hidden>
-      <legend>Make it one-of-a-kind <span class="hint">(optional)</span></legend>
-      <label class="chip"><input type="checkbox" id="useAi"><span>✨ Write the story with AI</span></label>
-      <p class="hint" style="margin-top:8px">If you turn this on, your child's first name, age, interests and reading level are sent to Claude (an AI by Anthropic) to write a new story. The photo is never sent. If the story writer can't be reached, you get the classic story instead.</p>
-    </fieldset>
-
     <p class="form-error" id="formError" role="alert"></p>
     <div class="submit-row">
-      <button type="submit" class="btn" id="makeBtn">Make my book</button>
+      <button type="submit" class="btn" id="makeBtn">Make my adventure book</button>
     </div>
   </form>
 
@@ -110,7 +99,7 @@
     </div>
     <div class="upsell">
       <h3>Printed hardcover book <span class="tag soon">Coming soon</span></h3>
-      <p>Soon you will be able to order this story as a printed hardcover keepsake.</p>
+      <p>Soon you will be able to order this adventure as a printed hardcover keepsake.</p>
     </div>
   </section>
 
@@ -121,7 +110,7 @@
     <span>© 2026 Hog the Hedgehog</span>
     <nav aria-label="Footer">
       <a href="/games/abc-animal-safari/">ABC game</a>
-      <a href="/stories/">Stories</a>
+      <a href="/stories/">Adventures</a>
       <a href="/privacy/">Privacy</a>
       <a href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">YouTube</a>
     </nav>

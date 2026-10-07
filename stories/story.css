@@ -54,98 +54,183 @@
 .upsell h3{ font-family:"Baloo 2",sans-serif; margin:0 0 4px; font-size:1.2rem; }
 .upsell p{ margin:0 0 8px; color:var(--ink-soft); font-weight:700; }
 
+
+.letters{ display:grid; grid-template-columns:repeat(auto-fill, minmax(46px, 1fr)); gap:8px; }
+.lchip{ position:relative; }
+.lchip input{ position:absolute; inset:0; width:100%; height:100%; opacity:0; margin:0; cursor:pointer; }
+.lchip span{ display:flex; align-items:center; justify-content:center; height:46px; border-radius:14px; border:2px solid var(--option-edge); background:var(--option-bg); font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.3rem; color:var(--ink); }
+.lchip input:checked + span{ background:var(--green); border-color:var(--green); color:#fff; transform:scale(1.08); }
+.lchip input:focus-visible + span{ outline:3px solid var(--blue); outline-offset:2px; }
+
 /* ---------- A4 sheets (also used for the PDF) ---------- */
 .sheet{
   --accent:#3E63DD; --tint:#E8EDFB; --on:#fff;
   width:794px; height:1123px; position:relative; overflow:hidden; background:#fff; color:#3b2f22;
-  font-family:"Nunito",sans-serif; padding:56px 56px 64px; box-sizing:border-box;
+  font-family:"Nunito",sans-serif; padding:44px 52px 64px; box-sizing:border-box;
   transform-origin:top left;
 }
 .sheet *{ box-sizing:border-box; }
-.sheet::before{ content:""; position:absolute; left:0; top:0; right:0; height:22px; background:var(--accent); }
-.sh-head{ display:flex; justify-content:space-between; align-items:center; font-weight:800; font-size:15px; color:#8a7660; margin-top:6px; }
-.sh-foot{ position:absolute; left:56px; right:56px; bottom:26px; display:flex; justify-content:space-between; font-size:14px; font-weight:800; color:#a8957c; }
-.sheet h2{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:44px; line-height:1.05; margin:18px 0 6px; color:var(--accent); }
+.sheet::before{ content:""; position:absolute; left:0; top:0; right:0; height:20px; background:var(--accent); }
+.sheet h2{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:44px; line-height:1.05; margin:14px 0 6px; color:var(--accent); }
 .sheet p{ margin:0; }
 .sheet .lead{ font-size:22px; font-weight:700; color:#6b5a45; line-height:1.4; }
-.accent-pill{ display:inline-block; background:var(--accent); color:var(--on); font-family:"Baloo 2",sans-serif; font-weight:800; font-size:20px; padding:4px 18px; border-radius:999px; }
+.sh-head{ display:flex; justify-content:space-between; align-items:center; font-weight:800; font-size:15px; color:#8a7660; margin-top:8px; }
+.sh-foot{ position:absolute; left:52px; right:52px; bottom:24px; display:flex; justify-content:space-between; font-size:14px; font-weight:800; color:#a8957c; }
 .round-photo{ border-radius:50%; border:6px solid var(--accent); background:var(--tint); display:flex; align-items:center; justify-content:center; overflow:hidden; }
 .round-photo img{ width:100%; height:100%; display:block; }
+.blank{ display:inline-block; border-bottom:3px solid #8a7660; vertical-align:bottom; }
+.blank.sm{ width:90px; height:28px; margin:0 6px; }
+
+/* mission frame */
+.m-head{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+.m-pill{ display:inline-block; background:var(--accent); color:var(--on); font-family:"Baloo 2",sans-serif; font-weight:800; font-size:19px; padding:3px 16px; border-radius:999px; }
+.mission h2{ font-size:46px; margin:6px 0 0; }
+.m-player{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.m-photo{ width:84px; height:84px; font-size:40px; border-width:5px; }
+.m-name{ font-weight:800; font-size:15px; color:var(--accent); }
+.m-track{ display:flex; gap:8px; align-items:center; margin:12px 0 4px; }
+.m-track .dot{ width:22px; height:22px; border-radius:50%; border:3px solid var(--tint); background:#fff; display:flex; align-items:center; justify-content:center; font-size:20px; }
+.m-track .dot.done{ background:var(--accent); border-color:var(--accent); }
+.m-track .dot.now{ width:44px; height:44px; border:4px solid var(--accent); background:var(--tint); font-size:26px; }
+.m-foot{ position:absolute; left:52px; right:52px; bottom:54px; display:flex; justify-content:space-between; align-items:center; gap:16px; border-top:3px dashed var(--tint); padding-top:10px; }
+.m-star{ display:flex; align-items:center; gap:8px; font-weight:800; font-size:16px; color:#8a7660; }
+.m-star i{ font-style:normal; font-size:46px; line-height:1; color:var(--accent); }
+.m-next{ font-weight:700; font-size:17px; color:#6b5a45; text-align:right; max-width:360px; line-height:1.25; }
+.m-next b{ color:var(--accent); }
+.instr{ font-size:21px; font-weight:700; color:#5a4a37; line-height:1.45; margin-top:12px; }
+.instr.big{ font-size:24px; font-weight:800; color:#3b2f22; }
+.instr b{ color:var(--accent); }
+.count-line{ margin-top:16px; font-size:24px; font-weight:800; color:#3b2f22; }
 
 /* cover */
-.sheet.cover{ text-align:center; background:linear-gradient(180deg, var(--tint) 0%, #fff 70%); padding-top:70px; }
-.cover .cover-top{ font-size:54px; letter-spacing:10px; }
-.cover .cover-photo{ width:340px; height:340px; margin:26px auto 22px; font-size:150px; border-width:12px; }
-.cover h1{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:62px; line-height:1.02; margin:6px 0 10px; color:var(--accent); }
-.cover .cover-sub{ font-size:25px; font-weight:800; color:#6b5a45; }
-.cover .cover-includes{ list-style:none; padding:0; margin:30px auto 0; display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-width:640px; }
-.cover .cover-includes li{ background:#fff; border:3px solid var(--accent); border-radius:999px; padding:6px 18px; font-weight:800; font-size:19px; }
-.cover .cover-foot{ position:absolute; left:0; right:0; bottom:30px; font-weight:800; color:#a8957c; font-size:17px; }
+.sheet.cover{ text-align:center; background:linear-gradient(180deg, var(--tint) 0%, #fff 72%); padding-top:62px; }
+.cover .cover-top{ font-size:56px; letter-spacing:12px; }
+.cover .cover-photo{ width:320px; height:320px; margin:22px auto 20px; font-size:140px; border-width:12px; }
+.cover h1{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:60px; line-height:1.02; margin:6px 0 14px; color:var(--accent); }
+.cover-letter{ display:flex; width:fit-content; margin:0 auto; align-items:center; gap:18px; background:#fff; border:5px solid var(--accent); border-radius:30px; padding:6px 30px; }
+.cl-big{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:92px; line-height:1; color:var(--accent); }
+.cl-text{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:32px; color:#3b2f22; }
+.cover-includes{ list-style:none; padding:0; margin:26px auto 0; display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+.cover-includes li{ background:#fff; border:3px solid var(--accent); border-radius:999px; padding:6px 20px; font-weight:800; font-size:20px; }
+.cover-foot{ position:absolute; left:0; right:0; bottom:28px; font-weight:800; color:#a8957c; font-size:17px; }
 
-/* story */
-.story .scene{ font-size:190px; line-height:1.1; text-align:center; margin:0; letter-spacing:8px; }
-.story .scene-box{ background:var(--tint); border-radius:40px; padding:60px 10px; margin-top:30px; }
-.story .scene-box .scene{ margin:0; }
-.story .story-text{ font-weight:800; line-height:1.38; color:#3b2f22; margin-top:40px; }
-.story .story-photo{ position:absolute; right:56px; bottom:92px; width:130px; height:130px; font-size:60px; }
-.story .story-name{ position:absolute; right:56px; bottom:64px; width:130px; text-align:center; font-weight:800; font-size:16px; color:var(--accent); }
+/* map */
+.map-title{ font-size:46px !important; margin:8px 0 4px !important; }
+.map-deco{ font-size:38px; letter-spacing:10px; margin-top:6px; }
+.map-flag{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:24px; color:var(--accent); margin-top:14px; }
+.map-flag.end{ text-align:right; margin-top:6px; }
+.map-row{ display:flex; justify-content:space-between; margin-top:10px; padding:14px 0 6px; border-top:6px dotted var(--tint); border-bottom:6px dotted var(--tint); }
+.map-row.rev{ flex-direction:row-reverse; }
+.map-turn{ text-align:right; font-size:34px; color:var(--accent); line-height:1; margin-top:6px; }
+.stop{ width:124px; text-align:center; }
+.stop-circle{ width:84px; height:84px; margin:0 auto; border-radius:50%; background:var(--tint); border:5px solid var(--accent); display:flex; align-items:center; justify-content:center; font-size:42px; }
+.stop-num{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:22px; color:var(--accent); line-height:1; margin-top:4px; }
+.stop-name{ font-weight:800; font-size:16px; line-height:1.15; min-height:38px; }
+.stop-star{ font-size:44px; line-height:1; color:var(--accent); }
+.how{ margin-top:14px; background:var(--tint); border-radius:24px; padding:16px 24px; }
+.how h3{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:28px; margin:0 0 4px; color:var(--accent); }
+.how ol{ margin:0; padding-left:26px; font-weight:700; font-size:20px; line-height:1.45; }
 
-/* letter hunt */
-.hunt-letter{ display:flex; align-items:center; gap:26px; margin:14px 0 8px; }
-.big-letter{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:170px; line-height:0.95; color:var(--accent); }
-.hunt-items{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:18px; }
-.hunt-item{ border:3px solid var(--tint); border-radius:22px; padding:14px 6px 10px; text-align:center; }
-.hunt-item .em{ font-size:62px; line-height:1.1; }
-.hunt-item .wr{ margin-top:8px; font-weight:800; font-size:20px; color:#3b2f22; }
-.hunt-item .line{ margin:12px 8px 0; border-bottom:3px solid #c9bba5; height:30px; }
-.trace-letters{ margin-top:24px; }
-.trace-row{ position:relative; height:112px; border-top:3px solid #b9a98f; border-bottom:3px solid #b9a98f; margin-top:14px; overflow:hidden; }
+/* mission 1 */
+.meet-top{ display:flex; align-items:center; gap:28px; margin-top:6px; }
+.big-letter{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:190px; line-height:0.95; color:var(--accent); flex:0 0 auto; }
+.meet-card{ flex:1; background:var(--tint); border-radius:30px; padding:16px 22px; text-align:center; }
+.mc-say{ font-size:34px; font-weight:800; }
+.mc-say b{ color:var(--accent); font-family:"Baloo 2",sans-serif; font-size:44px; }
+.mc-ex{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:4px; }
+.mc-emoji{ font-size:64px; line-height:1; }
+.mc-word{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:44px; }
+.mc-word b{ color:var(--accent); }
+.mc-for{ font-size:24px; font-weight:800; color:#6b5a45; }
+.bubble{ display:flex; align-items:center; gap:16px; margin-top:12px; border:4px solid var(--accent); border-radius:30px; padding:8px 18px; }
+.b-pal{ font-size:60px; line-height:1; }
+.b-text{ font-size:21px; font-weight:800; line-height:1.35; }
+.b-text b{ color:var(--accent); }
+
+/* tracing */
+.trace-row{ position:relative; height:112px; border-top:3px solid #b9a98f; border-bottom:3px solid #b9a98f; margin-top:12px; overflow:hidden; }
 .trace-row::after{ content:""; position:absolute; left:0; right:0; top:50%; border-top:3px dashed #d3c7b2; }
 .trace-row span{ position:absolute; left:14px; bottom:4px; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:84px; letter-spacing:16px; color:#d6d0c6; white-space:nowrap; z-index:1; line-height:0.78; }
-.trace-row.tall{ height:136px; }
+.trace-row.tall{ height:132px; }
+.trace-row.med{ height:92px; }
 .trace-row.blank span{ display:none; }
+.trace-row .word-trace{ font-size:68px; letter-spacing:8px; }
+.word-trace b{ color:var(--accent); opacity:0.55; }
 
-/* reading */
-.ex{ margin-top:22px; }
-.ex h3{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:26px; margin:0 0 10px; color:#3b2f22; }
-.ex-row{ display:flex; align-items:center; gap:16px; margin-bottom:12px; }
-.ex-row .em{ font-size:54px; width:78px; text-align:center; line-height:1; }
-.choices{ display:flex; gap:12px; }
-.choice{ border:3px solid var(--accent); border-radius:16px; padding:6px 22px; font-weight:800; font-size:24px; }
-.bank{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
-.bank span{ background:var(--tint); border-radius:12px; padding:4px 16px; font-weight:800; font-size:21px; }
-.fill{ font-weight:800; font-size:25px; display:flex; align-items:center; gap:10px; }
-.fill .blank{ display:inline-block; width:170px; border-bottom:3px solid #8a7660; height:28px; }
-.write-line{ border-bottom:3px solid #b9a98f; height:58px; }
+/* mission 2 */
+.hunt-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:14px; }
+.hunt-cell{ border:4px solid var(--tint); border-radius:28px; text-align:center; padding:14px 6px 10px; }
+.hc-emoji{ font-size:92px; line-height:1.05; }
+.hc-word{ font-weight:800; font-size:24px; margin-top:4px; }
 
-/* word search */
-.ws-wrap{ display:flex; gap:26px; margin-top:20px; align-items:flex-start; }
+/* mission 3 */
+.tw{ display:flex; align-items:center; gap:14px; margin-top:10px; }
+.tw-emoji{ font-size:70px; width:100px; text-align:center; line-height:1; flex:0 0 auto; }
+.tw-col{ flex:1; min-width:0; }
+
+/* mission 4 */
+.maze-wrap{ margin-top:12px; }
+.maze-flag{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:24px; color:var(--accent); }
+.maze-flag.end{ text-align:right; margin-top:4px; }
+.maze{ border-collapse:collapse; margin:6px auto; }
+.maze td{ width:var(--cell,76px); height:var(--cell,76px); text-align:center; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:38px; border:3px solid var(--tint); line-height:1; padding:0; color:#3b2f22; }
+.maze td.start{ background:var(--tint); }
+.maze td.end{ background:var(--tint); }
+
+/* mission 5 */
+.match{ margin-top:14px; }
+.mrow{ display:flex; align-items:center; margin-bottom:16px; }
+.mpic{ width:120px; height:120px; border:4px solid var(--tint); border-radius:26px; display:flex; align-items:center; justify-content:center; font-size:76px; line-height:1; flex:0 0 auto; }
+.mdot{ width:22px; height:22px; border-radius:50%; background:var(--accent); flex:0 0 auto; margin-left:10px; }
+.mdot + .mgap + .mdot{ margin-left:0; margin-right:10px; }
+.mgap{ flex:1; }
+.mword{ width:230px; border:4px solid var(--tint); border-radius:26px; text-align:center; padding:26px 6px; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:42px; flex:0 0 auto; line-height:1; }
+.mword b{ color:var(--accent); }
+
+/* mission 6 */
+.det{ border-collapse:collapse; margin:14px auto 0; }
+.det td{ width:84px; height:78px; text-align:center; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:44px; border:3px solid var(--tint); color:#3b2f22; line-height:1; padding:0; }
+
+/* mission 7 */
+.ws-wrap{ display:flex; gap:26px; margin-top:16px; align-items:flex-start; }
 .ws-grid{ border-collapse:collapse; flex:0 0 auto; }
 .ws-grid td{ width:48px; height:48px; text-align:center; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:28px; border:2px solid var(--tint); color:#3b2f22; line-height:1; padding:0; }
 .ws-words{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
 .ws-words li{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:22px; }
 .ws-words li::before{ content:""; width:22px; height:22px; border:3px solid var(--accent); border-radius:6px; }
 
-/* coloring */
-.color-art{ border:5px solid #3b2f22; border-radius:30px; margin-top:26px; padding:24px 14px; background:#fff; }
+/* mission 8 */
+.color-art{ border:5px solid #3b2f22; border-radius:30px; margin-top:10px; padding:6px 14px; background:#fff; }
 .color-art svg{ width:100%; height:auto; display:block; }
+.color-art.letter{ padding:2px 14px; }
+.color-art.letter svg{ height:140px; }
 
-/* daily */
-.day{ display:flex; align-items:center; gap:16px; border:3px solid var(--tint); border-radius:22px; padding:12px 16px; margin-top:12px; }
-.day .badge{ flex:0 0 auto; width:84px; text-align:center; background:var(--accent); color:var(--on); font-family:"Baloo 2",sans-serif; font-weight:800; font-size:22px; border-radius:14px; padding:6px 0; }
-.day .task{ flex:1; font-weight:800; font-size:21px; line-height:1.25; }
-.day .check{ width:38px; height:38px; border:4px solid var(--accent); border-radius:10px; flex:0 0 auto; }
-.day .sticker{ width:56px; height:56px; border:3px dashed #c9bba5; border-radius:50%; flex:0 0 auto; }
+/* mission 9 */
+.rebus{ font-size:36px; font-weight:800; line-height:1.55; margin-top:6px; color:#3b2f22; }
+.rebus .rb{ font-size:60px; vertical-align:middle; line-height:1; }
+.rebus b{ color:var(--accent); }
+.draw-box{ margin-top:16px; border:4px dashed #c9bba5; border-radius:28px; height:210px; padding:12px 18px; font-weight:800; font-size:22px; color:#8a7660; }
 
-/* parent */
-.profile{ display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; margin-top:12px; font-weight:800; font-size:19px; }
-.profile div span{ color:#8a7660; font-weight:700; }
+/* mission 10 */
+.cert-box{ margin-top:12px; border:8px solid var(--accent); border-radius:36px; padding:14px 24px 16px; text-align:center; background:linear-gradient(180deg, var(--tint), #fff 60%); }
+.cert-trophy{ font-size:70px; line-height:1; }
+.cert-title{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:50px; color:var(--accent); line-height:1.05; }
+.cert-photo{ width:170px; height:170px; margin:8px auto; font-size:80px; border-width:8px; }
+.cert-name{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:48px; line-height:1.1; }
+.cert-text{ font-size:21px; font-weight:700; color:#5a4a37; margin-top:2px; line-height:1.35; }
+.cert-lines{ display:flex; justify-content:space-between; margin-top:10px; font-weight:800; font-size:18px; color:#8a7660; }
+.stickers{ display:flex; gap:12px; justify-content:space-between; margin-top:10px; }
+.sticker{ width:118px; height:118px; border:4px dashed #c9bba5; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.sticker span{ font-size:54px; opacity:0.25; filter:grayscale(1); }
+.next-adv{ margin-top:14px; font-weight:800; font-size:19px; color:var(--accent); text-align:center; }
+
+/* parent guide */
 .track{ width:100%; border-collapse:collapse; margin-top:16px; }
-.track th, .track td{ border:2px solid var(--tint); padding:8px 10px; font-size:17px; font-weight:700; text-align:left; }
+.track th, .track td{ border:2px solid var(--tint); padding:5px 10px; font-size:17px; font-weight:700; text-align:left; }
 .track th{ background:var(--tint); font-weight:800; }
-.track td.star{ text-align:center; color:var(--accent); letter-spacing:2px; font-size:16px; white-space:nowrap; }
+.track td.star{ text-align:center; color:var(--accent); font-size:26px; width:110px; }
 .tips{ margin:8px 0 0; font-weight:700; font-size:18px; line-height:1.4; }
-.tips p{ margin:0 0 10px; padding-left:22px; text-indent:-22px; }
+.tips p{ margin:0 0 5px; }
 
 @media (max-width:620px){
   .row2{ grid-template-columns:1fr; }
@@ -163,3 +248,17 @@
   .sheet-frame{ width:210mm !important; height:297mm !important; box-shadow:none; border-radius:0; page-break-after:always; break-after:page; }
   .sheet{ transform:none !important; width:210mm; height:297mm; }
 }
+
+/* extras */
+.today{ margin-top:10px; border-top:3px dashed var(--tint); padding-top:8px; }
+.today-title{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:26px; color:var(--accent); }
+.today-row{ display:flex; justify-content:space-between; gap:6px; margin-top:4px; }
+.today-item{ flex:1; text-align:center; background:var(--tint); border-radius:20px; padding:8px 2px 6px; }
+.ti-emoji{ font-size:44px; line-height:1.05; }
+.ti-word{ font-weight:800; font-size:17px; margin-top:2px; }
+.ti-word b{ color:var(--accent); }
+.mission.big .rebus{ font-size:44px; }
+.mission.big .rebus .rb{ font-size:72px; }
+.mission.story .draw-box{ height:250px; }
+.mrow{ margin-bottom:22px; }
+.mpic{ width:132px; height:132px; }

@@ -2,100 +2,97 @@
 'use strict';
 
 /* ============================================================
-   Content
+   Content: letters, worlds and words
    ============================================================ */
-var ORDER = ['dinosaurs','space','ocean','safari','robots','fairy'];
+var LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-// AI story writer (a small Cloudflare Worker that calls Claude). Turned off until the Worker is deployed.
-var AI_ENABLED = false;
-var AI_URL = 'https://api.hogthehedgehog.com/story';
+var SOUNDS = {A:'/a/',B:'/b/',C:'/k/',D:'/d/',E:'/e/',F:'/f/',G:'/g/',H:'/h/',I:'/i/',J:'/j/',K:'/k/',L:'/l/',M:'/m/',
+  N:'/n/',O:'/o/',P:'/p/',Q:'/kw/',R:'/r/',S:'/s/',T:'/t/',U:'/u/',V:'/v/',W:'/w/',X:'/ks/',Y:'/y/',Z:'/z/'};
+
+var PAL_NAMES = {A:'Ally',B:'Benny',C:'Coco',D:'Dotty',E:'Ellie',F:'Fizz',G:'Gigi',H:'Hugo',I:'Izzy',J:'Jojo',K:'Kiki',L:'Lulu',M:'Milo',
+  N:'Nino',O:'Ollie',P:'Pip',Q:'Quincy',R:'Rosie',S:'Sunny',T:'Tilly',U:'Uma',V:'Vinnie',W:'Wally',X:'Xavi',Y:'Yoyo',Z:'Ziggy'};
+
+// word + emoji, "|" between letters
+var UNIVERSAL =
+ 'A:apple🍎,ant🐜,airplane✈️,alligator🐊,anchor⚓,avocado🥑,ambulance🚑,arrow🏹|' +
+ 'B:ball⚽,banana🍌,bear🐻,bee🐝,bus🚌,butterfly🦋,balloon🎈,bell🔔|' +
+ 'C:cat🐱,car🚗,cake🍰,cow🐮,crab🦀,carrot🥕,cookie🍪,crown👑|' +
+ 'D:dog🐶,duck🦆,drum🥁,dolphin🐬,donut🍩,door🚪,dinosaur🦕,diamond💎|' +
+ 'E:elephant🐘,egg🥚,eagle🦅,ear👂,envelope✉️,eye👁️,earth🌍,elf🧝|' +
+ 'F:fish🐟,frog🐸,flower🌸,fox🦊,fire🔥,flag🚩,foot🦶,fork🍴|' +
+ 'G:goat🐐,grapes🍇,giraffe🦒,guitar🎸,gift🎁,ghost👻,gorilla🦍,gloves🧤|' +
+ 'H:horse🐴,hat🎩,house🏠,heart❤️,hamburger🍔,hippo🦛,helicopter🚁,hand✋|' +
+ 'I:ice cream🍦,iguana🦎,insect🐛,island🏝️,ice🧊,ice skate⛸️|' +
+ 'J:juice🧃,jeans👖,jacket🧥,jigsaw🧩,jet🛩️,joystick🕹️,jaguar🐆|' +
+ 'K:kite🪁,key🔑,kangaroo🦘,koala🐨,king🤴,kiwi🥝,kitten🐈|' +
+ 'L:lion🦁,lemon🍋,leaf🍃,ladybug🐞,lizard🦎,lock🔒,lollipop🍭,light💡|' +
+ 'M:moon🌙,monkey🐵,mouse🐭,milk🥛,mushroom🍄,mango🥭,map🗺️,magnet🧲|' +
+ 'N:nose👃,nut🥜,necklace📿,newspaper📰,notebook📓,noodles🍜|' +
+ 'O:octopus🐙,orange🍊,owl🦉,onion🧅,otter🦦,ocean🌊,olive🫒|' +
+ 'P:pig🐷,pizza🍕,pear🍐,penguin🐧,pumpkin🎃,parrot🦜,piano🎹,pineapple🍍|' +
+ 'Q:queen👸,question mark❓,quill🪶,quiet🤫,quail🐦|' +
+ 'R:rabbit🐰,rainbow🌈,rocket🚀,robot🤖,ring💍,rose🌹,rain🌧️,rhino🦏|' +
+ 'S:sun☀️,star⭐,snake🐍,sock🧦,strawberry🍓,ship🚢,snail🐌,spider🕷️|' +
+ 'T:tiger🐯,tree🌳,turtle🐢,train🚂,tomato🍅,tent⛺,truck🚚,tooth🦷|' +
+ 'U:umbrella☂️,unicorn🦄,UFO🛸,up arrow⬆️,ukulele🎸|' +
+ 'V:van🚐,violin🎻,volcano🌋,vase🏺,vest🦺,valentine💌|' +
+ 'W:whale🐳,watermelon🍉,watch⌚,wolf🐺,web🕸️,worm🪱,window🪟,wand🪄|' +
+ 'X:xylophone🎹,Xmas tree🎄,X mark❌,fox🦊,box📦,ox🐂|' +
+ 'Y:yo-yo🪀,yak🐂,yarn🧶,yacht🛥️,yellow💛,yawn🥱|' +
+ 'Z:zebra🦓,zap⚡,zoo🦒,zucchini🥒,zipper🤐,zigzag〰️';
+
+function parseBank(str){
+  var out = {};
+  str.split('|').forEach(function(seg){
+    var i = seg.indexOf(':');
+    out[seg.slice(0, i)] = seg.slice(i + 1).split(',').map(function(p){
+      var m = p.match(/^([A-Za-z][A-Za-z \-]*?)([^\x00-\x7F].*)$/);
+      return m ? [m[1].trim(), m[2]] : null;
+    }).filter(Boolean);
+  });
+  return out;
+}
+var UNI = parseBank(UNIVERSAL);
 
 var THEMES = {
+  ocean: {
+    title:'Under the Sea', place:'the Blue Sea', creature:'Seahorse', creatureEmoji:'🐠',
+    container:'treasure chest', containerEmoji:'💎', deco:'🌊🐠🐙🐚', draw:'fish', plural:'sea',
+    words: parseBank('A:angelfish🐠,anchor⚓|B:boat⛵,beach🏖️|C:crab🦀,clam🦪|D:dolphin🐬,diver🤿|F:fish🐟|I:island🏝️|L:lobster🦞|M:mermaid🧜|O:octopus🐙,ocean🌊,otter🦦|P:pufferfish🐡,penguin🐧|S:shark🦈,shell🐚,starfish⭐,seal🦭|T:turtle🐢,treasure💎|W:whale🐳,wave🌊,walrus🦭|Y:yacht🛥️')
+  },
   dinosaurs: {
-    label:'Dinosaur', title:'Dinosaur', emoji:'🦕', place:'Dino Valley',
-    pal:'Benny', palFull:'Benny the Brachiosaurus', palEmoji:'🦕', letter:'B',
-    items:[['bone','🦴','a bone'],['banana','🍌','a banana'],['butterfly','🦋','a butterfly'],['bird','🐦','a bird'],['balloon','🎈','a balloon']],
-    scenes:['🌋🌴☀️','🦕🌿🥚','🔍🦕🌴','🦴🍌🦋','🐦🎈🌿','🌈🦕🎉'],
-    words:['DINO','EGG','BONE','FERN','ROAR','FOSSIL','TAIL','BENNY'],
-    draw:'dino',
-    intro:{s:'{n} woke up in Dino Valley.', m:'The sun was warm and the ferns were tall.', l:'Giant footprints led through the trees, and {n} was ready for a big adventure.'},
-    meet:{s:'A big, friendly dinosaur said hello.', m:'It was {P}! "Hello, {n}! Will you help me?" asked {p}.', l:'{p} had a long neck and a kind smile, and {p} needed {n}\'s help.'},
-    end:{s:'{n} and {p} had so much fun.', m:'{p} gave {n} a big dino hug.', l:'Back in Dino Valley, the sun began to set. {n} was a brave helper, and {p} would never forget this day.'}
+    title:'Dinosaur', place:'Dino Valley', creature:'Dino', creatureEmoji:'🦕',
+    container:'picnic basket', containerEmoji:'🧺', deco:'🌋🦕🌴🥚', draw:'dino', plural:'dino',
+    words: parseBank('B:brachiosaurus🦕,bone🦴|D:dinosaur🦕,dragon🐉|E:egg🥚|F:fern🌿,footprint🐾|L:leaf🍃|M:meteor☄️,mountain⛰️|P:palm tree🌴|R:rock🪨|S:sun☀️|T:T-rex🦖,tree🌳|V:volcano🌋')
   },
   space: {
-    label:'Space', title:'Space', emoji:'🚀', place:'Space',
-    pal:'Milo', palFull:'Milo the Martian', palEmoji:'👽', letter:'M',
-    items:[['moon','🌙','the moon'],['Mars','🔴','Mars'],['meteor','☄️','a meteor'],['Milky Way','🌌','the Milky Way'],['map','🗺️','a map']],
-    scenes:['🚀🌍⭐','👽🛸🌟','🔭👽🪐','🌙🔴☄️','🌌🗺️⭐','🚀🏅🎉'],
-    words:['MOON','STAR','ROCKET','MARS','SUN','ORBIT','ALIEN','MILO'],
-    draw:'rocket',
-    intro:{s:'{n} climbed into a shiny rocket.', m:'Three, two, one... blast off!', l:'The rocket zoomed past the clouds, and soon {n} was floating among the twinkling stars.'},
-    meet:{s:'A friendly alien waved hello.', m:'It was {P}! "Hi, {n}! I need a helper!" said {p}.', l:'{p} had green skin and big shiny eyes, and {p} was looking for help.'},
-    end:{s:'{n} and {p} cheered.', m:'{p} gave {n} a shiny star medal.', l:'Then the rocket flew home. {n} waved goodbye to {p} and promised to come back.'}
-  },
-  ocean: {
-    label:'Ocean', title:'Ocean', emoji:'🐠', place:'the Blue Sea',
-    pal:'Sammy', palFull:'Sammy the Seahorse', palEmoji:'🐠', letter:'S',
-    items:[['shell','🐚','a shell'],['starfish','⭐','a starfish'],['seaweed','🌿','some seaweed'],['shark','🦈','a shark'],['sailboat','⛵','a sailboat']],
-    scenes:['🌊🐠🫧','🐠🐚🌊','🤿🐠🐙','🐚⭐🌿','🦈⛵🌊','🐬🐠🎉'],
-    words:['FISH','WAVE','SHELL','CRAB','SEA','WHALE','REEF','SAMMY'],
-    draw:'fish',
-    intro:{s:'{n} dived into the blue sea.', m:'Bubbles floated up all around.', l:'The water was warm and sparkly, and colorful fish swam by to say hello.'},
-    meet:{s:'A tiny seahorse swam up.', m:'It was {P}! "Can you help me, {n}?" asked {p}.', l:'{p} was small but very brave, and {p} had a big problem to solve.'},
-    end:{s:'{n} and {p} swam home.', m:'{p} did a happy twirl in the water.', l:'The sea glowed gold in the evening light. {n} gave {p} a big wave, and the fish all cheered.'}
+    title:'Space', place:'Space', creature:'Alien', creatureEmoji:'👽',
+    container:'rocket', containerEmoji:'🚀', deco:'🚀🪐⭐👽', draw:'rocket', plural:'space',
+    words: parseBank('A:alien👽,astronaut🧑‍🚀|C:comet☄️|E:earth🌍|M:moon🌙,Mars🔴,meteor☄️|P:planet🪐|R:rocket🚀|S:star⭐,sun☀️,satellite🛰️,Saturn🪐|T:telescope🔭|U:UFO🛸')
   },
   safari: {
-    label:'Safari', title:'Safari', emoji:'🦁', place:'the Sunny Safari',
-    pal:'Leo', palFull:'Leo the Lion', palEmoji:'🦁', letter:'L',
-    items:[['leaf','🍃','a leaf'],['ladybug','🐞','a ladybug'],['lizard','🦎','a lizard'],['lake','🏞️','a lake'],['log','🪵','a log']],
-    scenes:['🌅🦒🌳','🦁🌾🌳','🔍🦁🦓','🍃🐞🦎','🏞️🪵🍃','🦁🐘🎉'],
-    words:['LION','ZEBRA','TREE','SUN','GRASS','HERD','LEO','TRUNK'],
-    draw:'lion',
-    intro:{s:'{n} rode into the safari.', m:'The grass was golden and the sun was bright.', l:'Zebras ran across the plain, and birds sang in the tall, tall trees.'},
-    meet:{s:'A big lion came over.', m:'It was {P}! "Hello, {n}! Please help me!" said {p}.', l:'{p} had a fluffy golden mane and a gentle roar, and {p} needed a clever helper.'},
-    end:{s:'{n} and {p} did a happy dance.', m:'{p} gave a big, friendly roar.', l:'As the sun went down, all the safari animals cheered for {n}. It was the best day ever.'}
+    title:'Safari', place:'the Sunny Safari', creature:'Lion', creatureEmoji:'🦁',
+    container:'explorer backpack', containerEmoji:'🎒', deco:'🦁🐘🦒🌳', draw:'lion', plural:'safari',
+    words: parseBank('C:camel🐫|E:elephant🐘|F:flamingo🦩|G:giraffe🦒,gorilla🦍|H:hippo🦛|J:jaguar🐆,jeep🚙|L:lion🦁,leopard🐆|M:monkey🐵|R:rhino🦏|S:snake🐍|Z:zebra🦓')
   },
   robots: {
-    label:'Robot', title:'Robot', emoji:'🤖', place:'Robot City',
-    pal:'Rusty', palFull:'Rusty the Robot', palEmoji:'🤖', letter:'R',
-    items:[['radio','📻','a radio'],['rabbit','🐰','a rabbit'],['rainbow','🌈','a rainbow'],['rocket','🚀','a rocket'],['ruler','📏','a ruler']],
-    scenes:['🏙️🤖⚙️','🤖🔧⚡','🔍🤖🔋','📻🐰🌈','🚀📏⚙️','🤖🎊🎉'],
-    words:['ROBOT','GEAR','BEEP','WIRE','BOLT','CODE','LASER','RUSTY'],
-    draw:'robot',
-    intro:{s:'{n} walked into Robot City.', m:'Lights blinked and gears went click, click, click.', l:'Little robots rolled along the streets, and everything beeped and buzzed with excitement.'},
-    meet:{s:'A shiny robot rolled up.', m:'It was {P}! "Beep boop! Hi, {n}!" said {p}.', l:'{p} had a squeaky wheel and a big blinking smile, and {p} needed some help.'},
-    end:{s:'{n} and {p} high-fived.', m:'{p} flashed all the lights, beep beep!', l:'Every robot in the city beeped a big thank you. {n} had saved the day.'}
+    title:'Robot', place:'Robot City', creature:'Robot', creatureEmoji:'🤖',
+    container:'toy box', containerEmoji:'🧸', deco:'🤖⚙️🔋🚀', draw:'robot', plural:'robot',
+    words: parseBank('A:antenna📡|B:battery🔋,bolt🔩|C:computer💻,camera📷|G:gear⚙️|K:keyboard⌨️|L:light💡|M:magnet🧲|P:phone📱|R:robot🤖,radio📻,rocket🚀|S:satellite🛰️|T:tool🔧,telephone☎️|W:wrench🔧')
   },
   fairy: {
-    label:'Fairy Tale', title:'Fairy Tale', emoji:'🧚', place:'Fairy Kingdom',
-    pal:'Poppy', palFull:'Poppy the Pixie', palEmoji:'🧚', letter:'P',
-    items:[['pumpkin','🎃','a pumpkin'],['petal','🌸','a petal'],['pie','🥧','a pie'],['pony','🐴','a pony'],['present','🎁','a present']],
-    scenes:['🏰🌈✨','🧚🌸✨','🔍🧚🏰','🎃🌸🥧','🐴🎁🌷','🏰🧚🎉'],
-    words:['FAIRY','WAND','CROWN','STAR','CASTLE','MAGIC','GLITTER','POPPY'],
-    draw:'castle',
-    intro:{s:'{n} stepped into Fairy Kingdom.', m:'Flowers sparkled and tiny lights floated by.', l:'A pink castle shone on the hill, and the whole kingdom was full of magic.'},
-    meet:{s:'A tiny pixie flew down.', m:'It was {P}! "Hello, {n}! I need help!" said {p}.', l:'{p} had glittery wings and a giggly laugh, and {p} had a magic problem.'},
-    end:{s:'{n} and {p} twirled and twirled.', m:'{p} sprinkled magic glitter in the air.', l:'The castle bells rang out. The fairies thanked {n}, and the whole kingdom sparkled.'}
+    title:'Fairy Tale', place:'Fairy Kingdom', creature:'Pixie', creatureEmoji:'🧚',
+    container:'magic basket', containerEmoji:'🧺', deco:'🧚🏰✨🌈', draw:'castle', plural:'fairy',
+    words: parseBank('B:butterfly🦋|C:castle🏰,crown👑|D:dragon🐉,diamond💎|F:fairy🧚,flower🌸|G:glitter✨|K:king🤴|M:magic🪄|P:princess👸,pumpkin🎃|Q:queen👸|R:rainbow🌈,rose🌹|S:star⭐|U:unicorn🦄|W:wand🪄')
   }
 };
+var THEME_ORDER = ['ocean','dinosaurs','space','safari','robots','fairy'];
+var THEME_EMOJI = {ocean:'🐠',dinosaurs:'🦕',space:'🚀',safari:'🦁',robots:'🤖',fairy:'🧚'};
 
-var INTERESTS = [
-  ['dinosaurs','🦕','Dinosaurs'], ['space','🚀','Space'], ['ocean','🐠','Ocean'],
-  ['safari','🦁','Safari animals'], ['robots','🤖','Robots'], ['fairy','🧚','Fairy tales']
-];
-var LEVELS = [
-  ['0','Just starting','Very short sentences'],
-  ['1','Growing reader','A few sentences a page'],
-  ['2','Confident reader','Longer sentences']
-];
-var STRUGGLES = [
-  ['reading','Reading words'], ['letters','Letters and sounds'], ['writing','Writing and spelling'], ['focus','Staying focused']
-];
 var SWATCHES = [
   ['Red','#E5484D'],['Orange','#F76B15'],['Yellow','#F5C518'],['Green','#30A46C'],
   ['Teal','#12A594'],['Blue','#3E63DD'],['Purple','#8E4EC6'],['Pink','#E93D82']
 ];
-var SOUNDS = {B:'/b/',M:'/m/',S:'/s/',L:'/l/',R:'/r/',P:'/p/'};
 
 var DRAW = {
   dino:
@@ -183,8 +180,7 @@ var DRAW = {
    ============================================================ */
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
-
-function hexToRgb(h){ var n = parseInt(h.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+function hexToRgb(h){ var n = parseInt(h.slice(1), 16); return [(n>>16)&255, (n>>8)&255, n&255]; }
 function mix(h, w){ var c = hexToRgb(h); return 'rgb(' + c.map(function(v){ return Math.round(v + (255 - v) * w); }).join(',') + ')'; }
 function onColor(h){ var c = hexToRgb(h); var l = (0.299*c[0] + 0.587*c[1] + 0.114*c[2]) / 255; return l > 0.62 ? '#2d2418' : '#ffffff'; }
 
@@ -203,22 +199,35 @@ function shuffled(arr, rnd){
   for(var i = a.length - 1; i > 0; i--){ var j = Math.floor(rnd() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
   return a;
 }
+function startsWith(word, L){ return word.charAt(0).toUpperCase() === L; }
 
-function fmt(str, ctx){
-  return str.replace(/\{(\w+)\}/g, function(_, k){ return ctx[k] != null ? ctx[k] : ''; });
+/* Words for a letter in a world: world words first, then everyday words. */
+function wordsFor(L, themeKey){
+  var seen = {}, out = [];
+  var lists = [(THEMES[themeKey].words[L] || []), (UNI[L] || [])];
+  lists.forEach(function(list){
+    list.forEach(function(p){
+      var k = p[0].toLowerCase();
+      if(!seen[k]){ seen[k] = 1; out.push(p); }
+    });
+  });
+  return out;
 }
-function byLevel(obj, level){
-  var out = [obj.s];
-  if(level >= 1) out.push(obj.m);
-  if(level >= 2) out.push(obj.l);
-  return out.join(' ');
+
+/* Pictures that do NOT start with the letter, for decoys. */
+function decoyPool(L, themeKey, rnd){
+  var world = [], everyday = [], seen = {};
+  var add = function(list){ return function(p){ if(!startsWith(p[0], L) && !seen[p[1]]){ seen[p[1]] = 1; list.push(p); } }; };
+  Object.keys(THEMES[themeKey].words).forEach(function(k){ if(k !== L){ THEMES[themeKey].words[k].forEach(add(world)); } });
+  LETTERS.forEach(function(k){ if(k !== L){ (UNI[k] || []).slice(0, 3).forEach(add(everyday)); } });
+  return shuffled(world, rnd).concat(shuffled(everyday, rnd));
 }
 
 /* ============================================================
-   Word search
+   Puzzles
    ============================================================ */
 function makeWordSearch(words, size, level, rnd){
-  var grid = []; var r, c;
+  var grid = [], r, c;
   for(r = 0; r < size; r++){ grid.push(new Array(size).fill('')); }
   var dirs = [[0,1],[1,0]];
   if(level >= 1) dirs.push([1,1]);
@@ -240,245 +249,333 @@ function makeWordSearch(words, size, level, rnd){
       return;
     }
   });
-  var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  for(r = 0; r < size; r++){ for(c = 0; c < size; c++){ if(grid[r][c] === '') grid[r][c] = letters[Math.floor(rnd() * 26)]; } }
+  for(r = 0; r < size; r++){ for(c = 0; c < size; c++){ if(grid[r][c] === '') grid[r][c] = LETTERS[Math.floor(rnd() * 26)]; } }
   return {grid:grid, placed:placed};
 }
 
+function otherLetter(L, rnd, mixedCase){
+  var ch;
+  do { ch = LETTERS[Math.floor(rnd() * 26)]; } while(ch === L);
+  return (mixedCase && rnd() < 0.5) ? ch.toLowerCase() : ch;
+}
+
+/* A monotone path of the target letter from top-left to bottom-right. */
+function makeMaze(n, L, level, rnd){
+  var path = [[0,0]], r = 0, c = 0;
+  while(r < n - 1 || c < n - 1){
+    if(r === n - 1) c++; else if(c === n - 1) r++; else if(rnd() < 0.5) r++; else c++;
+    path.push([r, c]);
+  }
+  var grid = [], i, j;
+  for(i = 0; i < n; i++){ grid.push(new Array(n).fill(null)); }
+  path.forEach(function(p){ grid[p[0]][p[1]] = (level >= 1 && rnd() < 0.4) ? L.toLowerCase() : L; });
+  for(i = 0; i < n; i++){ for(j = 0; j < n; j++){ if(grid[i][j] === null) grid[i][j] = otherLetter(L, rnd, level >= 1); } }
+  return {grid:grid, path:path};
+}
+
+function makeDetective(cols, rows, L, count, rnd){
+  var total = cols * rows, cells = new Array(total).fill(null), idx = [], i;
+  for(i = 0; i < total; i++){ idx.push(i); }
+  shuffled(idx, rnd).slice(0, count).forEach(function(p){ cells[p] = rnd() < 0.5 ? L : L.toLowerCase(); });
+  for(i = 0; i < total; i++){ if(cells[i] === null) cells[i] = otherLetter(L, rnd, true); }
+  return cells;
+}
+
 /* ============================================================
-   Build the book
+   Build the workbook
    ============================================================ */
+var TOTAL_MISSIONS = 10;
+
 function buildModel(f){
-  var theme = THEMES[f.interests[0]];
-  var theme2 = f.interests[1] ? THEMES[f.interests[1]] : null;
-  var n = f.name;
-  var ctx = {n:esc(n), p:theme.pal, P:theme.palFull, L:theme.letter, place:theme.place};
-  theme.items.forEach(function(it, i){ ctx['i' + i] = it[1]; ctx['i' + i + 'a'] = it[2]; ctx['i' + i + 'w'] = it[0]; });
-
-  var lv = f.level;
-  var pages = [];
-  pages.push({scene:theme.scenes[0], text:byLevel(theme.intro, lv)});
-  pages.push({scene:theme.scenes[1], text:byLevel(theme.meet, lv)});
-  pages.push({scene:theme.scenes[2], text:byLevel({
-    s:'{p} said, "Let us find 5 things that start with {L}!"',
-    m:'Each one begins with the letter {L}, just like {p}\'s name.',
-    l:'{n} took a deep breath. "{L} is for {p}, so we should look for 5 things that start with {L}. Let us go!"'
-  }, lv)});
-  pages.push({scene:theme.scenes[3], text:byLevel({
-    s:'{n} found {i0a}, {i1a}, and {i2a}.',
-    m:'"{i0w}, {i1w}, {i2w}... {L}, {L}, {L}!" sang {n}.',
-    l:'{n} looked up and down and all around. First came {i0a}, then {i1a}, and then {i2a}. Three {L} words already!'
-  }, lv)});
-  pages.push({scene:theme.scenes[4], text:byLevel({
-    s:'Then {n} found {i3a} and {i4a}.',
-    m:'That makes five! {n} counted: one, two, three, four, five!',
-    l:'Next {n} spotted {i3a}, and finally {i4a}. "Five things that start with {L}!" {n} cheered. "We did it!"'
-  }, lv)});
-  var endText = byLevel(theme.end, lv);
-  if(theme2){ endText += ' Far away, ' + theme2.palFull + ' waved hello. Maybe next time!'; }
-  pages.push({scene:theme.scenes[5], text:endText});
-  pages = pages.map(function(p){ return {scene:p.scene, text:fmt(p.text, ctx)}; });
-
-  var seed = n.toLowerCase() + '|' + f.interests.join(',') + '|' + f.age;
-  return {f:f, theme:theme, theme2:theme2, ctx:ctx, pages:pages, rnd:makeRng(seed)};
+  var t = THEMES[f.theme], L = f.letter;
+  var rnd = makeRng(f.name.toLowerCase() + '|' + L + '|' + f.theme + '|' + f.age);
+  var level = f.age <= 5 ? 0 : (f.age <= 8 ? 1 : 2);
+  var all = wordsFor(L, f.theme);
+  var targets = all.slice(0, 5);
+  var pal = PAL_NAMES[L];
+  return {
+    f:f, t:t, L:L, l:L.toLowerCase(), level:level, rnd:rnd, all:all, targets:targets,
+    pal:pal, palFull:pal + ' the ' + t.creature
+  };
 }
 
-function vars(f){
-  return '--accent:' + f.color + ';--tint:' + mix(f.color, 0.86) + ';--on:' + onColor(f.color) + ';';
+function vars(f){ return '--accent:' + f.color + ';--tint:' + mix(f.color, 0.86) + ';--on:' + onColor(f.color) + ';'; }
+function photoHtml(f, cls, emoji){ return '<div class="round-photo ' + cls + '">' + (f.photo ? '<img src="' + f.photo + '" alt="">' : emoji) + '</div>'; }
+function sheet(m, cls, inner){ return '<section class="sheet ' + cls + '" style="' + vars(m.f) + '">' + inner + '</section>'; }
+
+var MISSION_NAMES = ['Meet the letter','Treasure hunt','Trace the words','The maze','Word match','Letter detective','Word search','Color it','Picture story','You did it!'];
+var MISSION_ICONS = ['👋','🔎','✏️','🌀','🔗','🕵️','🧩','🖍️','📖','🏆'];
+
+function teaser(m, n){
+  var L = m.L, t = m.t;
+  var tx = [
+    'a treasure hunt for ' + L + ' things!',
+    'trace your very first ' + L + ' words!',
+    'can you find your way through the ' + L + ' maze?',
+    'match the pictures to their words!',
+    'become a ' + L + ' letter detective!',
+    'a secret word search!',
+    'color your ' + t.title.toLowerCase() + ' picture!',
+    'read a story made of pictures!',
+    'a surprise and your champion certificate!'
+  ];
+  return tx[n - 1] || '';
 }
 
-function photoHtml(f, cls, emoji){
-  return '<div class="round-photo ' + cls + '">' + (f.photo ? '<img src="' + f.photo + '" alt="">' : emoji) + '</div>';
+function missionSheet(m, n, cls, body){
+  var f = m.f, t = m.t;
+  var dots = '';
+  for(var i = 1; i <= TOTAL_MISSIONS; i++){
+    dots += '<span class="dot ' + (i < n ? 'done' : (i === n ? 'now' : '')) + '">' + (i === n ? t.creatureEmoji : '') + '</span>';
+  }
+  var next = n < TOTAL_MISSIONS
+    ? '<div class="m-next"><b>Next mission:</b> ' + teaser(m, n) + '</div>'
+    : '<div class="m-next"><b>Great job!</b> Show someone your certificate.</div>';
+  return sheet(m, 'mission ' + cls,
+    '<div class="m-head"><div><span class="m-pill">Mission ' + n + ' of ' + TOTAL_MISSIONS + '</span><h2>' + MISSION_ICONS[n - 1] + ' ' + MISSION_NAMES[n - 1] + '</h2></div>' +
+    '<div class="m-player">' + photoHtml(f, 'm-photo', t.creatureEmoji) + '<div class="m-name">' + esc(f.name) + '</div></div></div>' +
+    '<div class="m-track">' + dots + '</div>' +
+    body +
+    '<div class="m-foot"><div class="m-star"><span>Color your star when done:</span><i>☆</i></div>' + next + '</div>');
 }
 
-function head(m){
-  return '<div class="sh-head"><span>' + m.theme.emoji + ' ' + esc(m.f.name) + '\'s ' + m.theme.title + ' Adventure</span><span>hogthehedgehog.com</span></div>';
-}
-
-function sheet(m, cls, inner){
-  return '<section class="sheet ' + cls + '" style="' + vars(m.f) + '">' + inner + '</section>';
-}
-
+/* ---- cover ---- */
 function coverSheet(m){
-  var f = m.f, t = m.theme;
-  var inc = ['📖 Story','🔤 Letter hunt','🧩 Puzzle','🖍️ Coloring','🏆 Daily challenges','📊 Parent guide'];
+  var f = m.f, t = m.t;
   return sheet(m, 'cover',
-    '<div class="cover-top" aria-hidden="true">' + t.scenes[0] + '</div>' +
-    photoHtml(f, 'cover-photo', t.palEmoji) +
+    '<div class="cover-top" aria-hidden="true">' + t.deco + '</div>' +
+    photoHtml(f, 'cover-photo', t.creatureEmoji) +
     '<h1>' + esc(f.name) + '\'s<br>' + t.title + ' Adventure</h1>' +
-    '<p class="cover-sub">A personalized story for ' + esc(f.name) + ', age ' + f.age + '</p>' +
-    '<ul class="cover-includes">' + inc.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul>' +
+    '<div class="cover-letter"><span class="cl-big">' + m.L + m.l + '</span><span class="cl-text">Letter ' + m.L + ' mission</span></div>' +
+    '<ul class="cover-includes"><li>🗺️ 10 missions</li><li>⭐ 10 stars to collect</li><li>🏆 A certificate</li></ul>' +
     '<p class="cover-foot">hogthehedgehog.com</p>');
 }
 
-function storySheet(m, i){
-  var p = m.pages[i], f = m.f;
-  var size = f.age <= 5 ? 46 : (f.age <= 8 ? 42 : 36);
-  if(f.level === 0) size += 4;
-  var chars = plain(p.text).length;
-  while(size > 22 && Math.ceil(chars * 0.57 * size / 682) * size * 1.38 > 350){ size -= 2; }
-  return sheet(m, 'story',
-    head(m) +
-    '<div class="scene-box"><div class="scene" aria-hidden="true">' + p.scene + '</div></div>' +
-    '<p class="story-text" style="font-size:' + size + 'px">' + p.text + '</p>' +
-    photoHtml(f, 'story-photo', m.theme.palEmoji) +
-    '<div class="story-name">' + esc(f.name) + '</div>');
+/* ---- map ---- */
+function mapSheet(m){
+  var f = m.f, t = m.t;
+  var stop = function(i){
+    return '<div class="stop"><div class="stop-circle">' + MISSION_ICONS[i] + '</div>' +
+      '<div class="stop-num">' + (i + 1) + '</div><div class="stop-name">' + MISSION_NAMES[i].replace('You did it!', 'Certificate') + '</div><div class="stop-star">☆</div></div>';
+  };
+  var row1 = '', row2 = '';
+  for(var i = 0; i < 5; i++){ row1 += stop(i); }
+  for(var j = 5; j < 10; j++){ row2 += stop(j); }
+  return sheet(m, 'map',
+    '<div class="sh-head"><span>' + t.creatureEmoji + ' ' + esc(f.name) + '\'s ' + t.title + ' Adventure</span><span>hogthehedgehog.com</span></div>' +
+    '<h2 class="map-title">Your adventure map</h2>' +
+    '<p class="lead">Hi ' + esc(f.name) + '! I am ' + esc(m.palFull) + '. Today we are learning the letter <b>' + m.L + '</b>. Will you help me fill my ' + t.container + '?</p>' +
+    '<div class="map-deco" aria-hidden="true">' + t.deco + '</div>' +
+    '<div class="map-flag">START ➜</div>' +
+    '<div class="map-row">' + row1 + '</div>' +
+    '<div class="map-turn">⬇</div>' +
+    '<div class="map-row rev">' + row2 + '</div>' +
+    '<div class="map-flag end">🏆 FINISH</div>' +
+    '<div class="how"><h3>How to play</h3><ol><li>Do a mission. Do one a day or a few at once.</li><li>Color the star when you finish.</li><li>Collect all 10 stars to win your certificate!</li></ol></div>');
 }
 
+/* ---- mission 1: meet the letter ---- */
+function meetSheet(m){
+  var f = m.f, t = m.t, L = m.L;
+  var ex = m.targets[0];
+  var rows = '<div class="trace-row tall"><span>' + L + ' ' + m.l + ' ' + L + ' ' + m.l + ' ' + L + '</span></div>' +
+             '<div class="trace-row tall blank"></div>';
+  return missionSheet(m, 1, 'meet',
+    '<div class="meet-top"><div class="big-letter">' + L + m.l + '</div>' +
+    '<div class="meet-card"><div class="mc-say">' + L + ' says <b>' + SOUNDS[L] + '</b></div>' +
+    '<div class="mc-ex"><span class="mc-emoji">' + ex[1] + '</span><span class="mc-word"><b>' + esc(ex[0].charAt(0)) + '</b>' + esc(ex[0].slice(1)) + '</span></div>' +
+    '<div class="mc-for">' + L + ' is for ' + esc(ex[0]) + '!</div></div></div>' +
+    '<div class="bubble"><div class="b-pal">' + t.creatureEmoji + '</div><div class="b-text">Hi ' + esc(f.name) + '! I am ' + esc(m.palFull) + '. Help me fill my ' + t.container + ' ' + t.containerEmoji + ' with things that start with <b>' + L + '</b>!</div></div>' +
+    '<p class="instr">Say <b>' + SOUNDS[L] + '</b> three times. Write ' + L + ' in the air. Then trace it!</p>' +
+    rows +
+    '<div class="today"><div class="today-title">Today\'s ' + L + ' words</div><div class="today-row">' +
+    m.targets.map(function(p){ return '<div class="today-item"><div class="ti-emoji">' + p[1] + '</div><div class="ti-word"><b>' + esc(p[0].charAt(0)) + '</b>' + esc(p[0].slice(1)) + '</div></div>'; }).join('') +
+    '</div></div>');
+}
+
+/* ---- mission 2: treasure hunt ---- */
 function huntSheet(m){
-  var t = m.theme, f = m.f, L = t.letter;
-  var items = t.items.map(function(it){
-    return '<div class="hunt-item"><div class="em">' + it[1] + '</div><div class="wr">' + esc(it[0]) + '</div><div class="line"></div></div>';
+  var L = m.L, rnd = m.rnd;
+  var isX = L === 'X';
+  var decoys = decoyPool(L, m.f.theme, rnd).slice(0, 4);
+  var cells = shuffled(m.targets.map(function(p){ return {p:p, yes:true}; }).concat(decoys.map(function(p){ return {p:p, yes:false}; })), rnd);
+  var grid = cells.map(function(c){
+    return '<div class="hunt-cell"><div class="hc-emoji">' + c.p[1] + '</div><div class="hc-word">' + esc(c.p[0]) + '</div></div>';
   }).join('');
-  return sheet(m, 'hunt',
-    head(m) +
-    '<h2>Letter hunt</h2>' +
-    '<p class="lead">' + esc(f.name) + ' and ' + t.palFull + ' are looking for 5 things beginning with ' + L + '. Say each word out loud and listen for the first sound.</p>' +
-    '<div class="hunt-letter"><div class="big-letter">' + L + L.toLowerCase() + '</div>' +
-    '<div><span class="accent-pill">' + L + ' says ' + (SOUNDS[L] || '') + '</span>' +
-    '<p class="lead" style="margin-top:10px">' + L + ' is for <b>' + esc(t.pal) + '</b>!</p></div></div>' +
-    '<div class="hunt-items">' + items + '</div>' +
-    '<p class="lead" style="margin-top:20px">Trace the letter, then write it on your own:</p>' +
-    '<div class="trace-row tall"><span>' + L + ' ' + L.toLowerCase() + ' ' + L + ' ' + L.toLowerCase() + ' ' + L + '</span></div>' +
-    '<div class="trace-row tall blank"></div>');
+  var note = isX ? 'X is tricky! Circle the pictures that <b>start</b> or <b>end</b> with X.' : 'Circle every picture that starts with <b>' + L + '</b>. Say each word out loud!';
+  return missionSheet(m, 2, 'hunt',
+    '<p class="instr big">' + note + '</p>' +
+    '<div class="hunt-grid">' + grid + '</div>' +
+    '<div class="count-line">I found <span class="blank sm"></span> out of 5 ' + L + ' things!</div>');
 }
 
-function nameSheet(m){
-  var f = m.f, nm = esc(f.name);
-  var rows = '';
-  for(var i = 0; i < 3; i++){ rows += '<div class="trace-row tall"><span>' + nm + '</span></div>'; }
-  rows += '<div class="trace-row tall blank"></div><div class="trace-row tall blank"></div>';
-  var extra = f.struggles.indexOf('writing') >= 0 || f.struggles.indexOf('letters') >= 0
-    ? '<p class="lead" style="margin-top:14px">Tip: trace with a finger first, then with a pencil. Say each letter name as you go.</p>' : '';
-  return sheet(m, 'name',
-    head(m) +
-    '<h2>This is my name</h2>' +
-    '<p class="lead">Trace ' + nm + '\'s name, then write it by yourself.</p>' +
-    extra + rows);
+/* ---- mission 3: trace the words ---- */
+function wordsSheet(m){
+  var L = m.L;
+  var cand = m.targets.slice().sort(function(a, b){ return a[0].length - b[0].length; });
+  var take = 3;
+  var rows = cand.slice(0, take).map(function(p){
+    var w = p[0];
+    return '<div class="tw"><div class="tw-emoji">' + p[1] + '</div><div class="tw-col">' +
+      '<div class="trace-row med"><span class="word-trace"><b>' + esc(w.charAt(0)) + '</b>' + esc(w.slice(1)) + '</span></div>' +
+      '<div class="trace-row med blank"></div></div></div>';
+  }).join('');
+  return missionSheet(m, 3, 'words',
+    '<p class="instr big">Trace each word, then write it by yourself. Every word starts with <b>' + L + '</b>!</p>' + rows);
 }
 
-function readingSheet(m){
-  var t = m.theme, f = m.f, rnd = m.rnd;
-  var words = t.items.map(function(it){ return it[0]; });
-  var pickN = 3;
-  var choiceRows = '';
-  for(var i = 0; i < pickN; i++){
-    var correct = words[i];
-    var others = shuffled(words.filter(function(w){ return w !== correct; }), rnd).slice(0, 2);
-    var opts = shuffled([correct].concat(others), rnd);
-    choiceRows += '<div class="ex-row"><div class="em">' + t.items[i][1] + '</div><div class="choices">' +
-      opts.map(function(w){ return '<div class="choice">' + esc(w) + '</div>'; }).join('') + '</div></div>';
+/* ---- mission 4: maze ---- */
+function mazeSheet(m){
+  var L = m.L, rnd = m.rnd;
+  var n = m.level === 0 ? 5 : 7;
+  var mz = makeMaze(n, L, m.level, rnd);
+  var cell = n === 5 ? 96 : 76;
+  var table = '<table class="maze" style="--cell:' + cell + 'px">' + mz.grid.map(function(row, r){
+    return '<tr>' + row.map(function(ch, c){
+      var cls = (r === 0 && c === 0) ? ' start' : ((r === n - 1 && c === n - 1) ? ' end' : '');
+      return '<td class="' + cls.trim() + '">' + ch + '</td>';
+    }).join('') + '</tr>';
+  }).join('') + '</table>';
+  return missionSheet(m, 4, 'maze',
+    '<p class="instr big">Help ' + esc(m.pal) + ' reach the ' + m.t.container + '! Draw a line that only steps on <b>' + L + '</b> and <b>' + m.l + '</b>. Go right or down.</p>' +
+    '<div class="maze-wrap"><div class="maze-flag">🏁 START</div>' + table + '<div class="maze-flag end">' + m.t.containerEmoji + ' ' + m.t.container.toUpperCase() + '</div></div>');
+}
+
+/* ---- mission 5: word match ---- */
+function matchSheet(m){
+  var rnd = m.rnd;
+  var take = 4;
+  var left = m.targets.slice(0, take);
+  var right = shuffled(left, rnd);
+  var guard = 0;
+  while(right.every(function(p, i){ return p === left[i]; }) && guard++ < 10){ right = shuffled(left, rnd); }
+  var rows = left.map(function(p, i){
+    return '<div class="mrow"><div class="mpic">' + p[1] + '</div><i class="mdot"></i><span class="mgap"></span><i class="mdot"></i><div class="mword"><b>' + esc(right[i][0].charAt(0)) + '</b>' + esc(right[i][0].slice(1)) + '</div></div>';
+  }).join('');
+  return missionSheet(m, 5, 'match',
+    '<p class="instr big">Draw a line from each picture to its word. Look at the first letter!</p>' +
+    '<div class="match">' + rows + '</div>');
+}
+
+/* ---- mission 6: letter detective ---- */
+function detectiveSheet(m){
+  var L = m.L, rnd = m.rnd;
+  var count = m.level === 0 ? 8 : (m.level === 1 ? 10 : 12);
+  var cells = makeDetective(7, 6, L, count, rnd);
+  m.detectiveCount = count;
+  var table = '<table class="det">';
+  for(var r = 0; r < 6; r++){
+    table += '<tr>' + cells.slice(r * 7, r * 7 + 7).map(function(ch){ return '<td>' + ch + '</td>'; }).join('') + '</tr>';
   }
-  var fillN = f.level === 0 ? 3 : 4;
-  var order = shuffled(t.items.map(function(it, idx){ return idx; }), rnd).slice(0, fillN);
-  var bank = shuffled(order, rnd).map(function(idx){ return '<span>' + esc(t.items[idx][0]) + '</span>'; }).join('');
-  var fills = order.map(function(idx){
-    return '<div class="ex-row"><div class="em">' + t.items[idx][1] + '</div><div class="fill">' + esc(f.name) + ' found <span class="blank"></span>.</div></div>';
-  }).join('');
-  var lines = f.level >= 1 ? 3 : 2;
-  var wl = '';
-  for(var k = 0; k < lines; k++){ wl += '<div class="write-line"></div>'; }
-  return sheet(m, 'reading',
-    head(m) +
-    '<h2>Reading time</h2>' +
-    '<div class="ex"><h3>1. Circle the right word</h3>' + choiceRows + '</div>' +
-    '<div class="ex"><h3>2. Fill in the blank</h3><div class="bank">' + bank + '</div>' + fills + '</div>' +
-    '<div class="ex"><h3>3. Write about ' + esc(t.pal) + ' and ' + esc(f.name) + '</h3>' + wl + '</div>');
+  table += '</table>';
+  return missionSheet(m, 6, 'detective',
+    '<p class="instr big">Be a letter detective! Circle every <b>' + L + '</b> and <b>' + m.l + '</b> you can find.</p>' + table +
+    '<div class="count-line">I found <span class="blank sm"></span> letters!</div>');
 }
 
+/* ---- mission 7: word search ---- */
 function searchSheet(m){
-  var t = m.theme, f = m.f, rnd = m.rnd;
-  var pool = t.words.slice(0, 7).filter(function(w){ return w !== t.pal.toUpperCase(); });
-  var words = shuffled(pool, rnd).slice(0, m.theme2 ? 4 : 6);
-  if(m.theme2){
-    words = words.concat(shuffled(m.theme2.words.filter(function(w){ return words.indexOf(w) < 0; }), rnd).slice(0, 2));
-  }
+  var f = m.f, rnd = m.rnd;
+  var words = m.all.map(function(p){ return p[0].toUpperCase().replace(/[^A-Z]/g, ''); })
+    .filter(function(w){ return w.length >= 3 && w.length <= 9; });
+  words = shuffled(words, rnd).slice(0, 5);
   var nameWord = f.name.toUpperCase().replace(/[^A-Z]/g, '');
   if(nameWord.length >= 2 && nameWord.length <= 9 && words.indexOf(nameWord) < 0){ words.push(nameWord); }
-  words = words.filter(function(w){ return w.length <= 9; });
-  var ws = makeWordSearch(words, 10, f.level, rnd);
+  var ws = makeWordSearch(words, 10, m.level, rnd);
   var table = '<table class="ws-grid">' + ws.grid.map(function(row){
     return '<tr>' + row.map(function(ch){ return '<td>' + ch + '</td>'; }).join('') + '</tr>';
   }).join('') + '</table>';
   var list = '<ul class="ws-words">' + ws.placed.map(function(w){ return '<li>' + w + '</li>'; }).join('') + '</ul>';
-  var dir = f.level >= 1 ? 'Words go across, down and diagonally.' : 'Words go across and down.';
-  return sheet(m, 'search',
-    head(m) +
-    '<h2>Word search</h2>' +
-    '<p class="lead">Find all the words. ' + dir + ' Can you spot ' + esc(f.name) + '\'s name?</p>' +
+  var dir = m.level >= 1 ? 'Words go across, down and diagonally.' : 'Words go across and down.';
+  return missionSheet(m, 7, 'search',
+    '<p class="instr big">Find all the words. ' + dir + ' Can you spot ' + esc(f.name) + '\'s name?</p>' +
     '<div class="ws-wrap">' + table + list + '</div>');
 }
 
+/* ---- mission 8: coloring ---- */
 function colorSheet(m){
-  var t = m.theme;
-  return sheet(m, 'color',
-    head(m) +
-    '<h2>Color ' + esc(t.pal) + '!</h2>' +
-    '<p class="lead">Grab your crayons and color ' + esc(m.f.name) + '\'s ' + t.label.toLowerCase() + ' picture.</p>' +
+  var t = m.t;
+  var letterSvg = '<svg viewBox="0 0 400 110" class="color-letter" role="img" aria-label="Letter to color"><text x="200" y="92" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="104" fill="#fff" stroke="#222" stroke-width="4" stroke-linejoin="round">' + m.L + ' ' + m.l + '</text></svg>';
+  return missionSheet(m, 8, 'color',
+    '<p class="instr big">Color ' + esc(m.pal) + '\'s ' + t.title.toLowerCase() + ' picture. Then color the big letter!</p>' +
     '<div class="color-art"><svg viewBox="0 0 400 300" role="img" aria-label="Coloring picture">' + DRAW[t.draw] + '</svg></div>' +
-    '<p class="lead" style="margin-top:16px">Colored by: ______________________</p>');
+    '<div class="color-art letter">' + letterSvg + '</div>');
 }
 
-function dailySheet(m){
-  var t = m.theme, f = m.f, nm = esc(f.name);
-  var days = [
-    'Read the story out loud with a grown-up.',
-    'Trace ' + nm + '\'s name three times.',
-    'Find 5 things at home that start with ' + t.letter + '.',
-    'Play the ABC Animal Safari game for 10 minutes.',
-    'Do the word search with ' + esc(t.pal) + '.',
-    'Draw ' + nm + ' and ' + esc(t.pal) + ' on a new adventure.',
-    'Tell the story in your own words.'
-  ];
-  if(f.struggles.indexOf('reading') >= 0){ days[0] = 'Read pages 1 to 3 out loud, pointing at each word.'; days[6] = 'Read your favorite page to someone you love.'; }
-  var rows = days.map(function(d, i){
-    return '<div class="day"><div class="badge">Day ' + (i + 1) + '</div><div class="task">' + d + '</div><div class="check"></div><div class="sticker"></div></div>';
-  }).join('');
-  return sheet(m, 'daily',
-    head(m) +
-    '<h2>7-day challenge</h2>' +
-    '<p class="lead">Do one challenge a day. Tick the box and add a sticker when ' + nm + ' finishes!</p>' + rows);
+/* ---- mission 9: picture story ---- */
+function storySheet(m){
+  var f = m.f, nm = esc(f.name), pal = esc(m.pal);
+  var w = m.targets;
+  var lines;
+  if(m.level === 0){
+    lines = w.slice(0, 4).map(function(p){ return nm + ' sees <span class="rb">' + p[1] + '</span>.'; });
+    lines.push(nm + ' and ' + pal + ' say <b>' + m.L + '</b>, <b>' + m.L + '</b>, <b>' + m.L + '</b>!');
+  } else {
+    lines = [
+      nm + ' and ' + pal + ' go to ' + esc(m.t.place) + '.',
+      'They look for ' + m.t.containerEmoji + '. They see <span class="rb">' + w[0][1] + '</span> and <span class="rb">' + w[1][1] + '</span>.',
+      '"Look!" says ' + nm + '. "I see <span class="rb">' + w[2][1] + '</span>!"',
+      pal + ' finds <span class="rb">' + w[3][1] + '</span> and <span class="rb">' + (w[4] || w[0])[1] + '</span>.',
+      'They put them in the ' + m.t.container + '. All the things start with <b>' + m.L + '</b>!'
+    ];
+  }
+  var body = lines.map(function(l){ return '<p class="rebus">' + l + '</p>'; }).join('');
+  return missionSheet(m, 9, 'story' + (m.level === 0 ? ' big' : ''),
+    '<p class="instr big">Read the story. Say the picture words out loud!</p>' + body +
+    '<div class="draw-box"><div>Draw your favorite ' + m.L + ' thing here:</div></div>');
 }
 
+/* ---- mission 10: certificate ---- */
+function certSheet(m){
+  var f = m.f, t = m.t, L = m.L;
+  var stickers = m.targets.map(function(p){ return '<div class="sticker"><span>' + p[1] + '</span></div>'; }).join('');
+  var nextIdx = LETTERS.indexOf(L) + 1;
+  var nextTxt = nextIdx < 26 ? 'Next adventure: letter ' + LETTERS[nextIdx] + '! Make a new book at hogthehedgehog.com/stories' : 'You finished the whole alphabet! Make another adventure at hogthehedgehog.com/stories';
+  return missionSheet(m, 10, 'cert',
+    '<div class="cert-box"><div class="cert-trophy">🏆</div>' +
+    '<div class="cert-title">Letter ' + L + ' Champion</div>' +
+    photoHtml(f, 'cert-photo', t.creatureEmoji) +
+    '<div class="cert-name">' + esc(f.name) + '</div>' +
+    '<p class="cert-text">found ' + L + ' things, traced ' + L + ' words and finished all 10 missions in the ' + esc(t.title) + ' adventure!</p>' +
+    '<div class="cert-lines"><span>Date: ____________</span><span>Signed: ______________</span></div></div>' +
+    '<p class="instr">Stick or draw your 5 ' + L + ' things in the ' + t.container + ' ' + t.containerEmoji + ':</p>' +
+    '<div class="stickers">' + stickers + '</div>' +
+    '<div class="next-adv">' + esc(nextTxt) + '</div>');
+}
+
+/* ---- parent guide ---- */
 function parentSheet(m){
-  var f = m.f, t = m.theme, nm = esc(f.name);
-  var lvlName = LEVELS[f.level][1];
-  var interestNames = f.interests.map(function(k){ return INTERESTS.filter(function(i){ return i[0] === k; })[0][2]; }).join(' + ');
-  var focus = f.struggles.length ? f.struggles.map(function(k){ return STRUGGLES.filter(function(s){ return s[0] === k; })[0][1]; }).join(', ') : 'General practice';
+  var f = m.f, nm = esc(f.name), L = m.L;
   var skills = [
-    'Recognizes the letter ' + t.letter,
-    'Says the sound ' + (SOUNDS[t.letter] || ''),
-    'Reads the story words',
-    'Writes ' + nm + '\'s name',
-    'Finds words that start with ' + t.letter
+    'Says the letter name: ' + L,
+    'Says the sound ' + SOUNDS[L],
+    'Finds ' + L + ' things in pictures',
+    'Traces and writes ' + L + ' and ' + m.l,
+    'Reads the picture story'
   ];
-  var star = '<td class="star">☆☆☆☆☆</td>';
-  var rows = skills.map(function(s){ return '<tr><td>' + s + '</td>' + star + star + star + star + '</tr>'; }).join('');
-  var tipMap = {
-    reading:'Read together for 10 minutes a day. Point to each word, and let ' + nm + ' read the repeated words ("' + t.letter + '", "' + esc(t.pal) + '") by themselves.',
-    letters:'Practice one letter and sound at a time. Use the letter hunt page and look for the letter on signs, food and toys.',
-    writing:'Keep writing sessions short. Trace with a finger first, then crayon, then pencil.',
-    focus:'Try 5 to 10 minute sessions. Use the daily challenge stickers as a small reward.'
-  };
-  var tips = f.struggles.map(function(k){ return '<p>• ' + tipMap[k] + '</p>'; });
-  tips.push('<p>• Praise effort, not speed. Short, happy sessions work better than long ones.</p>');
+  var cols = '<td class="star">○</td><td class="star">○</td><td class="star">○</td>';
+  var rows = skills.map(function(s){ return '<tr><td>' + s + '</td>' + cols + '</tr>'; }).join('');
+  var key = '<p>🕵️ Letter detective: there are <b>' + (m.detectiveCount || '') + '</b> ' + L + 's and ' + m.l + 's to find.</p>' +
+            '<p>🔎 Treasure hunt: the ' + L + ' pictures are ' + m.targets.map(function(p){ return esc(p[0]); }).join(', ') + '.</p>' +
+            '<p>🌀 Maze: the path only steps on ' + L + ' or ' + m.l + ', moving right or down.</p>';
   return sheet(m, 'parent',
-    head(m) +
-    '<h2>Parent guide and progress tracker</h2>' +
-    '<div class="profile">' +
-      '<div><span>Child: </span>' + nm + '</div><div><span>Age: </span>' + f.age + '</div>' +
-      '<div><span>Reading level: </span>' + lvlName + '</div><div><span>Loves: </span>' + interestNames + '</div>' +
-      '<div style="grid-column:1/-1"><span>Focus: </span>' + focus + '</div>' +
-    '</div>' +
-    '<table class="track"><tr><th>Skill</th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th></tr>' + rows + '</table>' +
-    '<p class="lead" style="margin-top:14px;font-size:18px">Color in one star for each skill ' + nm + ' can do (1 = just starting, 5 = does it easily).</p>' +
-    '<h2 style="font-size:30px;margin-top:20px">Tips for you</h2><div class="tips">' + tips.join('') + '</div>');
+    '<div class="sh-head"><span>' + m.t.creatureEmoji + ' ' + nm + '\'s ' + m.t.title + ' Adventure</span><span>hogthehedgehog.com</span></div>' +
+    '<h2>Parent guide</h2>' +
+    '<div class="how"><h3>How to use this book</h3><ol>' +
+    '<li>Do one mission a day, about 10 minutes. Short and happy works best.</li>' +
+    '<li>Say the letter <b>sound</b> (' + SOUNDS[L] + '), not just the name.</li>' +
+    '<li>Let ' + nm + ' color the star after each mission, and celebrate!</li></ol></div>' +
+    '<table class="track"><tr><th>Skill</th><th>Not yet</th><th>Getting there</th><th>Got it!</th></tr>' + rows + '</table>' +
+    '<p class="lead" style="margin-top:12px;font-size:18px">Color in the circle that fits ' + nm + ' best.</p>' +
+    '<h2 style="font-size:28px;margin-top:10px">Answer key</h2><div class="tips">' + key + '</div>' +
+    '<h2 style="font-size:28px;margin-top:10px">Extra practice</h2><div class="tips">' +
+    '<p>• Look for ' + L + ' on signs, food and toys. Say the word and its first sound.</p>' +
+    '<p>• Play the free ABC Animal Safari game at hogthehedgehog.com to keep practicing.</p></div>');
 }
 
 function buildSheets(m){
-  var out = [coverSheet(m)];
-  for(var i = 0; i < m.pages.length; i++){ out.push(storySheet(m, i)); }
-  out.push(huntSheet(m), nameSheet(m), readingSheet(m), searchSheet(m), colorSheet(m), dailySheet(m), parentSheet(m));
+  var out = [coverSheet(m), mapSheet(m), meetSheet(m), huntSheet(m), wordsSheet(m), mazeSheet(m), matchSheet(m)];
+  out.push(detectiveSheet(m), searchSheet(m), colorSheet(m), storySheet(m), certSheet(m), parentSheet(m));
   return out;
 }
 
@@ -538,83 +635,37 @@ function finalPhoto(){
    ============================================================ */
 (function buildForm(){
   var age = $('childAge');
-  for(var a = 3; a <= 12; a++){ var o = document.createElement('option'); o.value = a; o.textContent = a; if(a === 6) o.selected = true; age.appendChild(o); }
+  for(var a = 3; a <= 12; a++){ var o = document.createElement('option'); o.value = a; o.textContent = a; if(a === 5) o.selected = true; age.appendChild(o); }
 
-  $('interestChips').innerHTML = INTERESTS.map(function(it){
-    return '<label class="chip"><input type="checkbox" name="interest" value="' + it[0] + '"><span>' + it[1] + ' ' + it[2] + '</span></label>';
+  $('letterChips').innerHTML = LETTERS.map(function(L){
+    return '<label class="lchip"><input type="radio" name="letter" value="' + L + '" aria-label="Letter ' + L + '"><span>' + L + '</span></label>';
   }).join('');
-  $('levelChips').innerHTML = LEVELS.map(function(l, i){
-    return '<label class="chip"><input type="radio" name="level" value="' + l[0] + '"' + (i === 0 ? ' checked' : '') + '><span>' + l[1] + ' <small>(' + l[2] + ')</small></span></label>';
-  }).join('');
-  $('struggleChips').innerHTML = STRUGGLES.map(function(s){
-    return '<label class="chip"><input type="checkbox" name="struggle" value="' + s[0] + '"><span>' + s[1] + '</span></label>';
+  $('themeChips').innerHTML = THEME_ORDER.map(function(k, i){
+    return '<label class="chip"><input type="radio" name="theme" value="' + k + '"' + (i === 0 ? ' checked' : '') + '><span>' + THEME_EMOJI[k] + ' ' + THEMES[k].title + '</span></label>';
   }).join('');
   $('colorSwatches').innerHTML = SWATCHES.map(function(c, i){
     return '<label class="swatch" title="' + c[0] + '"><input type="radio" name="color" value="' + c[1] + '" aria-label="' + c[0] + '"' + (i === 5 ? ' checked' : '') + '><span style="background:' + c[1] + '"></span></label>';
   }).join('');
-
-  $('interestChips').addEventListener('change', function(){
-    var boxes = [].slice.call(document.querySelectorAll('input[name="interest"]'));
-    var count = boxes.filter(function(b){ return b.checked; }).length;
-    boxes.forEach(function(b){ b.disabled = count >= 2 && !b.checked; });
-  });
 })();
 
 function readForm(){
   var name = $('childName').value.replace(/\s+/g, ' ').trim();
   name = name.charAt(0).toUpperCase() + name.slice(1);
+  var letterEl = document.querySelector('input[name="letter"]:checked');
   return {
     name: name,
     age: parseInt($('childAge').value, 10),
-    interests: [].slice.call(document.querySelectorAll('input[name="interest"]:checked')).map(function(b){ return b.value; }),
-    level: parseInt(document.querySelector('input[name="level"]:checked').value, 10),
-    struggles: [].slice.call(document.querySelectorAll('input[name="struggle"]:checked')).map(function(b){ return b.value; }),
+    letter: letterEl ? letterEl.value : '',
+    theme: document.querySelector('input[name="theme"]:checked').value,
     color: document.querySelector('input[name="color"]:checked').value,
     photo: finalPhoto()
   };
 }
 
 /* ============================================================
-   AI story (optional)
-   ============================================================ */
-function fetchAiPages(f){
-  var ctrl = new AbortController();
-  var timer = setTimeout(function(){ ctrl.abort(); }, 45000);
-  return fetch(AI_URL, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({name:f.name, age:f.age, level:f.level, theme:f.interests[0], theme2:f.interests[1], struggles:f.struggles}),
-    signal: ctrl.signal
-  }).then(function(r){
-    if(!r.ok) throw new Error('status ' + r.status);
-    return r.json();
-  }).then(function(d){
-    if(!d || !Array.isArray(d.pages) || d.pages.length !== 6) throw new Error('bad response');
-    return d.pages.map(function(x){ return String(x).slice(0, 420); });
-  }).finally(function(){ clearTimeout(timer); });
-}
-
-/* ============================================================
    Show the result
    ============================================================ */
 var current = null;
-var speakingBtn = null;
-
-function stopSpeaking(){
-  if('speechSynthesis' in window){ window.speechSynthesis.cancel(); }
-  if(speakingBtn){ speakingBtn.textContent = '🔊 Read aloud'; speakingBtn = null; }
-}
-function toggleSpeak(btn, text){
-  if(!('speechSynthesis' in window)) return;
-  var same = speakingBtn === btn;
-  stopSpeaking();
-  if(same) return;
-  var u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US'; u.rate = 0.85;
-  u.onend = function(){ if(speakingBtn === btn){ btn.textContent = '🔊 Read aloud'; speakingBtn = null; } };
-  speakingBtn = btn; btn.textContent = '⏹ Stop';
-  window.speechSynthesis.speak(u);
-}
 
 function fitSheets(){
   var frames = document.querySelectorAll('.sheet-frame');
@@ -624,13 +675,10 @@ function fitSheets(){
   [].forEach.call(frames, function(fr){
     fr.style.width = (794 * scale) + 'px';
     fr.style.height = (1123 * scale) + 'px';
-    var s = fr.firstElementChild;
-    s.style.transform = 'scale(' + scale + ')';
+    fr.firstElementChild.style.transform = 'scale(' + scale + ')';
   });
 }
 window.addEventListener('resize', fitSheets);
-
-function plain(html){ var d = document.createElement('div'); d.innerHTML = html; return d.textContent; }
 
 function render(m){
   current = m;
@@ -640,15 +688,6 @@ function render(m){
   book.innerHTML = '';
   sheets.forEach(function(html, i){
     var block = document.createElement('div'); block.className = 'page-block';
-    var storyIdx = i - 1;
-    if(storyIdx >= 0 && storyIdx < m.pages.length){
-      var tools = document.createElement('div'); tools.className = 'page-tools';
-      var b = document.createElement('button'); b.type = 'button'; b.className = 'btn btn-light'; b.textContent = '🔊 Read aloud';
-      b.style.padding = '6px 16px'; b.style.fontSize = '0.95rem';
-      if(!('speechSynthesis' in window)) b.hidden = true;
-      b.addEventListener('click', function(){ toggleSpeak(b, plain(m.pages[storyIdx].text)); });
-      tools.appendChild(b); block.appendChild(tools);
-    }
     var frame = document.createElement('div'); frame.className = 'sheet-frame';
     frame.innerHTML = html;
     var sh = frame.firstElementChild;
@@ -658,8 +697,8 @@ function render(m){
     block.appendChild(frame);
     book.appendChild(block);
   });
-  $('resultTitle').textContent = m.f.name + '\'s ' + m.theme.title + ' Adventure is ready';
-  $('included').innerHTML = ['📖 6-page story', '🔤 Letter hunt', '✏️ Name tracing', '📚 Reading time', '🧩 Word search', '🖍️ Coloring page', '🏆 7-day challenge', '📊 Parent guide']
+  $('resultTitle').textContent = m.f.name + '\'s Letter ' + m.L + ' adventure is ready';
+  $('included').innerHTML = ['🗺️ Adventure map', '👋 Meet the letter', '🔎 Treasure hunt', '✏️ Trace words', '🌀 Maze', '🔗 Word match', '🕵️ Letter detective', '🧩 Word search', '🖍️ Coloring', '📖 Picture story', '🏆 Certificate', '👪 Parent guide']
     .map(function(x){ return '<li>' + x + '</li>'; }).join('');
   $('results').hidden = false;
   $('pdfStatus').textContent = '';
@@ -667,41 +706,23 @@ function render(m){
   $('results').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-$('storyForm').addEventListener('submit', async function(ev){
+$('storyForm').addEventListener('submit', function(ev){
   ev.preventDefault();
   var err = $('formError');
   err.textContent = '';
   var f = readForm();
   if(!f.name){ err.textContent = 'Please enter your child\'s name.'; $('childName').focus(); return; }
-  if(!/^[A-Za-z\u00C0-\u024F\u0590-\u05FF\u0600-\u06FF' \-]+$/.test(f.name)){ err.textContent = 'Please use letters only for the name.'; $('childName').focus(); return; }
-  if(f.interests.length < 1){ err.textContent = 'Please choose at least one thing they love.'; return; }
-  stopSpeaking();
-  var m = buildModel(f);
-  var note = '';
-  var wantAi = AI_ENABLED && $('useAi') && $('useAi').checked;
-  var btn = $('makeBtn');
-  if(wantAi){
-    btn.disabled = true; btn.textContent = 'Writing ' + f.name + '\'s story...';
-    try{
-      var pages = await fetchAiPages(f);
-      m.pages = m.pages.map(function(p, i){ return {scene:p.scene, text:esc(pages[i])}; });
-      note = '✨ This story was written just for ' + f.name + ' by AI.';
-    } catch(e){
-      note = 'The story writer could not be reached, so here is a classic story instead.';
-    }
-    btn.disabled = false; btn.textContent = 'Make my book';
-  }
-  render(m);
-  if(note){ $('pdfStatus').textContent = note; }
+  if(!/^[A-Za-zÀ-ɏ֐-׿؀-ۿ' \-]+$/.test(f.name)){ err.textContent = 'Please use letters only for the name.'; $('childName').focus(); return; }
+  if(!f.letter){ err.textContent = 'Please pick the letter your child is learning.'; return; }
+  render(buildModel(f));
 });
 
 $('btnAgain').addEventListener('click', function(){
-  stopSpeaking();
   $('results').hidden = true;
   $('book').innerHTML = '';
   $('intro').scrollIntoView({behavior:'smooth'});
 });
-$('btnPrint').addEventListener('click', function(){ stopSpeaking(); window.print(); });
+$('btnPrint').addEventListener('click', function(){ window.print(); });
 
 /* ============================================================
    PDF
@@ -723,9 +744,8 @@ function loadLibs(){
   }
   return libsPromise;
 }
-
-function safeFile(name, title){
-  return (name + '-' + title + '-Adventure').replace(/[^A-Za-z0-9À-ɏ֐-ۿ]+/g, '-').replace(/^-+|-+$/g, '') + '.pdf';
+function safeFile(name, letter, title){
+  return (name + '-Letter-' + letter + '-' + title).replace(/[^A-Za-z0-9À-ɏ֐-ۿ]+/g, '-').replace(/^-+|-+$/g, '') + '.pdf';
 }
 
 async function makePdf(opts){
@@ -754,7 +774,7 @@ async function makePdf(opts){
     document.body.removeChild(holder);
   }
   if(opts.asBlob){ return pdf.output('blob'); }
-  pdf.save(safeFile(current.f.name, current.theme.title));
+  pdf.save(safeFile(current.f.name, current.L, current.t.title));
   status.textContent = 'Done! Your PDF has been downloaded. You can also print it.';
 }
 
@@ -762,7 +782,6 @@ $('btnPdf').addEventListener('click', async function(){
   if(!current) return;
   var btn = $('btnPdf');
   btn.disabled = true;
-  stopSpeaking();
   try{
     $('pdfStatus').textContent = 'Getting ready...';
     await makePdf();
@@ -773,8 +792,6 @@ $('btnPdf').addEventListener('click', async function(){
   }
 });
 
-if(AI_ENABLED && $('aiBox')){ $('aiBox').hidden = false; }
-
-window.StoryGen = {makePdf: makePdf, buildModel: buildModel, buildSheets: buildSheets, render: render};
+window.StoryGen = {makePdf:makePdf, buildModel:buildModel, buildSheets:buildSheets, render:render, wordsFor:wordsFor, LETTERS:LETTERS, THEME_ORDER:THEME_ORDER, THEMES:THEMES};
 
 })();
