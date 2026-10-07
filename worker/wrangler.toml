@@ -10,3 +10,6 @@ routes = [
 [vars]
 MODEL = "claude-opus-5-5"
 ALLOWED_ORIGINS = "https://hogthehedgehog.com,https://www.hogthehedgehog.com"
+SITE_URL = "https://hogthehedgehog.com"
+PRICE_CENTS = "199"
+CURRENCY = "usd"

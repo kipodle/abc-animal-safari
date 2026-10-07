@@ -1,6 +1,13 @@
 (function(){
 'use strict';
 
+/* Payments: 3 free downloads per browser, then a small fee per PDF.
+   Stays off until the payments Worker is deployed, so visitors never hit a dead end. */
+var PAY_ENABLED = false;
+var API_URL = 'https://api.hogthehedgehog.com';
+var FREE_DOWNLOADS = 3;
+var PRICE_LABEL = '$1.99';
+
 /* ============================================================
    Content: letters, worlds and words
    ============================================================ */
@@ -663,6 +670,114 @@ function readForm(){
 }
 
 /* ============================================================
+   Free downloads and payments
+   ============================================================ */
+function store(k, v){
+  try{ if(v === undefined) return localStorage.getItem(k); localStorage.setItem(k, String(v)); }catch(e){ return null; }
+}
+function freeUsed(){ return parseInt(store('hogFreeUsed') || '0', 10) || 0; }
+function credits(){ return parseInt(store('hogCredits') || '0', 10) || 0; }
+function freeLeft(){ return Math.max(0, FREE_DOWNLOADS - freeUsed()); }
+function canDownload(){ return !PAY_ENABLED || freeLeft() > 0 || credits() > 0; }
+function spendDownload(){
+  if(!PAY_ENABLED) return;
+  if(freeLeft() > 0){ store('hogFreeUsed', freeUsed() + 1); }
+  else { store('hogCredits', Math.max(0, credits() - 1)); }
+  updateAllowance();
+}
+function updateAllowance(){
+  var el = $('allowance');
+  if(!el) return;
+  if(!PAY_ENABLED){ el.textContent = ''; return; }
+  var f = freeLeft(), c = credits();
+  if(f > 0){ el.textContent = f + ' of ' + FREE_DOWNLOADS + ' free downloads left'; }
+  else if(c > 0){ el.textContent = c + ' paid download' + (c > 1 ? 's' : '') + ' left'; }
+  else { el.textContent = 'No free downloads left. Each extra one is ' + PRICE_LABEL + '.'; }
+}
+
+function saveDraft(f){
+  try{ sessionStorage.setItem('hogDraft', JSON.stringify(f)); }catch(e){}
+}
+function loadDraft(){
+  try{ var raw = sessionStorage.getItem('hogDraft'); return raw ? JSON.parse(raw) : null; }catch(e){ return null; }
+}
+function setPayNote(msg){
+  var el = $('payNote');
+  if(!el) return;
+  el.textContent = msg || '';
+  el.hidden = !msg;
+}
+function fillForm(f){
+  $('childName').value = f.name || '';
+  if(f.age) $('childAge').value = f.age;
+  var pick = function(name, val){ var e = document.querySelector('input[name="' + name + '"][value="' + val + '"]'); if(e) e.checked = true; };
+  pick('letter', f.letter); pick('theme', f.theme); pick('color', f.color);
+}
+function restoreDraft(msg){
+  var f = loadDraft();
+  if(f && f.name && f.letter && THEMES[f.theme]){
+    fillForm(f);
+    render(buildModel(f));
+  }
+  setPayNote(msg);
+}
+
+function openPaywall(){
+  $('pwError').textContent = '';
+  $('pwBuy').disabled = false;
+  $('paywall').hidden = false;
+  $('pwBuy').focus();
+}
+function closePaywall(){ $('paywall').hidden = true; }
+
+async function startCheckout(){
+  var btn = $('pwBuy');
+  btn.disabled = true;
+  $('pwError').textContent = '';
+  if(current){ saveDraft(current.f); }
+  try{
+    var r = await fetch(API_URL + '/checkout', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
+    var d = await r.json();
+    if(!r.ok || !d.url) throw new Error('checkout');
+    window.location.href = d.url;
+  } catch(e){
+    $('pwError').textContent = 'Sorry, we could not open the payment page. Please try again in a moment.';
+    btn.disabled = false;
+  }
+}
+
+async function handleReturn(){
+  if(!PAY_ENABLED) return;
+  var q = new URLSearchParams(window.location.search);
+  var sid = q.get('session_id');
+  var canceled = q.get('canceled');
+  if(!sid && !canceled) return;
+  try{ window.history.replaceState(null, '', window.location.pathname); }catch(e){}
+  if(canceled){ restoreDraft('Payment canceled. Your book is still here.'); return; }
+  var done = (store('hogRedeemed') || '').split(',');
+  if(done.indexOf(sid) >= 0){ restoreDraft('That payment has already been added to this browser.'); return; }
+  setPayNote('Checking your payment...');
+  try{
+    var r = await fetch(API_URL + '/redeem', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({session_id:sid})});
+    var d = await r.json();
+    if(r.ok && d.ok){
+      store('hogCredits', credits() + (d.credits || 1));
+      store('hogRedeemed', done.concat([sid]).filter(Boolean).slice(-20).join(','));
+      restoreDraft('Thank you! Your payment worked. Press Download PDF to get your book.');
+      updateAllowance();
+    } else if(r.status === 409){
+      restoreDraft('This payment was already used for a download.');
+    } else if(r.status === 402){
+      restoreDraft('We could not confirm that payment yet. If you were charged, please contact us through our YouTube channel.');
+    } else {
+      throw new Error('redeem');
+    }
+  } catch(e){
+    restoreDraft('We could not check your payment right now. Please refresh this page in a minute.');
+  }
+}
+
+/* ============================================================
    Show the result
    ============================================================ */
 var current = null;
@@ -702,6 +817,7 @@ function render(m){
     .map(function(x){ return '<li>' + x + '</li>'; }).join('');
   $('results').hidden = false;
   $('pdfStatus').textContent = '';
+  updateAllowance();
   fitSheets();
   $('results').scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -722,7 +838,11 @@ $('btnAgain').addEventListener('click', function(){
   $('book').innerHTML = '';
   $('intro').scrollIntoView({behavior:'smooth'});
 });
-$('btnPrint').addEventListener('click', function(){ window.print(); });
+$('btnPrint').addEventListener('click', function(){
+  if(!canDownload()){ openPaywall(); return; }
+  spendDownload();
+  window.print();
+});
 
 /* ============================================================
    PDF
@@ -780,17 +900,30 @@ async function makePdf(opts){
 
 $('btnPdf').addEventListener('click', async function(){
   if(!current) return;
+  if(!canDownload()){ openPaywall(); return; }
   var btn = $('btnPdf');
   btn.disabled = true;
   try{
     $('pdfStatus').textContent = 'Getting ready...';
     await makePdf();
+    spendDownload();
   } catch(e){
     $('pdfStatus').textContent = 'Sorry, the PDF could not be made here. Please use Print and choose "Save as PDF" instead.';
   } finally {
     btn.disabled = false;
   }
 });
+
+$('pwBuy').addEventListener('click', startCheckout);
+$('pwClose').addEventListener('click', closePaywall);
+document.addEventListener('keydown', function(ev){ if(ev.key === 'Escape' && !$('paywall').hidden){ closePaywall(); } });
+
+if(PAY_ENABLED){
+  var ip = $('introPrice');
+  if(ip){ ip.innerHTML = '<strong>Your first ' + FREE_DOWNLOADS + ' downloads are free.</strong> After that, each PDF download or print is ' + PRICE_LABEL + '.'; }
+  updateAllowance();
+  handleReturn();
+}
 
 window.StoryGen = {makePdf:makePdf, buildModel:buildModel, buildSheets:buildSheets, render:render, wordsFor:wordsFor, LETTERS:LETTERS, THEME_ORDER:THEME_ORDER, THEMES:THEMES};
 

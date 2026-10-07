@@ -262,3 +262,14 @@
 .mission.story .draw-box{ height:250px; }
 .mrow{ margin-bottom:22px; }
 .mpic{ width:132px; height:132px; }
+
+/* payments */
+.allowance{ font-weight:800; color:var(--ink-soft); margin:10px 2px 0; }
+.pay-note{ font-weight:800; color:var(--green-deep); background:var(--option-bg); border:2px dashed var(--option-edge); border-radius:14px; padding:10px 14px; margin:10px 0 0; }
+.modal{ position:fixed; inset:0; background:rgba(40,28,14,0.6); display:flex; align-items:center; justify-content:center; padding:20px; z-index:100; }
+.modal[hidden]{ display:none; }
+.modal-card{ max-height:calc(100vh - 40px); overflow-y:auto; background:var(--card); border:2px solid var(--card-edge); border-radius:26px; padding:24px; max-width:440px; width:100%; box-shadow:0 10px 0 var(--card-edge); display:grid; gap:10px; }
+.modal-card h3{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.5rem; margin:0; color:var(--green-deep); }
+.modal-card p{ margin:0; color:var(--ink-soft); font-weight:700; }
+.modal-card .pw-note{ font-size:0.85rem; }
+@media print{ .modal, .pay-note, .allowance{ display:none !important; } }

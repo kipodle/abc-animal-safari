@@ -30,7 +30,8 @@
   <section class="intro" id="intro">
     <h1>A letter adventure starring your child</h1>
     <p>Pick the letter your child is learning and a world they love. We make a printable book that feels like a game: 10 missions, a treasure hunt, puzzles, coloring, stars to collect and a certificate. Everything is about one letter, and your child is the hero.</p>
-    <p><strong>Free.</strong> Download it as a PDF and print it at home.</p>
+    <p id="introPrice"><strong>Free.</strong> Download it as a PDF and print it at home.</p>
+    <p class="pay-note" id="payNote" role="status" hidden></p>
   </section>
 
   <form class="form-card" id="storyForm" novalidate>
@@ -89,6 +90,7 @@
       <button type="button" class="btn btn-light" id="btnPrint">Print</button>
       <button type="button" class="btn btn-light" id="btnAgain">Make another</button>
     </div>
+    <p class="allowance" id="allowance"></p>
     <p class="pdf-status" id="pdfStatus" role="status"></p>
     <ul class="included" id="included"></ul>
     <div id="book"></div>
@@ -116,6 +118,19 @@
     </nav>
   </div>
 </footer>
+
+<div class="modal" id="paywall" hidden role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+  <div class="modal-card">
+    <h3 id="pwTitle">You have used your free downloads</h3>
+    <p>Each extra PDF download or print is <b>$1.99</b>. Your book will be waiting for you when you come back from the payment page.</p>
+    <p class="pw-note">Secure payment by Stripe. We never see your card details.</p>
+    <p class="form-error" id="pwError" role="alert"></p>
+    <div class="submit-row">
+      <button type="button" class="btn" id="pwBuy">Buy this download for $1.99</button>
+      <button type="button" class="btn btn-light" id="pwClose">Not now</button>
+    </div>
+  </div>
+</div>
 
 <script src="/stories/story.js"></script>
 
