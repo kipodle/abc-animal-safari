@@ -65,9 +65,7 @@ a{ color:var(--green-deep); }
 .site-header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 .brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--green-deep); font-family:"Baloo 2",sans-serif; font-weight:800; line-height:1; }
 .brand .logo-img{ height:72px; width:auto; display:block; flex:0 0 auto; }
-.brand .wordmark{ display:flex; flex-direction:column; gap:7px; }
-.brand .wordmark b{ font-size:2.15rem; font-weight:800; letter-spacing:.34em; margin-right:-.34em; line-height:.9; color:var(--ink); }
-.brand .wordmark small{ font-size:.82rem; font-weight:800; letter-spacing:.3em; color:var(--green-deep); line-height:1; white-space:nowrap; }
+.brand .wordmark{ height:64px; width:auto; display:block; flex:0 0 auto; }
 .nav{ display:flex; align-items:center; gap:4px 14px; flex-wrap:wrap; }
 .nav a{ text-decoration:none; font-weight:800; font-size:0.95rem; color:var(--ink); padding:8px 6px; }
 .nav a:hover{ color:var(--green-deep); }
