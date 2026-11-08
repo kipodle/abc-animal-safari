@@ -21,8 +21,9 @@
 
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
   function normEmail(s) { return String(s || '').trim().toLowerCase(); }
-  function parade(names) {
-    return '<div class="wc-parade" aria-hidden="true">' + names.map(function (n, i) { return '<img src="' + ASSETS + 'wc/wc-' + n + '.svg" alt="" style="--i:' + i + '">'; }).join('') + '</div>';
+  // Hog the hedgehog is the one and only mascot on the sign-up / login screens.
+  function parade() {
+    return '<div class="hog-main" aria-hidden="true"><img src="' + ASSETS + 'logo.png" alt="" width="146" height="130"></div>';
   }
 
   var member = null;

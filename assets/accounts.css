@@ -65,6 +65,11 @@ body.auth-open{ overflow:hidden; }
 .wc-parade img{ width:72px; height:72px; object-fit:contain; margin:0 -4px; animation:hog-hop 2.8s ease-in-out infinite; animation-delay:calc(var(--i, 0) * .28s); }
 @keyframes hog-hop{ 0%,100%{ transform:translateY(0) rotate(-2deg); } 50%{ transform:translateY(-7px) rotate(2deg); } }
 
+/* the hedgehog mascot on sign-up / login */
+.hog-main{ display:flex; justify-content:center; margin:-6px 0 6px; }
+.hog-main img{ width:132px; height:auto; display:block; }
+.hog-wall .hog-main img{ width:170px; }
+
 /* full-page wall (game) */
 .hog-wall{
   position:fixed; inset:0; z-index:400; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:20px; text-align:center;
@@ -98,7 +103,8 @@ body.auth-open{ overflow:hidden; }
   .auth-modal{ border-radius:26px 26px 0 0; max-width:none; margin:0; padding-bottom:calc(24px + env(safe-area-inset-bottom,0px)); max-height:100%; overflow-y:auto; background-size:70px auto, 70px auto, cover; }
   .auth-alt{ padding:0 54px; }
   .wc-parade img{ width:60px; height:60px; }
-  .join-card .wc-parade img, .hog-wall .wc-parade img{ width:68px; height:68px; }
+  .hog-main img{ width:112px; }
+  .hog-wall .hog-main img{ width:140px; }
 }
 
 .card .shop-note{ font-size:.82rem; font-weight:700; color:var(--ink-soft, #7D6A54); }

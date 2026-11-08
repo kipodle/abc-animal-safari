@@ -28,8 +28,7 @@
 @keyframes tile-pop{ 0%{ transform:scale(1); } 35%{ transform:scale(1.03); } 100%{ transform:scale(1); } }
 .tile-learning{ --tint:#E1EAFB; --tint-a:rgba(225,234,251,.62); }
 .tile-shop{ --tint:#FFEDCB; --tint-a:rgba(255,237,203,.62); }
-.tile-art{ position:absolute; right:-6px; top:-8px; width:112px; height:auto; pointer-events:none; transform:rotate(6deg); animation:hog-hop 3.4s ease-in-out infinite; }
-.tile-head{ display:flex; align-items:center; gap:10px; padding-right:96px; min-height:64px; }
+.tile-head{ display:flex; align-items:center; gap:10px; min-height:64px; }
 .tile-ico{ width:46px; height:46px; flex:0 0 46px; display:flex; align-items:center; justify-content:center; font-size:1.6rem; border-radius:16px; background:var(--card); border:2px solid var(--card-edge); }
 .tile h2{ margin:0; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.75rem; line-height:1.05; color:var(--ink); }
 .tile > p{ margin:0; font-weight:700; color:var(--ink-soft); }
@@ -74,9 +73,8 @@ a.item:hover{ border-color:var(--green); }
 /* iPad portrait: still three columns, with slimmer tiles */
 @media (min-width:721px) and (max-width:900px){
   .tile{ padding:16px 14px 18px; }
-  .tile-art{ width:72px; right:-4px; }
-  .tile-ico{ display:none; }
-  .tile-head{ padding-right:60px; min-height:56px; }
+    .tile-ico{ display:none; }
+  .tile-head{ min-height:56px; }
   .tile h2{ font-size:1.5rem; }
   .tile > p{ font-size:.92rem; }
   .item{ padding:8px 10px; }
@@ -88,7 +86,6 @@ a.item:hover{ border-color:var(--green); }
   .tile-head{ min-height:0; }
 }
 @media (prefers-reduced-motion: reduce){
-  .tile-art{ animation:none; }
   .tile, .tile:hover{ transition:none; transform:none; }
 }
 
@@ -99,8 +96,7 @@ a.item:hover{ border-color:var(--green); }
   .hero-hog img{ width:150px; }
   .hub{ gap:14px; }
   .tile{ padding:14px 16px 16px; gap:8px; border-radius:24px; }
-  .tile-art{ width:84px; top:-6px; }
-  .tile-head{ padding-right:72px; min-height:48px; }
+  .tile-head{ min-height:0; }
   .tile h2{ font-size:1.45rem; }
   .tile-ico{ width:40px; height:40px; flex-basis:40px; font-size:1.35rem; }
   .tile > p{ display:none; }
