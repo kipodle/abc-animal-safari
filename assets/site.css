@@ -64,7 +64,7 @@ a{ color:var(--green-deep); }
 .site-header{ padding-block:14px; }
 .site-header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 .brand{ display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--green-deep); font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.35rem; line-height:1; }
-.brand .logo{ font-size:1.8rem; }
+.brand .logo-img{ height:46px; width:auto; display:block; flex:0 0 auto; }
 .nav{ display:flex; align-items:center; gap:4px 14px; flex-wrap:wrap; }
 .nav a{ text-decoration:none; font-weight:800; font-size:0.95rem; color:var(--ink); padding:8px 6px; }
 .nav a:hover{ color:var(--green-deep); }

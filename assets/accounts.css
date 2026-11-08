@@ -106,9 +106,16 @@ body.auth-open{ overflow:hidden; }
 
 /* compact header on phones: logo and Log in / Sign up share one row */
 @media (max-width:480px){
-  .site-header .brand{ font-size:1.12rem; }
-  .site-header .brand .logo{ font-size:1.5rem; }
+  .site-header .brand{ font-size:.98rem; gap:6px; }
+  .site-header .brand .logo-img{ height:32px; }
   .hdr-auth{ gap:6px; }
   .hdr-auth .btn{ padding:6px 12px; font-size:.85rem; }
   .site-header .nav .btn{ display:none; } /* the YouTube link is also in the About strip */
+}
+
+@media (max-width:380px){
+  .site-header .brand{ font-size:.9rem; gap:5px; }
+  .site-header .brand .logo-img{ height:30px; }
+  .hdr-auth{ gap:5px; }
+  .hdr-auth .btn{ padding:6px 10px; font-size:.8rem; }
 }
