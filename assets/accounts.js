@@ -235,6 +235,16 @@
     openSignup: function () { return openModal('signup', {}); },
     openLogin: function () { return openModal('login', {}); },
     openAccount: function () { return openModal('account', {}); },
+    gateDownload: function (meta) { return requireJoin('download', meta && meta.label); },
+    // Game stars are kept on this device, per account.
+    getProgress: function (letter) {
+      if (!member) return Promise.resolve([]);
+      try { return Promise.resolve(JSON.parse(localStorage.getItem('hog-progress:' + member.email + ':' + letter) || '[]').filter(Number.isInteger)); } catch (e) { return Promise.resolve([]); }
+    },
+    saveProgress: function (letter, done) {
+      if (!member) return;
+      try { localStorage.setItem('hog-progress:' + member.email + ':' + letter, JSON.stringify(Array.from(done).sort(function (a, b) { return a - b; }))); } catch (e) { /* storage may be blocked */ }
+    },
     logDownload: function (meta) { if (!member) return; api('POST', '/account/download', { kind: meta.kind, letter: meta.letter || null, file: meta.file || null }).catch(function () {}); },
     admin: { stats: function () { return api('GET', '/account/admin/stats'); }, members: function () { return api('GET', '/account/admin/members'); } },
   };

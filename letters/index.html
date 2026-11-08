@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Letter Lab – 20 Games for Every Letter | Hog the Hedgehog</title>
+<meta name="description" content="Pick a letter and meet an animal friend whose name starts with it, like Fizz the Frog. Get 20 fun games and exercises for every letter, to play on screen or print as a personalised PDF workbook.">
+<link rel="canonical" href="https://hogthehedgehog.com/letters/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%94%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/accounts.css">
+<link rel="stylesheet" href="/assets/lab/lab.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="logo" aria-hidden="true">🦔</span> Hog the Hedgehog</a>
+    <nav class="nav" aria-label="Main">
+      <a href="/#games">Games</a>
+      <a href="/#learning" aria-current="page">Learning resources</a>
+      <a href="/#shop">Shop</a>
+      <a href="/#about">About</a>
+      <a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Watch on YouTube</a>
+    </nav>
+  </div>
+</header>
+
+<main class="lab">
+
+  <!-- STEP 1: choose name + letter + mode -->
+  <section id="setup">
+    <div class="wrap">
+      <div class="learn-hero">
+        <h1>🔤 Letter Lab</h1>
+        <p>Type a name, pick a letter, and meet an animal friend whose name starts with it. Every letter comes with <strong>20 fun games &amp; exercises</strong>, to play on screen or print as a PDF workbook.</p>
+      </div>
+
+      <div class="setup-card" id="setup-card">
+        <div class="step-title"><span class="n">1</span> Who is learning?</div>
+        <input id="name" class="text-input" type="text" maxlength="20" autocomplete="off" placeholder="Child's name, e.g. Emma" aria-label="Child's name">
+
+        <div class="step-title"><span class="n">2</span> Which letter?</div>
+        <div class="letter-row">
+          <input id="letter-input" class="text-input letter-input" type="text" maxlength="1" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="F" aria-label="Type a letter">
+          <span class="letter-hint">Type a letter, or tap one below</span>
+        </div>
+        <div class="letter-picker" id="picker" role="group" aria-label="Pick a letter"></div>
+
+        <div class="preview" id="preview" aria-live="polite">
+          <span class="pe">🦔</span>
+          <div><b>Pick a letter to meet your animal friend!</b><small>Every friend's name and animal start with the same letter.</small></div>
+        </div>
+
+        <div class="step-title"><span class="n">3</span> How do you want to learn?</div>
+        <div class="mode-buttons">
+          <button class="mode-btn play" id="btn-play" type="button" disabled>
+            <span class="big">🎮</span>Play now on screen<small>Interactive games with stars &amp; sounds</small>
+          </button>
+          <button class="mode-btn pdf" id="btn-pdf" type="button" disabled>
+            <span class="big">📄</span>Download as PDF<small>Print-ready workbook, made just for them</small>
+          </button>
+        </div>
+        <div class="paper-row">
+          <label for="paper">Paper size for PDF:</label>
+          <select id="paper"><option value="a4">A4</option><option value="letter">US Letter</option></select>
+        </div>
+        <div data-auth-note></div>
+        <div class="setup-msg" id="setup-msg" role="status"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAYER -->
+  <section id="player" hidden>
+    <div class="wrap player">
+      <div class="p-top">
+        <div class="p-hello">
+          <span class="p-emoji" id="p-emoji">🦔</span>
+          <div class="bubble" id="p-greeting"></div>
+        </div>
+        <div class="p-tools">
+          <button class="tool-btn" id="p-sound" type="button" aria-label="Turn sound on or off" aria-pressed="true">🔊 Sound on</button>
+          <button class="tool-btn" id="p-pdf" type="button">📄 Get PDF</button>
+          <button class="tool-btn" id="p-quit" type="button">↩ Change letter</button>
+        </div>
+      </div>
+      <div class="p-progress"><div id="p-bar"></div></div>
+      <div class="pips" id="pips" aria-label="Jump to a game"></div>
+      <div id="stage" class="mode-play"></div>
+      <div id="finish" class="finish mode-play" hidden></div>
+    </div>
+    <div class="p-nav" id="p-nav">
+      <button class="btn btn-secondary" id="p-prev" type="button">◀ Back</button>
+      <span class="p-count" id="p-count"></span>
+      <button class="btn btn-green" id="p-next" type="button">Next ▶</button>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="overlay" id="pdf-overlay" hidden>
+  <div class="overlay-box">
+    <h3 id="ov-title">Making your workbook…</h3>
+    <p id="ov-text" style="margin:0;color:var(--ink-soft)">This takes a few seconds.</p>
+    <div class="bar"><div id="ov-bar"></div></div>
+    <button class="btn btn-secondary" id="ov-close" type="button" hidden style="margin-top:18px">Close</button>
+  </div>
+</div>
+
+<div id="ws-root" aria-hidden="true"></div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Hog the Hedgehog</span>
+    <nav aria-label="Footer">
+      <a href="/#games">Games</a>
+      <a href="/#learning">Learning resources</a>
+      <a href="/#shop">Shop</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">YouTube</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/countries.js"></script>
+<script src="/assets/accounts.js"></script>
+<script src="/assets/lab/letters-data.js"></script>
+<script src="/assets/lab/exercises.js"></script>
+<script src="/assets/lab/learn.js"></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -115,23 +115,24 @@ async function startSession(db: D1, userId: number, env: AccountsEnv): Promise<s
 async function stats(db: D1) {
   const now = Date.now(), D7 = now - 7 * DAY, D30 = now - 30 * DAY;
   const q = (sql: string, ...a: unknown[]) => db.prepare(sql).bind(...a);
+  const NA = "user_id NOT IN (SELECT id FROM users WHERE is_admin = 1)"; // the owner's own account is not counted
   const r = await db.batch([
-    q("SELECT COUNT(*) c FROM users"),
-    q("SELECT COUNT(*) c FROM users WHERE created_at > ?", D7),
-    q("SELECT COUNT(*) c FROM users WHERE created_at > ?", D30),
-    q("SELECT COUNT(*) c FROM users WHERE marketing = 1"),
-    q("SELECT COUNT(*) c FROM events WHERE type = 'login'"),
-    q("SELECT COUNT(*) c FROM events WHERE type = 'login' AND created_at > ?", D7),
-    q("SELECT COUNT(DISTINCT user_id) c FROM events WHERE type = 'login' AND created_at > ?", D30),
-    q("SELECT COUNT(*) c FROM events WHERE type = 'visit'"),
-    q("SELECT COUNT(*) c FROM events WHERE type = 'visit' AND created_at > ?", D7),
-    q("SELECT COUNT(DISTINCT user_id) c FROM events WHERE created_at > ?", D30),
-    q("SELECT COUNT(*) c FROM downloads"),
-    q("SELECT COUNT(*) c FROM downloads WHERE created_at > ?", D7),
-    q("SELECT letter, COUNT(*) n FROM downloads WHERE letter IS NOT NULL GROUP BY letter ORDER BY n DESC, letter LIMIT 5"),
-    q("SELECT country, COUNT(*) n FROM users GROUP BY country ORDER BY n DESC, country LIMIT 10"),
-    q("SELECT date(created_at/1000,'unixepoch') d, type, COUNT(*) n FROM events WHERE created_at > ? GROUP BY d, type", D30),
-    q("SELECT date(created_at/1000,'unixepoch') d, COUNT(*) n FROM downloads WHERE created_at > ? GROUP BY d", D30),
+    q("SELECT COUNT(*) c FROM users WHERE is_admin = 0"),
+    q("SELECT COUNT(*) c FROM users WHERE is_admin = 0 AND created_at > ?", D7),
+    q("SELECT COUNT(*) c FROM users WHERE is_admin = 0 AND created_at > ?", D30),
+    q("SELECT COUNT(*) c FROM users WHERE is_admin = 0 AND marketing = 1"),
+    q(`SELECT COUNT(*) c FROM events WHERE type = 'login' AND ${NA}`),
+    q(`SELECT COUNT(*) c FROM events WHERE type = 'login' AND ${NA} AND created_at > ?`, D7),
+    q(`SELECT COUNT(DISTINCT user_id) c FROM events WHERE type = 'login' AND ${NA} AND created_at > ?`, D30),
+    q(`SELECT COUNT(*) c FROM events WHERE type = 'visit' AND ${NA}`),
+    q(`SELECT COUNT(*) c FROM events WHERE type = 'visit' AND ${NA} AND created_at > ?`, D7),
+    q(`SELECT COUNT(DISTINCT user_id) c FROM events WHERE ${NA} AND created_at > ?`, D30),
+    q(`SELECT COUNT(*) c FROM downloads WHERE ${NA}`),
+    q(`SELECT COUNT(*) c FROM downloads WHERE ${NA} AND created_at > ?`, D7),
+    q(`SELECT letter, COUNT(*) n FROM downloads WHERE letter IS NOT NULL AND ${NA} GROUP BY letter ORDER BY n DESC, letter LIMIT 5`),
+    q("SELECT country, COUNT(*) n FROM users WHERE is_admin = 0 GROUP BY country ORDER BY n DESC, country LIMIT 10"),
+    q(`SELECT date(created_at/1000,'unixepoch') d, type, COUNT(*) n FROM events WHERE ${NA} AND created_at > ? GROUP BY d, type`, D30),
+    q(`SELECT date(created_at/1000,'unixepoch') d, COUNT(*) n FROM downloads WHERE ${NA} AND created_at > ? GROUP BY d`, D30),
   ]);
   const c = (i: number): number => r[i].results[0]?.c || 0;
   const byDay: Record<string, { signups: number; logins: number; visits: number; downloads: number }> = {};
