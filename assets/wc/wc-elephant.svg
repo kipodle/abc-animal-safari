@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -12 240 232"><defs>
+  <filter id="wc" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="51" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="0.9" result="b"/>
+    <feMorphology in="b" operator="erode" radius="2.2" result="e"/>
+    <feGaussianBlur in="e" stdDeviation="2.2" result="eb"/>
+    <feComposite in="b" in2="eb" operator="out" result="edge"/>
+    <feColorMatrix in="edge" type="matrix" values="0.72 0 0 0 0  0 0.72 0 0 0  0 0 0.72 0 0  0 0 0 1.1 0" result="edgeDark"/>
+    <feMerge result="m"><feMergeNode in="b"/><feMergeNode in="edgeDark"/></feMerge>
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="56" result="g"/>
+    <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.7 1.15" result="gA"/>
+    <feComposite in="m" in2="gA" operator="in"/>
+  </filter>
+</defs><g filter="url(#wc)">
+  <circle cx="34" cy="92" r="40" fill="#a9bfd3"/><circle cx="166" cy="92" r="40" fill="#a9bfd3"/>
+  <circle cx="36" cy="94" r="26" fill="#f4bcc6" opacity=".8"/><circle cx="164" cy="94" r="26" fill="#f4bcc6" opacity=".8"/>
+  <circle cx="100" cy="88" r="62" fill="#9db4c9"/>
+  <path d="M84 120 Q70 150 84 176 Q96 190 112 178 Q120 168 114 156 Q106 164 100 156 Q104 136 116 120 Z" fill="#9db4c9"/>
+  <ellipse cx="100" cy="64" rx="34" ry="16" fill="#b9cddd" opacity=".8"/>
+  <path d="M64 126 Q56 142 68 150" fill="none" stroke="#fff5dc" stroke-width="9" stroke-linecap="round"/>
+  <path d="M136 126 Q144 142 132 150" fill="none" stroke="#fff5dc" stroke-width="9" stroke-linecap="round"/>
+</g><circle cx="78" cy="86" r="4.4" fill="#3a2a22"/><circle cx="76.7" cy="84.5" r="1.4" fill="#fff"/><circle cx="122" cy="86" r="4.4" fill="#3a2a22"/><circle cx="120.7" cy="84.5" r="1.4" fill="#fff"/><circle cx="64" cy="104" r="8" fill="#f59a9a" opacity=".55"/><circle cx="136" cy="104" r="8" fill="#f59a9a" opacity=".55"/></svg>

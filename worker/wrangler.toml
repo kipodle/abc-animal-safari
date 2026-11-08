@@ -7,9 +7,21 @@ routes = [
   { pattern = "api.hogthehedgehog.com", custom_domain = true }
 ]
 
+# Accounts database. Create it once with:  npx wrangler d1 create hog-accounts
+# then paste the database_id it prints in place of the placeholder below.
+[[d1_databases]]
+binding = "DB"
+database_name = "hog-accounts"
+database_id = "f8a8b156-ab87-45eb-9ec7-3c04d07545cb"
+migrations_dir = "migrations"
+
 [vars]
 MODEL = "claude-opus-5-5"
 ALLOWED_ORIGINS = "https://hogthehedgehog.com,https://www.hogthehedgehog.com"
 SITE_URL = "https://hogthehedgehog.com"
 PRICE_CENTS = "199"
 CURRENCY = "usd"
+# Login cookie is shared between hogthehedgehog.com and api.hogthehedgehog.com
+COOKIE_DOMAIN = ".hogthehedgehog.com"
+# Shown on the Privacy page so parents know how to reach you (optional)
+CONTACT_EMAIL = ""

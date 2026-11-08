@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 224 224"><defs>
+  <filter id="wc" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="11" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="0.9" result="b"/>
+    <feMorphology in="b" operator="erode" radius="2.2" result="e"/>
+    <feGaussianBlur in="e" stdDeviation="2.2" result="eb"/>
+    <feComposite in="b" in2="eb" operator="out" result="edge"/>
+    <feColorMatrix in="edge" type="matrix" values="0.72 0 0 0 0  0 0.72 0 0 0  0 0 0.72 0 0  0 0 0 1.1 0" result="edgeDark"/>
+    <feMerge result="m"><feMergeNode in="b"/><feMergeNode in="edgeDark"/></feMerge>
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="16" result="g"/>
+    <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.7 1.15" result="gA"/>
+    <feComposite in="m" in2="gA" operator="in"/>
+  </filter>
+</defs><g filter="url(#wc)">
+  <ellipse cx="44" cy="160" rx="26" ry="14" fill="#6fb85f"/><ellipse cx="156" cy="160" rx="26" ry="14" fill="#6fb85f"/>
+  <ellipse cx="100" cy="128" rx="60" ry="50" fill="#7fc76d"/>
+  <ellipse cx="100" cy="142" rx="38" ry="31" fill="#dff2b0"/>
+  <ellipse cx="100" cy="88" rx="62" ry="40" fill="#86cf73"/>
+  <circle cx="66" cy="56" r="21" fill="#86cf73"/><circle cx="134" cy="56" r="21" fill="#86cf73"/>
+  <circle cx="66" cy="54" r="15" fill="#fffdf2"/><circle cx="134" cy="54" r="15" fill="#fffdf2"/>
+  <ellipse cx="70" cy="178" rx="15" ry="7" fill="#5fa84f"/><ellipse cx="130" cy="178" rx="15" ry="7" fill="#5fa84f"/>
+</g>
+<circle cx="68" cy="56" r="7" fill="#2f4a2a"/><circle cx="132" cy="56" r="7" fill="#2f4a2a"/>
+<circle cx="65" cy="53" r="2.4" fill="#fff"/><circle cx="129" cy="53" r="2.4" fill="#fff"/>
+<path d="M72 98 Q100 118 128 98" fill="none" stroke="#3f7a38" stroke-width="3.5" stroke-linecap="round" opacity=".8"/>
+<circle cx="60" cy="100" r="9" fill="#f59a9a" opacity=".55"/><circle cx="140" cy="100" r="9" fill="#f59a9a" opacity=".55"/></svg>

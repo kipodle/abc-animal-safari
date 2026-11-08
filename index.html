@@ -13,6 +13,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%94%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/accounts.css">
+<link rel="stylesheet" href="/assets/home.css">
 </head>
 <body>
 
@@ -21,7 +23,8 @@
     <a class="brand" href="/"><span class="logo" aria-hidden="true">🦔</span> Hog the Hedgehog</a>
     <nav class="nav" aria-label="Main">
       <a href="/#games">Games</a>
-      <a href="/stories/">Letter adventures</a>
+      <a href="/#learning">Learning resources</a>
+      <a href="/#shop">Shop</a>
       <a href="/#about">About</a>
       <a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Watch on YouTube</a>
     </nav>
@@ -29,88 +32,71 @@
 </header>
 
 <main>
-  <section class="hero">
+  <section class="welcome">
     <div class="wrap">
       <div>
-        <h1>Play, learn and read with <span class="accent">Hog the Hedgehog</span></h1>
-        <p class="lead">Free learning games for kids ages 4 to 12, plus printable letter adventures starring your child. Made to go with the songs and videos your little one already loves.</p>
-        <div class="cta">
-          <a class="btn" href="/games/abc-animal-safari/">Play the ABC game</a>
-          <a class="btn btn-light" href="/stories/">Make a letter adventure</a>
+        <h1>Play, learn and shop with <span class="accent">Hog the Hedgehog</span></h1>
+        <p class="lead">Free learning games and printable letter adventures for kids ages 4 to 12, made to go with the songs and videos your little one already loves.</p>
+        <div class="cta" data-guest-only hidden>
+          <button class="btn" type="button" data-open-signup>Let's gooo! 🚀</button>
+          <button class="btn btn-light" type="button" data-open-login>Log in</button>
         </div>
+        <p class="hello" data-member-only hidden>Welcome back! 🎉 Pick something below.</p>
       </div>
-      <div class="collage" aria-hidden="true">
-        <div class="tile"><img src="/assets/img/lion.jpg" alt=""></div>
-        <div class="tile"><img src="/assets/img/hedgehog.jpg" alt=""></div>
-        <div class="tile"><img src="/assets/img/sea-turtle.jpg" alt=""></div>
-        <div class="tile"><img src="/assets/img/peacock.jpg" alt=""></div>
+      <div class="parade-hero" aria-hidden="true">
+        <img src="/assets/wc/wc-hedgehog.svg" alt="" style="--i:0"><img src="/assets/wc/wc-frog.svg" alt="" style="--i:1"><img src="/assets/wc/wc-lion.svg" alt="" style="--i:2"><img src="/assets/wc/wc-penguin.svg" alt="" style="--i:3">
       </div>
     </div>
   </section>
 
-  <section class="section" id="games">
-    <div class="wrap">
-      <h2>Games</h2>
-      <p class="sub">Tap, match and learn. Works on phones, tablets and computers.</p>
-      <div class="cards">
-        <article class="card">
-          <div class="tags"><span class="tag">Play now</span><span class="tag">Ages 4–12</span></div>
-          <div class="thumb" aria-hidden="true">
-            <span><img src="/assets/img/lion.jpg" alt=""></span>
-            <span><img src="/assets/img/sea-turtle.jpg" alt=""></span>
-            <span><img src="/assets/img/peacock.jpg" alt=""></span>
-            <span><img src="/assets/img/hedgehog.jpg" alt=""></span>
-          </div>
-          <h3>ABC Animal Safari</h3>
-          <p>Which animal starts with this letter? Match real animal photos to letters, earn a Magic Star badge every level, and travel through Safari, Sea and Blue animal worlds with levels that never run out.</p>
-          <div class="actions"><a class="btn" href="/games/abc-animal-safari/">Play now</a></div>
-        </article>
-        <article class="card soon">
-          <div class="tags"><span class="tag soon">Coming soon</span></div>
-          <div class="big" aria-hidden="true">🎲</div>
-          <h3>More games</h3>
-          <p>New learning games are on the way: phonics, counting and more.</p>
-        </article>
-      </div>
-    </div>
+  <section class="wrap hub" aria-label="Explore the site">
+
+    <article class="tile tile-games" id="games">
+      <img class="tile-art" src="/assets/wc/wc-frog.svg" alt="">
+      <div class="tile-head"><span class="tile-ico" aria-hidden="true">🎮</span><h2>Games</h2></div>
+      <p>Tap, match and learn. Works on phones, tablets and computers.</p>
+      <ul class="tile-list">
+        <li><a class="item" href="/games/abc-animal-safari/">
+          <span class="thumbs" aria-hidden="true"><img src="/assets/img/lion.jpg" alt=""><img src="/assets/img/sea-turtle.jpg" alt=""><img src="/assets/img/peacock.jpg" alt=""></span>
+          <span class="txt"><b>ABC Animal Safari</b><small>Match letters to real animals · Ages 4–12</small></span><span class="go" aria-hidden="true">▶</span></a></li>
+        <li class="item soon"><span class="ic" aria-hidden="true">🎲</span><span class="txt"><b>More games</b><small>Phonics and counting, coming soon</small></span></li>
+      </ul>
+      <a class="btn" href="/games/abc-animal-safari/">Play now</a>
+    </article>
+
+    <article class="tile tile-learning" id="learning">
+      <img class="tile-art" src="/assets/wc/wc-elephant.svg" alt="">
+      <div class="tile-head"><span class="tile-ico" aria-hidden="true">📚</span><h2>Learning resources</h2></div>
+      <p>Printable fun that goes with the games. Free for members.</p>
+      <ul class="tile-list">
+        <li><a class="item" href="/stories/">
+          <span class="ic" aria-hidden="true">🗺️</span>
+          <span class="txt"><b>Letter adventure book</b><small>Your child is the hero · 10 missions · PDF</small></span><span class="go" aria-hidden="true">▶</span></a></li>
+        <li class="item soon"><span class="ic" aria-hidden="true">📖</span><span class="txt"><b>Printed hardcover book</b><small>Coming soon</small></span></li>
+      </ul>
+      <a class="btn" href="/stories/">Make an adventure</a>
+    </article>
+
+    <article class="tile tile-shop" id="shop">
+      <img class="tile-art" src="/assets/wc/wc-hedgehog.svg" alt="">
+      <div class="tile-head"><span class="tile-ico" aria-hidden="true">🛍️</span><h2>Shop</h2></div>
+      <p>Hog's pick, available on Amazon.</p>
+      <ul class="tile-list">
+        <li><a class="item" href="https://www.amazon.com/dp/B0CSXSY749" target="_blank" rel="noopener noreferrer">
+          <span class="ic" aria-hidden="true">⭐</span>
+          <span class="txt"><b>Hog's Amazon pick</b><small>Details and buying on Amazon</small></span><span class="go" aria-hidden="true">↗</span></a></li>
+      </ul>
+      <a class="btn" href="https://www.amazon.com/dp/B0CSXSY749" target="_blank" rel="noopener noreferrer">View on Amazon</a>
+      <p class="note">Opens Amazon in a new tab. You buy from Amazon, not from us.</p>
+    </article>
+
   </section>
 
-  <section class="section" id="stories">
-    <div class="wrap">
-      <h2>Letter adventures</h2>
-      <p class="sub">A free printable game book where your child is the hero.</p>
-      <div class="cards">
-        <article class="card">
-          <div class="tags"><span class="tag">New</span><span class="tag">Free PDF</span></div>
-          <h3>Your child's letter adventure</h3>
-          <p>Pick the letter your child is learning and a world they love, like Under the Sea. Get a printable book with 10 missions: a treasure hunt, tracing, a maze, word match, a word search, coloring, a picture story and a certificate. Your child's name and photo are in every mission.</p>
-          <ul class="feature-list">
-            <li><span class="ico" aria-hidden="true">🗺️</span> 10 missions with stars to collect</li>
-            <li><span class="ico" aria-hidden="true">🌀</span> Mazes, word search and matching games</li>
-            <li><span class="ico" aria-hidden="true">🔤</span> One letter at a time, all 26 letters</li>
-            <li><span class="ico" aria-hidden="true">🔒</span> Photo never leaves your device</li>
-          </ul>
-          <div class="actions"><a class="btn" href="/stories/">Make an adventure</a></div>
-        </article>
-        <article class="card soon">
-          <div class="tags"><span class="tag soon">Coming soon</span></div>
-          <div class="big" aria-hidden="true">📚</div>
-          <h3>Printed hardcover book</h3>
-          <p>Soon you will be able to order your child's adventure as a printed hardcover keepsake.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="about">
-    <div class="wrap">
-      <h2>About</h2>
-      <div class="about">
-        <p>Hog the Hedgehog makes songs, videos and games that help kids learn the alphabet, animals and more.</p>
-        <p>The games here are free to play and made for parents and kids to enjoy together.</p>
-        <div><a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Visit the YouTube channel</a></div>
-      </div>
-    </div>
+  <section class="about-strip" id="about">
+    <div class="wrap"><div>
+      <p><strong>About Hog.</strong> Hog the Hedgehog makes songs, videos and games that help kids learn the alphabet, animals and more. Everything here is made for parents and kids to enjoy together.</p>
+      <a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Visit the YouTube channel</a>
+    </div></div>
   </section>
 </main>
 
@@ -118,14 +104,17 @@
   <div class="wrap">
     <span>© 2026 Hog the Hedgehog</span>
     <nav aria-label="Footer">
-      <a href="/games/abc-animal-safari/">ABC game</a>
-      <a href="/stories/">Adventures</a>
+      <a href="/#games">Games</a>
+      <a href="/#learning">Learning resources</a>
+      <a href="/#shop">Shop</a>
       <a href="/privacy/">Privacy</a>
       <a href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">YouTube</a>
     </nav>
   </div>
 </footer>
 
+<script src="/assets/countries.js"></script>
+<script src="/assets/accounts.js"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

@@ -1,0 +1,107 @@
+/* Home page: a compact welcome and a grid of three big tiles (Games, Learning resources, Shop). */
+
+/* ---------- welcome ---------- */
+.welcome{ padding-block:18px 6px; }
+.welcome .wrap{ display:grid; grid-template-columns:1.25fr .75fr; gap:18px; align-items:center; }
+.welcome h1{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:clamp(1.8rem, 4.8vw, 2.8rem); line-height:1.06; margin:0 0 8px; color:var(--green-deep); text-wrap:balance; }
+.welcome h1 .accent{ color:var(--coral); }
+.welcome .lead{ margin:0 0 14px; font-size:1.05rem; font-weight:700; color:var(--ink-soft); max-width:36em; }
+.welcome .cta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.welcome .cta[hidden]{ display:none; }
+.welcome .hello{ margin:0; font-weight:800; font-size:1.05rem; color:var(--green-deep); }
+.parade-hero{ display:flex; justify-content:center; align-items:flex-end; }
+.parade-hero img{ width:clamp(64px, 9.5vw, 112px); height:auto; margin:0 -6px; animation:hog-hop 3s ease-in-out infinite; animation-delay:calc(var(--i, 0) * .3s); }
+
+/* ---------- the three tiles ---------- */
+.hub{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:18px; padding-block:14px 10px; }
+.tile{
+  --tint:#E2F2DF; --tint-a:rgba(226,242,223,.62);
+  position:relative; overflow:hidden; display:flex; flex-direction:column; gap:10px; padding:20px 20px 22px;
+  border-radius:28px; border:2px solid var(--card-edge); box-shadow:0 8px 0 var(--card-edge);
+  background-color:var(--tint);
+  background-image:linear-gradient(var(--tint-a), var(--tint-a)), url(/assets/wc/wc-wash.svg);
+  background-size:cover; background-position:center;
+  scroll-margin-top:16px; transition:transform .18s ease, box-shadow .18s ease;
+}
+.tile:hover{ transform:translateY(-4px); box-shadow:0 12px 0 var(--card-edge); }
+.tile:target{ animation:tile-pop .9s ease; }
+@keyframes tile-pop{ 0%{ transform:scale(1); } 35%{ transform:scale(1.03); } 100%{ transform:scale(1); } }
+.tile-learning{ --tint:#E1EAFB; --tint-a:rgba(225,234,251,.62); }
+.tile-shop{ --tint:#FFEDCB; --tint-a:rgba(255,237,203,.62); }
+.tile-art{ position:absolute; right:-6px; top:-8px; width:112px; height:auto; pointer-events:none; transform:rotate(6deg); animation:hog-hop 3.4s ease-in-out infinite; }
+.tile-head{ display:flex; align-items:center; gap:10px; padding-right:96px; min-height:64px; }
+.tile-ico{ width:46px; height:46px; flex:0 0 46px; display:flex; align-items:center; justify-content:center; font-size:1.6rem; border-radius:16px; background:var(--card); border:2px solid var(--card-edge); }
+.tile h2{ margin:0; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.75rem; line-height:1.05; color:var(--ink); }
+.tile > p{ margin:0; font-weight:700; color:var(--ink-soft); }
+.tile-list{ list-style:none; margin:2px 0 0; padding:0; display:grid; gap:8px; }
+.item{
+  display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:16px; text-decoration:none; color:var(--ink);
+  background:color-mix(in srgb, var(--card) 88%, transparent); border:2px solid var(--card-edge);
+}
+a.item:hover{ border-color:var(--green); }
+.item .ic{ flex:0 0 auto; font-size:1.5rem; line-height:1; }
+.item .txt{ display:flex; flex-direction:column; min-width:0; line-height:1.25; }
+.item b{ font-family:"Baloo 2",sans-serif; font-weight:700; font-size:1.05rem; }
+.item small{ font-weight:700; color:var(--ink-soft); font-size:.82rem; }
+.item .go{ margin-left:auto; font-weight:800; color:var(--green-deep); }
+.item.soon{ opacity:.78; border-style:dashed; }
+.thumbs{ display:flex; flex:0 0 auto; }
+.thumbs img{ width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid var(--card); margin-left:-9px; background:var(--card); }
+.thumbs img:first-child{ margin-left:0; }
+.tile .btn{ margin-top:auto; align-self:flex-start; }
+.tile .note{ margin:0; font-size:.8rem; font-weight:700; color:var(--ink-soft); }
+
+/* ---------- about strip ---------- */
+.about-strip{ padding-block:8px 18px; }
+.about-strip .wrap > div{
+  display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between;
+  padding:14px 18px; border-radius:22px; background:var(--card); border:2px solid var(--card-edge); box-shadow:0 5px 0 var(--card-edge);
+}
+.about-strip p{ margin:0; font-weight:700; color:var(--ink-soft); flex:1 1 340px; }
+.about-strip strong{ color:var(--ink); }
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .tile{ --tint:#1F2B1E; --tint-a:rgba(31,43,30,.78); }
+  :root:not([data-theme="light"]) .tile-learning{ --tint:#1D2535; --tint-a:rgba(29,37,53,.78); }
+  :root:not([data-theme="light"]) .tile-shop{ --tint:#33271A; --tint-a:rgba(51,39,26,.78); }
+}
+
+@media (max-width:900px){
+  .welcome .wrap{ grid-template-columns:1fr; }
+  .parade-hero{ justify-content:flex-start; }
+}
+/* iPad portrait: still three columns, with slimmer tiles */
+@media (min-width:721px) and (max-width:900px){
+  .tile{ padding:16px 14px 18px; }
+  .tile-art{ width:72px; right:-4px; }
+  .tile-ico{ display:none; }
+  .tile-head{ padding-right:60px; min-height:56px; }
+  .tile h2{ font-size:1.5rem; }
+  .tile > p{ font-size:.92rem; }
+  .item{ padding:8px 10px; }
+  .item small, .item .go, .item .ic, .thumbs{ display:none; }
+  .item.soon .ic{ display:none; }
+}
+@media (max-width:720px){
+  .hub{ grid-template-columns:1fr; }
+  .tile-head{ min-height:0; }
+}
+@media (prefers-reduced-motion: reduce){
+  .parade-hero img, .tile-art{ animation:none; }
+  .tile, .tile:hover{ transition:none; transform:none; }
+}
+
+/* phones: shorter tiles so the three categories are quick to scan */
+@media (max-width:560px){
+  .welcome{ padding-block:12px 4px; }
+  .welcome .lead{ font-size:.98rem; }
+  .parade-hero img{ width:62px; }
+  .hub{ gap:14px; }
+  .tile{ padding:14px 16px 16px; gap:8px; border-radius:24px; }
+  .tile-art{ width:84px; top:-6px; }
+  .tile-head{ padding-right:72px; min-height:48px; }
+  .tile h2{ font-size:1.45rem; }
+  .tile-ico{ width:40px; height:40px; flex-basis:40px; font-size:1.35rem; }
+  .tile > p{ display:none; }
+  .tile .item.soon{ display:none; }
+}

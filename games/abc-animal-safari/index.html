@@ -370,6 +370,7 @@
     .letter-glyph{ font-size:4.4rem; }
   }
 </style>
+<link rel="stylesheet" href="/assets/accounts.css">
 </head>
 <body>
 
@@ -383,29 +384,7 @@
 
   <a class="back-link" href="/">&larr; Back to Hog the Hedgehog</a>
 
-  <div class="gate" id="gate">
-    <div class="gate-mascot" aria-hidden="true">🦔</div>
-    <h1 id="gateTitle">Enjoy the <span class="accent">Free</span> ABC Animal Game!</h1>
-    <p class="sub" id="gateSub">Hi grown-ups! Pop in your email and country so we can say hello, then your little one can start matching letters to animal friends.</p>
-    <form class="gate-form" id="gateForm">
-      <div class="field">
-        <label for="gateEmail">Parent's email</label>
-        <input type="email" id="gateEmail" name="email" placeholder="you@example.com" required>
-      </div>
-      <div class="field" id="countryField">
-        <label for="gateCountry">Country</label>
-        <select id="gateCountry" name="country" required>
-          <option value="" disabled selected>Select your country</option>
-        </select>
-      </div>
-      <button type="submit" class="gate-submit" id="gateSubmit">Let's Play! 🎉</button>
-      <p class="gate-error" id="gateError"></p>
-      <button type="button" class="gate-switch" id="gateSwitch">Already signed up? Just enter your email</button>
-      <p class="gate-note">We only use your email to share news about new animal games, and we never sell or share it. Kids: ask a grown-up to fill this in! <a href="/privacy/">Privacy</a></p>
-    </form>
-  </div>
-
-  <div id="gameWrap" hidden>
+  <div id="gameWrap">
     <header>
       <div class="title-block">
         <span class="mascot" aria-hidden="true">🦔</span>
@@ -478,22 +457,6 @@
 (function(){
   "use strict";
 
-  var SIGNUP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScWQktJealsgI9Btzh6-eHsOoHhidq51VVzVRkTsRik4CLfag/formResponse";
-  var SIGNUP_FIELD_EMAIL = "entry.1358276712";
-  var SIGNUP_FIELD_COUNTRY = "entry.376890493";
-
-  var COUNTRIES = ["United States","United Kingdom","Canada","Australia","Ireland","New Zealand","India","Singapore",
-  "Afghanistan","Albania","Algeria","Argentina","Armenia","Austria","Azerbaijan","Bahrain","Bangladesh","Belarus","Belgium",
-  "Bolivia","Bosnia and Herzegovina","Brazil","Brunei","Bulgaria","Cambodia","Cameroon","Chile","China","Colombia","Costa Rica",
-  "Croatia","Cyprus","Czechia","Denmark","Dominican Republic","Ecuador","Egypt","El Salvador","Estonia","Ethiopia","Fiji",
-  "Finland","France","Georgia","Germany","Ghana","Greece","Guatemala","Honduras","Hong Kong","Hungary","Iceland","Indonesia",
-  "Iraq","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Latvia","Lebanon","Lithuania","Luxembourg",
-  "Malaysia","Malta","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Myanmar","Nepal","Netherlands","Nigeria",
-  "North Macedonia","Norway","Oman","Pakistan","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania",
-  "Russia","Rwanda","Saudi Arabia","Serbia","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","Sweden",
-  "Switzerland","Taiwan","Tanzania","Thailand","Tunisia","Turkey","Uganda","Ukraine","United Arab Emirates","Uruguay",
-  "Uzbekistan","Venezuela","Vietnam","Zambia","Zimbabwe","Other"];
-
   var SAFARI_NAMES = {
     A:'Alligator', B:'Bear', C:'Cat', D:'Dog', E:'Elephant', F:'Fox', G:'Giraffe',
     H:'Hedgehog', I:'Iguana', J:'Jellyfish', K:'Kangaroo', L:'Lion', M:'Monkey',
@@ -552,96 +515,6 @@
       var t=a[i]; a[i]=a[j]; a[j]=t;
     }
     return a;
-  }
-
-  /* ---------- Gate screen ---------- */
-  var gateEls = {
-    gate: document.getElementById('gate'),
-    gameWrap: document.getElementById('gameWrap'),
-    form: document.getElementById('gateForm'),
-    country: document.getElementById('gateCountry'),
-    email: document.getElementById('gateEmail'),
-    error: document.getElementById('gateError'),
-    title: document.getElementById('gateTitle'),
-    sub: document.getElementById('gateSub'),
-    countryField: document.getElementById('countryField'),
-    submit: document.getElementById('gateSubmit'),
-    toggle: document.getElementById('gateSwitch')
-  };
-
-  COUNTRIES.forEach(function(c){
-    var opt = document.createElement('option');
-    opt.value = c; opt.textContent = c;
-    gateEls.country.appendChild(opt);
-  });
-
-  function gatePassed(){
-    try{ return localStorage.getItem('abcSafariGatePassed') === '1'; }catch(e){ return false; }
-  }
-  function markGatePassed(){
-    try{ localStorage.setItem('abcSafariGatePassed', '1'); }catch(e){}
-  }
-
-  function submitSignup(email, country){
-    try{
-      var body = new URLSearchParams();
-      body.append(SIGNUP_FIELD_EMAIL, email);
-      body.append(SIGNUP_FIELD_COUNTRY, country);
-      fetch(SIGNUP_FORM_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        keepalive: true,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: body.toString()
-      }).catch(function(){});
-    }catch(e){}
-  }
-
-  var returningMode = false;
-  function setReturningMode(on){
-    returningMode = on;
-    gateEls.error.textContent = '';
-    gateEls.countryField.hidden = on;
-    gateEls.country.required = !on;
-    gateEls.title.innerHTML = on ? 'Welcome back!' : 'Enjoy the <span class="accent">Free</span> ABC Animal Game!';
-    gateEls.sub.textContent = on
-      ? 'Enter the email you signed up with and your little one can keep playing.'
-      : 'Hi grown-ups! Pop in your email and country so we can say hello, then your little one can start matching letters to animal friends.';
-    gateEls.submit.textContent = on ? 'Continue playing! 🎉' : "Let's Play! 🎉";
-    gateEls.toggle.textContent = on ? "New here? Sign up instead" : 'Already signed up? Just enter your email';
-  }
-  gateEls.toggle.addEventListener('click', function(){ setReturningMode(!returningMode); });
-
-  try{
-    var savedEmail = localStorage.getItem('abcSafariEmail');
-    if(savedEmail){ gateEls.email.value = savedEmail; }
-  }catch(e){}
-
-  gateEls.form.addEventListener('submit', function(ev){
-    ev.preventDefault();
-    var email = gateEls.email.value.trim();
-    var country = gateEls.country.value;
-    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if(!emailOk){
-      gateEls.error.textContent = 'Please enter a valid email address.';
-      return;
-    }
-    if(!returningMode && !country){
-      gateEls.error.textContent = 'Please choose your country.';
-      return;
-    }
-    gateEls.error.textContent = '';
-    try{ localStorage.setItem('abcSafariEmail', email); }catch(e){}
-    markGatePassed();
-    gateEls.gate.hidden = true;
-    gateEls.gameWrap.hidden = false;
-    startGame();
-    if(!returningMode){ submitSignup(email, country); }
-  });
-
-  if(gatePassed()){
-    gateEls.gate.hidden = true;
-    gateEls.gameWrap.hidden = false;
   }
 
   /* ---------- Star badge SVG ---------- */
@@ -941,11 +814,11 @@
   }
 
   loadState();
-  if(gatePassed()){
-    startGame();
-  }
+  startGame();
 })();
 </script>
+<script src="/assets/countries.js"></script>
+<script src="/assets/accounts.js" data-wall="game"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

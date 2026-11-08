@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 224 238"><defs>
+  <filter id="wc" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="41" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="0.9" result="b"/>
+    <feMorphology in="b" operator="erode" radius="2.2" result="e"/>
+    <feGaussianBlur in="e" stdDeviation="2.2" result="eb"/>
+    <feComposite in="b" in2="eb" operator="out" result="edge"/>
+    <feColorMatrix in="edge" type="matrix" values="0.72 0 0 0 0  0 0.72 0 0 0  0 0 0.72 0 0  0 0 0 1.1 0" result="edgeDark"/>
+    <feMerge result="m"><feMergeNode in="b"/><feMergeNode in="edgeDark"/></feMerge>
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="46" result="g"/>
+    <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.7 1.15" result="gA"/>
+    <feComposite in="m" in2="gA" operator="in"/>
+  </filter>
+</defs><g filter="url(#wc)">
+  <path d="M48 120 Q34 150 54 170 Q62 188 44 192" fill="none" stroke="#a58be0" stroke-width="17" stroke-linecap="round"/><path d="M70 120 Q82 150 65 170 Q58 188 74 192" fill="none" stroke="#a58be0" stroke-width="17" stroke-linecap="round"/><path d="M92 120 Q80 150 97 170 Q104 188 88 192" fill="none" stroke="#a58be0" stroke-width="17" stroke-linecap="round"/><path d="M112 120 Q124 150 107 170 Q100 188 116 192" fill="none" stroke="#a58be0" stroke-width="17" stroke-linecap="round"/><path d="M134 120 Q122 150 139 170 Q146 188 130 192" fill="none" stroke="#a58be0" stroke-width="17" stroke-linecap="round"/><path d="M156 120 Q170 150 150 170 Q142 188 160 192" fill="none" stroke="#a58be0" stroke-width="17" stroke-linecap="round"/>
+  <circle cx="100" cy="82" r="58" fill="#b49cec"/>
+  <ellipse cx="78" cy="58" rx="22" ry="13" fill="#cfc0f6" opacity=".8"/>
+  <circle cx="132" cy="50" r="6" fill="#8d72d6"/><circle cx="146" cy="68" r="4" fill="#8d72d6"/><circle cx="120" cy="38" r="3.5" fill="#8d72d6"/>
+</g><circle cx="80" cy="86" r="9.5" fill="#fffdf5"/><circle cx="80" cy="86" r="5" fill="#3a2a22"/><circle cx="78.5" cy="84.2" r="1.6" fill="#fff"/><circle cx="120" cy="86" r="9.5" fill="#fffdf5"/><circle cx="120" cy="86" r="5" fill="#3a2a22"/><circle cx="118.5" cy="84.2" r="1.6" fill="#fff"/>
+<path d="M84 108 Q100 122 116 108" fill="none" stroke="#5e45a8" stroke-width="3.2" stroke-linecap="round"/>
+<circle cx="62" cy="104" r="8" fill="#f59a9a" opacity=".55"/><circle cx="138" cy="104" r="8" fill="#f59a9a" opacity=".55"/></svg>

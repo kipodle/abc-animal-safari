@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 224 224"><defs>
+  <filter id="wc" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="4" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="0.9" result="b"/>
+    <feMorphology in="b" operator="erode" radius="2.2" result="e"/>
+    <feGaussianBlur in="e" stdDeviation="2.2" result="eb"/>
+    <feComposite in="b" in2="eb" operator="out" result="edge"/>
+    <feColorMatrix in="edge" type="matrix" values="0.72 0 0 0 0  0 0.72 0 0 0  0 0 0.72 0 0  0 0 0 1.1 0" result="edgeDark"/>
+    <feMerge result="m"><feMergeNode in="b"/><feMergeNode in="edgeDark"/></feMerge>
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="9" result="g"/>
+    <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.7 1.15" result="gA"/>
+    <feComposite in="m" in2="gA" operator="in"/>
+  </filter>
+</defs><g filter="url(#wc)">
+  <path d="M26.0 134.6L0.9 132.6L24.0 123.8ZM24.3 126.5L0.0 120.7L24.5 115.7ZM24.2 118.4L1.4 108.8L26.6 107.7ZM25.7 110.3L5.0 97.3L30.4 100.0ZM29.0 102.5L10.8 86.3L35.6 92.9ZM33.7 95.2L18.5 76.3L42.3 86.5ZM39.9 88.6L28.1 67.3L50.1 81.0ZM47.4 82.8L39.2 59.7L59.0 76.5ZM56.0 77.9L51.7 53.7L68.7 73.1ZM65.4 74.1L65.1 49.3L79.0 71.0ZM75.5 71.5L79.2 46.7L89.6 70.0ZM86.1 70.2L93.6 46.0L100.3 70.4ZM96.7 70.1L108.0 47.2L110.7 72.0ZM107.3 71.3L122.0 50.1L120.7 74.9ZM117.5 73.8L135.2 54.9L130.0 78.9ZM127.0 77.4L147.4 61.3L138.4 84.0ZM135.7 82.2L158.2 69.2L145.6 90.0ZM143.3 87.9L167.4 78.4L151.5 96.8ZM149.7 94.4L174.7 88.7L155.9 104.2ZM154.6 101.7L180.0 99.8L158.8 112.1ZM158.0 109.4L183.1 111.4L160.0 120.2Z" fill="#7a4f35" opacity=".92"/>
+  <ellipse cx="92" cy="122" rx="68" ry="52" fill="#a77450" opacity=".95"/>
+  <ellipse cx="62" cy="108" rx="26" ry="16" fill="#c79068" opacity=".6"/>
+  <ellipse cx="150" cy="136" rx="36" ry="27" fill="#f4dcbc"/>
+  <ellipse cx="62" cy="172" rx="13" ry="8" fill="#e9b79a"/><ellipse cx="116" cy="174" rx="13" ry="8" fill="#e9b79a"/>
+  <circle cx="184" cy="138" r="7" fill="#5a3d30"/>
+</g><circle cx="158" cy="126" r="3.8" fill="#3a2a22"/><circle cx="156.9" cy="124.7" r="1.2" fill="#fff"/><circle cx="150" cy="142" r="7" fill="#f59a9a" opacity=".55"/></svg>

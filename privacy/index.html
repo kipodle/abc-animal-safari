@@ -9,6 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%94%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/accounts.css">
 </head>
 <body>
 
@@ -17,7 +18,8 @@
     <a class="brand" href="/"><span class="logo" aria-hidden="true">🦔</span> Hog the Hedgehog</a>
     <nav class="nav" aria-label="Main">
       <a href="/#games">Games</a>
-      <a href="/stories/">Adventures</a>
+      <a href="/#learning">Learning resources</a>
+      <a href="/#shop">Shop</a>
       <a href="/#about">About</a>
       <a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Watch on YouTube</a>
     </nav>
@@ -29,27 +31,28 @@
   <p class="updated">Last updated: October 4, 2026</p>
   <p>This website is made for kids, and for the parents who play along. Here is what we collect and why, in plain language.</p>
 
-  <h2>Sign-up for the game</h2>
-  <p>To play the ABC game, a parent enters an email address and a country. We use the email only to share news about new games and stories. We never sell or share it. The country helps us understand where players are from. These details are stored in a private spreadsheet that only the site owner can open.</p>
-  <p>Children should ask a grown-up to fill in the sign-up. We do not knowingly collect personal information directly from children.</p>
+  <h2>Your account</h2>
+    <p>To play the ABC game and download letter adventures, a parent makes a free account with an <strong>email address, a password and a country</strong>. Your password is stored scrambled (hashed), so nobody, including us, can read it. We also keep when you log in or come back, and which downloads you make, so we can see how many families use the site and from which countries. If you tick the optional box, we use your email to share news about new games and stories. We never sell or share your email.</p>
+    <p>Children should ask a grown-up to make the account. We do not knowingly collect personal information directly from children, and we do not check that an email address belongs to the person who typed it.</p>
+    <p>Accounts are stored in our own database on Cloudflare. As before, new sign-ups are also added to a private spreadsheet that only the site owner can open.</p>
 
-  <h2>Letter adventure maker</h2>
+    <h2>Letter adventure maker</h2>
   <p>When you make a letter adventure, the name, age, letter, world and photo you enter are used only inside your own browser to build the book and the PDF. They are not sent to us, uploaded or saved anywhere, and they are gone when you close the page. Your child's photo never leaves your device.</p>
 
   <h2>Information saved on your device</h2>
-  <p>The game saves your level, stars, sound setting and the email you used in your own browser (local storage) so you can pick up where you left off. This stays on your device. It is not sent to us, and clearing your browser data removes it.</p>
+    <p>One secure cookie keeps you logged in. The game also saves your level, stars and sound setting in your own browser (local storage) so you can pick up where you left off. That game progress stays on your device and is not sent to us. We do not use advertising cookies.</p>
 
-  <h2>Visitor statistics</h2>
+    <h2>Visitor statistics</h2>
   <p>We use Cloudflare Web Analytics to count visits, countries, devices and which pages are popular. It does not use cookies and does not follow people around the web.</p>
 
   <h2>Fonts and links</h2>
-  <p>Pages load fonts from Google Fonts, and the PDF maker loads its tools from the cdnjs code library, which means your browser contacts those services to download them. Your child's name and photo are not part of those requests. Links to YouTube take you to a site we do not control.</p>
+  <p>Pages load fonts from Google Fonts, and the PDF maker loads its tools from the cdnjs code library, which means your browser contacts those services to download them. Your child's name and photo are not part of those requests. Links to YouTube and Amazon take you to sites we do not control.</p>
 
   <h2>Ads</h2>
   <p>There are no ads on this website.</p>
 
   <h2>Your choices</h2>
-  <p>You can ask us to delete your email at any time by contacting us through our YouTube channel. We will remove it from our list.</p>
+  <p>You can ask us to delete your account and everything linked to it at any time by contacting us through our YouTube channel. We will remove it.</p>
 
   <p><a class="btn btn-light" href="/">Back to home</a></p>
 </main>
@@ -66,6 +69,8 @@
   </div>
 </footer>
 
+<script src="/assets/countries.js"></script>
+<script src="/assets/accounts.js"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

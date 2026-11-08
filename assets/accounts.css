@@ -1,0 +1,114 @@
+/* Sign-up / login box, header buttons, game wall and the watercolor animals.
+   Works on pages with site.css and on the game page (which has its own styles). */
+
+/* header buttons */
+.hdr-auth{ display:flex; gap:8px; align-items:center; flex-shrink:0; }
+.hdr-auth[hidden], .hdr-auth button[hidden]{ display:none; }
+.hdr-auth .btn{ padding:8px 16px; font-size:.95rem; border-radius:14px; box-shadow:0 4px 0 #2C6B3B; }
+.hdr-auth .btn.btn-light{ padding:6px 14px; box-shadow:0 4px 0 var(--card-edge, #F0DFC0); }
+@media (max-width:760px){
+  .site-header .brand{ order:1; }
+  .hdr-auth{ order:2; margin-left:auto; }
+  .site-header .nav{ order:3; width:100%; }
+}
+
+body.auth-open{ overflow:hidden; }
+
+/* the box */
+.auth-overlay{
+  position:fixed; inset:0; z-index:500; background:rgba(40,28,14,.62); display:flex; align-items:center; justify-content:center;
+  padding:16px; overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+.auth-overlay[hidden]{ display:none; }
+.auth-modal{
+  position:relative; width:100%; max-width:440px; margin:auto; color:#4A3B2A; border:3px solid #F0DFC0; text-align:left;
+  border-radius:26px; padding:28px 24px 24px; box-shadow:0 12px 0 rgba(90,60,20,.18); font-family:'Nunito',system-ui,sans-serif; line-height:1.4;
+  background-color:#FFFDF7;
+  background-image:url(/assets/wc/wc-elephant.svg), url(/assets/wc/wc-octopus.svg), url(/assets/wc/wc-wash.svg);
+  background-repeat:no-repeat; background-position:left -18px bottom -16px, right -16px bottom -14px, center; background-size:86px auto, 86px auto, cover;
+}
+.auth-modal h2{ font-family:'Baloo 2','Nunito',sans-serif; font-size:1.7rem; margin:0 0 6px; line-height:1.15; text-align:center; color:#4A3B2A; }
+.auth-sub{ margin:0 0 14px; color:#6f5b45; font-weight:700; line-height:1.4; text-align:center; }
+.auth-x{
+  position:absolute; top:12px; right:12px; width:44px; height:44px; border-radius:50%; border:2px solid #F0DFC0; background:rgba(255,255,255,.85);
+  font-size:1.1rem; cursor:pointer; color:#4A3B2A; z-index:2;
+}
+.auth-pane[hidden]{ display:none; }
+.auth-field{ display:block; font-weight:800; font-size:.92rem; margin:0 0 12px; color:#4A3B2A; }
+.auth-field input, .auth-field select{
+  display:block; width:100%; margin-top:6px; font:inherit; font-size:1.05rem; font-weight:700; padding:13px 14px; min-height:48px;
+  border-radius:14px; border:3px solid #F0DFC0; background:#fff; color:#4A3B2A; box-sizing:border-box;
+}
+.auth-field input:focus, .auth-field select:focus{ outline:none; border-color:#4D7CFE; }
+.auth-chk{ display:flex; gap:10px; align-items:flex-start; font-size:.88rem; font-weight:700; line-height:1.35; margin:0 0 10px; cursor:pointer; color:#4A3B2A; }
+.auth-chk input{ width:22px; height:22px; flex:0 0 22px; margin:1px 0 0; accent-color:#3F8F52; }
+.auth-modal a{ color:#2C6B3B; }
+.auth-hp{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+.auth-err{ color:#C23F30; font-weight:800; min-height:1.3em; margin:2px 0 8px; font-size:.92rem; }
+.auth-submit{ width:100%; justify-content:center; }
+.auth-alt{ margin:12px 0 0; text-align:center; font-size:.92rem; font-weight:700; line-height:1.6; padding:0 64px; min-height:44px; color:#4A3B2A; }
+.auth-link{ font:inherit; font-weight:800; color:#2C6B3B; background:none; border:0; padding:6px 4px; min-height:36px; cursor:pointer; text-decoration:underline; }
+.auth-perks{ margin:0 0 16px; padding-left:20px; font-weight:700; line-height:1.7; color:#4A3B2A; }
+
+/* buttons that must also work where site.css is not loaded (the game page) */
+.auth-modal .btn, .hog-wall .btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:'Baloo 2','Nunito',sans-serif; font-weight:700; font-size:1.05rem;
+  padding:12px 24px; border-radius:16px; border:none; cursor:pointer; text-decoration:none; min-height:48px; color:#fff;
+  background:linear-gradient(160deg, #3F8F52, #2C6B3B); box-shadow:0 5px 0 #2C6B3B;
+}
+.auth-modal .btn:active, .hog-wall .btn:active{ transform:translateY(3px); box-shadow:0 2px 0 #2C6B3B; }
+.auth-modal .btn.btn-light, .hog-wall .btn.btn-light{ background:#fff; color:#4A3B2A; border:2px solid #F0DFC0; box-shadow:0 5px 0 #F0DFC0; padding:10px 22px; }
+.auth-modal .btn:disabled{ opacity:.6; cursor:wait; }
+
+/* watercolor animals */
+.wc-parade{ display:flex; justify-content:center; align-items:flex-end; margin:-4px 0 2px; }
+.wc-parade img{ width:72px; height:72px; object-fit:contain; margin:0 -4px; animation:hog-hop 2.8s ease-in-out infinite; animation-delay:calc(var(--i, 0) * .28s); }
+@keyframes hog-hop{ 0%,100%{ transform:translateY(0) rotate(-2deg); } 50%{ transform:translateY(-7px) rotate(2deg); } }
+
+/* full-page wall (game) */
+.hog-wall{
+  position:fixed; inset:0; z-index:400; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:20px; text-align:center;
+  color:#4A3B2A; font-family:'Nunito',system-ui,sans-serif; background:#fffaf0 url(/assets/wc/wc-wash.svg) center/cover no-repeat;
+}
+.hog-wall[hidden]{ display:none; }
+.hog-wall h1{ margin:0; font-family:'Baloo 2','Nunito',sans-serif; font-size:clamp(1.8rem,6vw,2.4rem); line-height:1.1; }
+.hog-wall p{ margin:0 0 6px; font-weight:700; color:#6f5b45; max-width:34ch; }
+.hog-wall .wc-parade img{ width:84px; height:84px; }
+.hog-wall-row{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+
+/* home page banner */
+.join-card{
+  border:2px solid var(--card-edge, #F0DFC0); border-radius:26px; box-shadow:0 8px 0 var(--card-edge, #F0DFC0); padding:22px 18px 24px; text-align:center;
+  background:#fffaf0 url(/assets/wc/wc-wash.svg) center/cover no-repeat; color:#4A3B2A;
+}
+.join-card h2{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.8rem; margin:0 0 6px; color:#2C6B3B; }
+.join-card p{ margin:0 auto 16px; max-width:46ch; font-weight:700; color:#6f5b45; }
+.join-card .cta{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.join-card .wc-parade img{ width:84px; height:84px; }
+
+.pay-note[data-auth-note], [data-auth-note]{ font-weight:700; color:var(--ink-soft, #7D6A54); }
+[data-auth-note] .auth-link{ color:var(--green-deep, #2C6B3B); padding:2px 3px; min-height:0; }
+
+.hog-confetti{ position:fixed; z-index:600; pointer-events:none; font-size:1.9rem; animation:hog-fly 1.5s ease-out forwards; }
+@keyframes hog-fly{ to{ transform:translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity:0; } }
+
+@media (prefers-reduced-motion: reduce){ .wc-parade img{ animation:none; } .hog-confetti{ display:none; } }
+@media (max-width:480px){
+  .auth-overlay{ padding:0; align-items:flex-end; }
+  .auth-modal{ border-radius:26px 26px 0 0; max-width:none; margin:0; padding-bottom:calc(24px + env(safe-area-inset-bottom,0px)); max-height:100%; overflow-y:auto; background-size:70px auto, 70px auto, cover; }
+  .auth-alt{ padding:0 54px; }
+  .wc-parade img{ width:60px; height:60px; }
+  .join-card .wc-parade img, .hog-wall .wc-parade img{ width:68px; height:68px; }
+}
+
+.card .shop-note{ font-size:.82rem; font-weight:700; color:var(--ink-soft, #7D6A54); }
+.card .big{ font-size:2.4rem; line-height:1; }
+
+/* compact header on phones: logo and Log in / Sign up share one row */
+@media (max-width:480px){
+  .site-header .brand{ font-size:1.12rem; }
+  .site-header .brand .logo{ font-size:1.5rem; }
+  .hdr-auth{ gap:6px; }
+  .hdr-auth .btn{ padding:6px 12px; font-size:.85rem; }
+  .site-header .nav .btn{ display:none; } /* the YouTube link is also in the About strip */
+}

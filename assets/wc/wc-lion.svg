@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 224 224"><defs>
+  <filter id="wc" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="21" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="0.9" result="b"/>
+    <feMorphology in="b" operator="erode" radius="2.2" result="e"/>
+    <feGaussianBlur in="e" stdDeviation="2.2" result="eb"/>
+    <feComposite in="b" in2="eb" operator="out" result="edge"/>
+    <feColorMatrix in="edge" type="matrix" values="0.72 0 0 0 0  0 0.72 0 0 0  0 0 0.72 0 0  0 0 0 1.1 0" result="edgeDark"/>
+    <feMerge result="m"><feMergeNode in="b"/><feMergeNode in="edgeDark"/></feMerge>
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="26" result="g"/>
+    <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.7 1.15" result="gA"/>
+    <feComposite in="m" in2="gA" operator="in"/>
+  </filter>
+</defs><g filter="url(#wc)">
+  <circle cx="168.0" cy="100.0" r="26" fill="#e9923a"/><circle cx="158.9" cy="134.0" r="26" fill="#e9923a"/><circle cx="134.0" cy="158.9" r="26" fill="#e9923a"/><circle cx="100.0" cy="168.0" r="26" fill="#e9923a"/><circle cx="66.0" cy="158.9" r="26" fill="#e9923a"/><circle cx="41.1" cy="134.0" r="26" fill="#e9923a"/><circle cx="32.0" cy="100.0" r="26" fill="#e9923a"/><circle cx="41.1" cy="66.0" r="26" fill="#e9923a"/><circle cx="66.0" cy="41.1" r="26" fill="#e9923a"/><circle cx="100.0" cy="32.0" r="26" fill="#e9923a"/><circle cx="134.0" cy="41.1" r="26" fill="#e9923a"/><circle cx="158.9" cy="66.0" r="26" fill="#e9923a"/>
+  <circle cx="100" cy="100" r="62" fill="#f3a74a"/>
+  <circle cx="58" cy="52" r="15" fill="#f7cf6a"/><circle cx="142" cy="52" r="15" fill="#f7cf6a"/>
+  <circle cx="100" cy="106" r="46" fill="#f8d273"/>
+  <ellipse cx="100" cy="126" rx="26" ry="19" fill="#fdeec3"/>
+  <path d="M90 108 L110 108 L100 120 Z" fill="#e58a8a"/>
+</g><circle cx="80" cy="96" r="4.6" fill="#3a2a22"/><circle cx="78.6" cy="94.4" r="1.5" fill="#fff"/><circle cx="120" cy="96" r="4.6" fill="#3a2a22"/><circle cx="118.6" cy="94.4" r="1.5" fill="#fff"/>
+<path d="M100 120 Q100 132 88 134 M100 120 Q100 132 112 134" fill="none" stroke="#9a5b3a" stroke-width="3" stroke-linecap="round"/>
+<circle cx="70" cy="116" r="8" fill="#f59a9a" opacity=".55"/><circle cx="130" cy="116" r="8" fill="#f59a9a" opacity=".55"/></svg>
