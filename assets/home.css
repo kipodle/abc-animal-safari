@@ -9,8 +9,8 @@
 .welcome .cta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
 .welcome .cta[hidden]{ display:none; }
 .welcome .hello{ margin:0; font-weight:800; font-size:1.05rem; color:var(--green-deep); }
-.parade-hero{ display:flex; justify-content:center; align-items:flex-end; }
-.parade-hero img{ width:clamp(64px, 9.5vw, 112px); height:auto; margin:0 -6px; animation:hog-hop 3s ease-in-out infinite; animation-delay:calc(var(--i, 0) * .3s); }
+.hero-hog{ display:flex; justify-content:center; align-items:center; }
+.hero-hog img{ width:clamp(190px, 30vw, 330px); height:auto; display:block; }
 
 /* ---------- the three tiles ---------- */
 .hub{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:18px; padding-block:14px 10px; }
@@ -68,7 +68,8 @@ a.item:hover{ border-color:var(--green); }
 
 @media (max-width:900px){
   .welcome .wrap{ grid-template-columns:1fr; }
-  .parade-hero{ justify-content:flex-start; }
+  .hero-hog{ justify-content:flex-start; order:-1; }
+  .hero-hog img{ width:clamp(150px, 42vw, 240px); }
 }
 /* iPad portrait: still three columns, with slimmer tiles */
 @media (min-width:721px) and (max-width:900px){
@@ -87,7 +88,7 @@ a.item:hover{ border-color:var(--green); }
   .tile-head{ min-height:0; }
 }
 @media (prefers-reduced-motion: reduce){
-  .parade-hero img, .tile-art{ animation:none; }
+  .tile-art{ animation:none; }
   .tile, .tile:hover{ transition:none; transform:none; }
 }
 
@@ -95,7 +96,7 @@ a.item:hover{ border-color:var(--green); }
 @media (max-width:560px){
   .welcome{ padding-block:12px 4px; }
   .welcome .lead{ font-size:.98rem; }
-  .parade-hero img{ width:62px; }
+  .hero-hog img{ width:150px; }
   .hub{ gap:14px; }
   .tile{ padding:14px 16px 16px; gap:8px; border-radius:24px; }
   .tile-art{ width:84px; top:-6px; }
