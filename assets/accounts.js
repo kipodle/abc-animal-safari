@@ -49,9 +49,9 @@
 
   function celebrate() {
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var icons = ['🎉', '⭐', '✨', '🎈', '🌟', '💛'];
+    var colors = ['#3F8F52', '#F26B5B', '#F5B83D', '#4D7CFE', '#8A5A3C'];
     for (var k = 0; k < 18; k++) {
-      var c = el('span', 'hog-confetti', icons[k % icons.length]);
+      var c = el('span', 'hog-confetti'); c.style.background = colors[k % colors.length];
       c.style.left = (25 + Math.random() * 50) + 'vw'; c.style.top = '55vh';
       c.style.setProperty('--dx', (Math.random() * 420 - 210) + 'px'); c.style.setProperty('--dy', (-Math.random() * 360 - 60) + 'px'); c.style.setProperty('--rot', (Math.random() * 540 - 270) + 'deg');
       document.body.appendChild(c);
@@ -81,7 +81,7 @@
       '<button type="button" class="auth-x" aria-label="Close">✕</button>' +
 
       '<form class="auth-pane" data-pane="signup" novalidate>' + parade(['hedgehog', 'frog', 'lion', 'penguin']) +
-        '<h2 id="auth-title">Let\'s gooo! 🎉</h2><p class="auth-sub" data-sub></p>' +
+        '<h2 id="auth-title">Let\'s gooo!</h2><p class="auth-sub" data-sub></p>' +
         '<label class="auth-field">Parent or guardian email<input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>' +
         '<label class="auth-field">Pick a secret password (8+ characters)<input type="password" name="password" autocomplete="new-password" minlength="8"></label>' +
         '<label class="auth-field">Country<select name="country" autocomplete="country"></select></label>' +
@@ -89,12 +89,12 @@
         '<label class="auth-chk"><input type="checkbox" name="marketing"><span>Also send me news about new games and stories (optional). Unsubscribe any time.</span></label>' +
         '<input class="auth-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">' +
         '<div class="auth-err" role="alert"></div>' +
-        '<button class="btn auth-submit" type="submit">Let\'s gooo! 🚀</button>' +
+        '<button class="btn auth-submit" type="submit">Let\'s gooo!</button>' +
         '<p class="auth-alt">Already one of us? <button type="button" class="auth-link" data-go="login">Log in</button></p>' +
       '</form>' +
 
       '<form class="auth-pane" data-pane="login" novalidate>' + parade(['octopus', 'elephant', 'frog']) +
-        '<h2>Welcome back! 👋</h2><p class="auth-sub">Log in and let\'s keep the fun going!</p>' +
+        '<h2>Welcome back!</h2><p class="auth-sub">Log in and let\'s keep the fun going!</p>' +
         '<label class="auth-field">Email<input type="email" name="email" autocomplete="username" inputmode="email"></label>' +
         '<label class="auth-field">Password<input type="password" name="password" autocomplete="current-password"></label>' +
         '<div class="auth-err" role="alert"></div>' +
@@ -108,7 +108,7 @@
       '</div>' +
 
       '<div class="auth-pane" data-pane="account">' + parade(['hedgehog', 'lion', 'frog']) +
-        '<h2>You\'re in! 🎉</h2><p class="auth-sub">Logged in as <strong data-email></strong><br><span data-country></span></p>' +
+        '<h2>You\'re in!</h2><p class="auth-sub">Logged in as <strong data-email></strong><br><span data-country></span></p>' +
         '<ul class="auth-perks"><li>The ABC game is open</li><li>Download your letter adventures</li></ul>' +
         '<div class="auth-err" role="alert"></div>' +
         '<button class="btn btn-light auth-submit" type="button" data-logout>Log out</button>' +
@@ -258,7 +258,7 @@
     var box = el('div', 'hdr-auth');
     var login = el('button', 'btn btn-light', 'Log in'); login.type = 'button'; login.onclick = function () { openModal('login', {}); };
     var signup = el('button', 'btn', 'Sign up'); signup.type = 'button'; signup.onclick = function () { openModal('signup', {}); };
-    var acct = el('button', 'btn btn-light', '👤 Account'); acct.type = 'button'; acct.onclick = function () { openModal('account', {}); };
+    var acct = el('button', 'btn btn-light', 'Account'); acct.type = 'button'; acct.onclick = function () { openModal('account', {}); };
     box.appendChild(login); box.appendChild(signup); box.appendChild(acct);
     wrap.appendChild(box);
     function render() { login.hidden = signup.hidden = !!member; acct.hidden = !member; }
@@ -270,10 +270,10 @@
     [].forEach.call(document.querySelectorAll('[data-member-only]'), function (n) { n.hidden = !member; });
     [].forEach.call(document.querySelectorAll('[data-auth-note]'), function (n) {
       n.textContent = '';
-      if (member) { n.appendChild(document.createTextNode('✅ Logged in as ')); n.appendChild(el('strong', '', member.email)); n.appendChild(document.createTextNode(' — download as many adventures as you like.')); return; }
+      if (member) { n.appendChild(document.createTextNode('Logged in as ')); n.appendChild(el('strong', '', member.email)); n.appendChild(document.createTextNode(' — download as many adventures as you like.')); return; }
       var a = el('button', 'auth-link', "Sign up and let's gooo"); a.type = 'button'; a.onclick = function () { requireJoin('download', 'your letter adventure'); };
       var b = el('button', 'auth-link', 'log in'); b.type = 'button'; b.onclick = function () { openModal('login', {}); };
-      n.appendChild(document.createTextNode('🎉 Downloads are free for members! ')); n.appendChild(a); n.appendChild(document.createTextNode(' or ')); n.appendChild(b); n.appendChild(document.createTextNode('.'));
+      n.appendChild(document.createTextNode('Downloads are free for members! ')); n.appendChild(a); n.appendChild(document.createTextNode(' or ')); n.appendChild(b); n.appendChild(document.createTextNode('.'));
     });
   }
 
@@ -284,7 +284,7 @@
     wall = el('div', 'hog-wall');
     wall.innerHTML = parade(['hedgehog', 'frog', 'lion']) +
       '<h1>Ready to play? Let\'s gooo!</h1><p>Sign up with your email and country (or log in) and the game is all yours.</p>' +
-      '<div class="hog-wall-row"><button class="btn" type="button" data-w="su">Let\'s gooo! 🚀</button><button class="btn btn-light" type="button" data-w="li">Log in</button></div>';
+      '<div class="hog-wall-row"><button class="btn" type="button" data-w="su">Let\'s gooo!</button><button class="btn btn-light" type="button" data-w="li">Log in</button></div>';
     document.body.appendChild(wall);
     wall.querySelector('[data-w=su]').onclick = function () { requireJoin('play'); };
     wall.querySelector('[data-w=li]').onclick = function () { openModal('login', {}); };

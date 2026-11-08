@@ -24,8 +24,8 @@ body.auth-open{ overflow:hidden; }
   position:relative; width:100%; max-width:440px; margin:auto; color:#4A3B2A; border:3px solid #F0DFC0; text-align:left;
   border-radius:26px; padding:28px 24px 24px; box-shadow:0 12px 0 rgba(90,60,20,.18); font-family:'Nunito',system-ui,sans-serif; line-height:1.4;
   background-color:#FFFDF7;
-  background-image:url(/assets/wc/wc-elephant.svg), url(/assets/wc/wc-octopus.svg), url(/assets/wc/wc-wash.svg);
-  background-repeat:no-repeat; background-position:left -18px bottom -16px, right -16px bottom -14px, center; background-size:86px auto, 86px auto, cover;
+  background-image:url(/assets/wc/wc-wash.svg);
+  background-repeat:no-repeat; background-position:center; background-size:cover;
 }
 .auth-modal h2{ font-family:'Baloo 2','Nunito',sans-serif; font-size:1.7rem; margin:0 0 6px; line-height:1.15; text-align:center; color:#4A3B2A; }
 .auth-sub{ margin:0 0 14px; color:#6f5b45; font-weight:700; line-height:1.4; text-align:center; }
@@ -94,13 +94,13 @@ body.auth-open{ overflow:hidden; }
 .pay-note[data-auth-note], [data-auth-note]{ font-weight:700; color:var(--ink-soft, #7D6A54); }
 [data-auth-note] .auth-link{ color:var(--green-deep, #2C6B3B); padding:2px 3px; min-height:0; }
 
-.hog-confetti{ position:fixed; z-index:600; pointer-events:none; font-size:1.9rem; animation:hog-fly 1.5s ease-out forwards; }
+.hog-confetti{ position:fixed; z-index:600; pointer-events:none; width:11px; height:11px; border-radius:50%; animation:hog-fly 1.5s ease-out forwards; }
 @keyframes hog-fly{ to{ transform:translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity:0; } }
 
 @media (prefers-reduced-motion: reduce){ .wc-parade img{ animation:none; } .hog-confetti{ display:none; } }
 @media (max-width:480px){
   .auth-overlay{ padding:0; align-items:flex-end; }
-  .auth-modal{ border-radius:26px 26px 0 0; max-width:none; margin:0; padding-bottom:calc(24px + env(safe-area-inset-bottom,0px)); max-height:100%; overflow-y:auto; background-size:70px auto, 70px auto, cover; }
+  .auth-modal{ border-radius:26px 26px 0 0; max-width:none; margin:0; padding-bottom:calc(24px + env(safe-area-inset-bottom,0px)); max-height:100%; overflow-y:auto; }
   .auth-alt{ padding:0 54px; }
   .wc-parade img{ width:60px; height:60px; }
   .hog-main img{ width:112px; }
