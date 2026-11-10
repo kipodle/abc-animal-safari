@@ -42,6 +42,23 @@
 .video-block{ display:grid; gap:12px; }
 .video-title{ margin:0; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.5rem; line-height:1.15; color:var(--ink); display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; }
 .video-sub{ font-family:"Nunito",sans-serif; font-weight:800; font-size:.9rem; color:var(--ink-soft); }
+.top-list{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
+.top-card{
+  display:flex; flex-direction:column; height:100%; text-decoration:none; color:var(--ink); border-radius:18px; overflow:hidden;
+  background:var(--card); border:2px solid var(--card-edge); box-shadow:0 5px 0 var(--card-edge);
+}
+.top-card:hover, .top-card[aria-current="true"]{ border-color:var(--green); }
+.top-thumb{ position:relative; display:block; aspect-ratio:16/9; overflow:hidden; background:#2b2118; }
+.top-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+.top-rank{
+  position:absolute; left:8px; top:8px; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--green); color:#fff; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:.95rem; line-height:1;
+}
+.top-info{ display:flex; flex-direction:column; gap:2px; padding:8px 10px 10px; line-height:1.25; }
+.top-info b{ font-family:"Baloo 2",sans-serif; font-weight:700; font-size:.98rem; }
+.top-info small{ font-weight:800; color:var(--ink-soft); font-size:.8rem; }
+@media (max-width:900px){ .top-list{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:560px){ .top-list{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 .note{ margin:0; font-size:.85rem; font-weight:700; color:var(--ink-soft); }
 
 .about-copy{ max-width:46em; display:grid; gap:14px; }
