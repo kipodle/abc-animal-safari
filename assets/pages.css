@@ -39,6 +39,9 @@
 
 .video-frame{ position:relative; width:100%; aspect-ratio:16/9; border-radius:24px; overflow:hidden; border:2px solid var(--card-edge); box-shadow:0 8px 0 var(--card-edge); background:#2b2118; }
 .video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.video-block{ display:grid; gap:12px; }
+.video-title{ margin:0; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.5rem; line-height:1.15; color:var(--ink); display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; }
+.video-sub{ font-family:"Nunito",sans-serif; font-weight:800; font-size:.9rem; color:var(--ink-soft); }
 .note{ margin:0; font-size:.85rem; font-weight:700; color:var(--ink-soft); }
 
 .about-copy{ max-width:46em; display:grid; gap:14px; }
