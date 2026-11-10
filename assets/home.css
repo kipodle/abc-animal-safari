@@ -30,6 +30,8 @@
 .tile-shop{ --tint:#FFEDCB; --tint-a:rgba(255,237,203,.62); }
 .tile-head{ display:flex; align-items:center; gap:10px; min-height:64px; }
 .tile-ico{ width:46px; height:46px; flex:0 0 46px; display:flex; align-items:center; justify-content:center; font-size:1.6rem; border-radius:16px; background:var(--card); border:2px solid var(--card-edge); }
+.tile h2 a{ color:inherit; text-decoration:none; }
+.tile h2 a:hover{ text-decoration:underline; text-underline-offset:4px; }
 .tile h2{ margin:0; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.75rem; line-height:1.05; color:var(--ink); }
 .tile > p{ margin:0; font-weight:700; color:var(--ink-soft); }
 .tile-list{ list-style:none; margin:2px 0 0; padding:0; display:grid; gap:8px; }
@@ -53,8 +55,6 @@ a.item:hover{ border-color:var(--green); }
 .videos{ padding-block:14px 8px; scroll-margin-top:16px; }
 .videos-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
 .videos h2{ margin:0; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.75rem; line-height:1.1; color:var(--ink); }
-.video-frame{ position:relative; width:100%; aspect-ratio:16/9; border-radius:24px; overflow:hidden; border:2px solid var(--card-edge); box-shadow:0 8px 0 var(--card-edge); background:#2b2118; }
-.video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
 .videos .note{ margin:14px 0 0; font-size:.85rem; font-weight:700; color:var(--ink-soft); }
 
 /* ---------- about strip ---------- */

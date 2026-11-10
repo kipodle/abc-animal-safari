@@ -1,0 +1,62 @@
+/* Section pages: Games, Learning resources, Shop, Videos, About */
+.page-hero{ padding-block:22px 6px; }
+.crumb{ margin:0 0 6px; font-weight:800; font-size:.9rem; color:var(--ink-soft); }
+.crumb a{ color:var(--ink-soft); }
+.page-hero h1{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:clamp(2.1rem, 6vw, 3.1rem); line-height:1.05; margin:0 0 8px; color:var(--green-deep); }
+.page-hero .lead{ margin:0; max-width:40em; font-size:1.08rem; font-weight:700; color:var(--ink-soft); }
+.page-body{ padding-block:16px 34px; display:grid; gap:22px; }
+
+.feature{
+  display:grid; grid-template-columns:minmax(0,270px) minmax(0,1fr); gap:22px; align-items:center; padding:20px;
+  background:var(--card); border:2px solid var(--card-edge); border-radius:28px; box-shadow:0 8px 0 var(--card-edge);
+}
+.feature h2{ margin:0 0 6px; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.7rem; line-height:1.1; color:var(--ink); }
+.feature p{ margin:0 0 12px; font-weight:700; color:var(--ink-soft); }
+.feature .actions{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.feature .fine{ margin:12px 0 0; font-size:.85rem; }
+.facts{ list-style:none; margin:0 0 14px; padding:0; display:flex; flex-wrap:wrap; gap:8px; }
+.facts li{ padding:5px 12px; border-radius:999px; background:var(--option-bg); border:2px solid var(--card-edge); font-weight:800; font-size:.85rem; color:var(--ink); }
+
+.media-photos{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.media-photos img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:18px; border:3px solid var(--card-edge); display:block; }
+.media-badge{
+  aspect-ratio:1/1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; text-align:center; border-radius:24px;
+  background:var(--option-bg); border:3px solid var(--card-edge); font-family:"Baloo 2",sans-serif; font-weight:800; line-height:1; color:var(--green-deep);
+}
+.media-badge b{ font-size:3.4rem; }
+.media-badge span{ font-size:1rem; color:var(--ink-soft); }
+.media-hog{ display:flex; justify-content:center; }
+.media-hog img{ width:min(100%,230px); height:auto; display:block; }
+
+.join-strip{
+  display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between; padding:16px 20px; border-radius:24px;
+  background:var(--card); border:2px solid var(--card-edge); box-shadow:0 5px 0 var(--card-edge);
+}
+.join-strip p{ margin:0; flex:1 1 300px; font-weight:700; color:var(--ink-soft); }
+.join-strip p strong{ color:var(--ink); }
+.join-strip .row{ display:flex; gap:10px; flex-wrap:wrap; }
+.join-strip[hidden]{ display:none; }
+
+.video-frame{ position:relative; width:100%; aspect-ratio:16/9; border-radius:24px; overflow:hidden; border:2px solid var(--card-edge); box-shadow:0 8px 0 var(--card-edge); background:#2b2118; }
+.video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.note{ margin:0; font-size:.85rem; font-weight:700; color:var(--ink-soft); }
+
+.about-copy{ max-width:46em; display:grid; gap:14px; }
+.about-copy h2{ margin:10px 0 0; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.4rem; color:var(--ink); }
+.about-copy p{ margin:0; font-weight:700; color:var(--ink-soft); font-size:1.05rem; }
+.about-links{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; max-width:none; }
+.about-links a{
+  display:flex; flex-direction:column; gap:4px; padding:14px 16px; border-radius:20px; text-decoration:none; color:var(--ink);
+  background:var(--card); border:2px solid var(--card-edge); box-shadow:0 5px 0 var(--card-edge);
+}
+.about-links a:hover{ border-color:var(--green); }
+.about-links b{ font-family:"Baloo 2",sans-serif; font-size:1.15rem; }
+.about-links small{ font-weight:700; color:var(--ink-soft); font-size:.88rem; }
+
+@media (max-width:700px){
+  .feature{ grid-template-columns:1fr; gap:14px; padding:16px; }
+  .media-badge{ aspect-ratio:auto; padding:18px; flex-direction:row; justify-content:flex-start; gap:12px; }
+  .media-badge b{ font-size:2.4rem; }
+  .media-hog img{ width:150px; }
+  .media-photos{ max-width:340px; }
+}
