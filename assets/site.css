@@ -43,6 +43,18 @@
 
 *{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
+
+/* big hedgehog behind every page, half see-through */
+body::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:url(/assets/hedgehog-bg.webp) center center / contain no-repeat; opacity:.5;
+}
+/* keep text that sits straight on the background easy to read */
+.welcome h1, .welcome .lead, .welcome .hello, .page-hero h1, .page-hero .lead, .crumb, .page h1, .page h2, .page p, .page li,
+.about-copy h2, .about-copy p, .section h2, .section .sub, .pz-label, .pz-hint, .note, .pdf-status, .cb-tools label, .videos h2, .video-title{
+  text-shadow:0 0 10px var(--bg), 0 0 5px var(--bg), 0 0 2px var(--bg);
+}
+.card .note, .feature .note, .tile .note{ text-shadow:none; }
 body{
   margin:0;
   background:linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
