@@ -1,0 +1,129 @@
+/* Color Splash: three colour games on one page */
+.cs-picker{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.cs-pick{
+  display:flex; flex-direction:column; align-items:center; gap:6px; padding:14px 10px 12px; text-align:center; cursor:pointer;
+  font:inherit; color:var(--ink); background:var(--card); border:3px solid var(--card-edge); border-radius:22px; box-shadow:0 6px 0 var(--card-edge);
+}
+.cs-pick:hover{ border-color:var(--green); }
+.cs-pick[aria-pressed="true"]{ border-color:var(--green); box-shadow:0 6px 0 var(--green); }
+.cs-pick:active{ transform:translateY(3px); box-shadow:0 3px 0 var(--card-edge); }
+.cs-pick b{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.25rem; line-height:1.05; }
+.cs-pick small{ font-weight:800; font-size:.82rem; color:var(--ink-soft); }
+.cs-pick svg{ width:64px; height:64px; display:block; }
+
+.cs-stage{
+  position:relative; padding:20px; border-radius:28px; background:var(--card); border:2px solid var(--card-edge); box-shadow:0 8px 0 var(--card-edge);
+  text-shadow:none; min-height:420px; overflow:hidden;
+}
+.cs-stage h2{ margin:0 0 6px; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.8rem; line-height:1.1; color:var(--ink); }
+.cs-stage p{ margin:0 0 12px; font-weight:700; color:var(--ink-soft); }
+.cs-intro{ display:grid; justify-items:center; text-align:center; gap:10px; padding:14px 4px; }
+.cs-intro .cs-art{ width:min(100%,360px); }
+.cs-intro .cs-art svg{ width:100%; height:auto; display:block; }
+.cs-intro p{ max-width:34em; margin:0; }
+.cs-big{ font-size:1.25rem; padding:14px 34px; }
+
+.cs-bar{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 12px; margin-bottom:10px; }
+.cs-bar .cs-chip{ padding:5px 14px; border-radius:999px; background:var(--option-bg); border:2px solid var(--card-edge); font-weight:800; font-size:.9rem; color:var(--ink); }
+.cs-bar .cs-tools{ display:flex; flex-wrap:wrap; gap:8px; }
+.cs-small{ font-family:"Baloo 2",sans-serif; font-weight:700; font-size:.95rem; padding:8px 16px; min-height:44px; }
+.cs-small[aria-pressed="false"]{ opacity:.7; }
+.cs-small[disabled]{ opacity:.45; cursor:default; }
+
+.cs-prompt{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px 14px; margin:6px 0 4px; text-align:center; }
+.cs-prompt h2{ margin:0; font-size:clamp(1.7rem, 5.5vw, 2.5rem); }
+.cs-prompt h2 em{ font-style:normal; color:var(--green-deep); text-decoration:underline; text-decoration-thickness:4px; text-underline-offset:6px; text-decoration-color:var(--gold); }
+.cs-msg{ min-height:1.6em; margin:0; text-align:center; font-weight:800; font-size:1.05rem; color:var(--green-deep); }
+.cs-msg.bad{ color:var(--coral); }
+
+/* balloons */
+.cs-sky{
+  position:relative; display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-end; gap:6px clamp(6px,2.4vw,22px);
+  padding:22px 10px 10px; border-radius:22px; background:linear-gradient(180deg,#CDE9FF 0%,#EAF6FF 70%,#FFF8EA 100%); min-height:300px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .cs-sky{ background:linear-gradient(180deg,#27425A 0%,#2E4F63 70%,#3A3A2B 100%); } }
+.cs-balloon{
+  position:relative; border:0; background:none; padding:0; cursor:pointer; width:clamp(82px,19vw,128px); animation:cs-bob 3.4s ease-in-out infinite; transform-origin:50% 100%;
+  -webkit-tap-highlight-color:transparent;
+}
+.cs-balloon:nth-child(2n){ animation-duration:4s; animation-delay:-1.2s; }
+.cs-balloon:nth-child(3n){ animation-duration:3.1s; animation-delay:-2s; }
+.cs-balloon svg{ width:100%; height:auto; display:block; overflow:visible; }
+.cs-balloon:focus-visible{ outline:4px solid var(--blue); outline-offset:4px; border-radius:20px; }
+.cs-balloon[disabled]{ cursor:default; }
+.cs-balloon.hint svg{ animation:cs-pulse .7s ease-in-out infinite; transform-origin:50% 45%; }
+@keyframes cs-bob{ 0%,100%{ transform:translateY(0) rotate(-1.5deg) } 50%{ transform:translateY(-12px) rotate(1.5deg) } }
+@keyframes cs-pulse{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.12) } }
+
+/* finish screens */
+.cs-stars{ display:flex; justify-content:center; gap:8px; }
+.cs-stars svg{ width:64px; height:64px; }
+.cs-stars .off path{ fill:var(--card-edge); stroke:var(--card-edge); }
+.cs-actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+
+/* mixing */
+.cs-mixgrid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; align-items:center; }
+.cs-target{ display:flex; align-items:center; gap:14px; justify-content:center; }
+.cs-swatch{ width:78px; height:78px; border-radius:50%; border:4px solid var(--card-edge); box-shadow:0 5px 0 var(--card-edge); flex:0 0 auto; }
+.cs-target h2{ margin:0; font-size:clamp(1.5rem,4.5vw,2.1rem); }
+.cs-target small{ display:block; font-weight:800; color:var(--ink-soft); }
+.cs-bowlwrap{ display:grid; justify-items:center; gap:8px; }
+.cs-bowl{ position:relative; width:min(100%,240px); aspect-ratio:1/1; }
+.cs-bowl .rim{ position:absolute; inset:0; border-radius:50%; background:linear-gradient(160deg,#fff,#e9dcc3); border:4px solid var(--card-edge); box-shadow:0 8px 0 var(--card-edge); }
+.cs-bowl .paint{ position:absolute; inset:11%; border-radius:50%; background:#f2ead8; box-shadow:inset 0 6px 10px rgba(0,0,0,.14); transition:background .4s; }
+.cs-bowl .paint.spin{ animation:cs-spin .9s ease-in-out; }
+@keyframes cs-spin{ 0%{ transform:rotate(0) scale(1) } 50%{ transform:rotate(420deg) scale(.92) } 100%{ transform:rotate(720deg) scale(1) } }
+.cs-scoop{ display:flex; gap:6px; min-height:34px; align-items:center; justify-content:center; }
+.cs-scoop i{ width:26px; height:26px; border-radius:50%; border:3px solid var(--card-edge); display:block; }
+.cs-pots{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px clamp(10px,3vw,24px); margin:16px 0 6px; }
+.cs-pot{ display:flex; flex-direction:column; align-items:center; gap:4px; border:0; background:none; cursor:pointer; padding:4px; font:inherit; color:var(--ink); -webkit-tap-highlight-color:transparent; }
+.cs-pot svg{ width:clamp(64px,16vw,92px); height:auto; display:block; transition:transform .12s; }
+.cs-pot:active svg{ transform:scale(.92) translateY(3px); }
+.cs-pot span{ font-weight:800; font-size:.9rem; }
+.cs-pot:focus-visible{ outline:4px solid var(--blue); outline-offset:3px; border-radius:18px; }
+.cs-pot.hint svg{ animation:cs-pulse .7s ease-in-out infinite; }
+.cs-pot[disabled]{ cursor:default; opacity:.55; }
+.cs-found{ margin-top:14px; }
+.cs-found h3{ margin:0 0 6px; font-family:"Baloo 2",sans-serif; font-size:1.05rem; color:var(--ink); }
+.cs-found ul{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px; }
+.cs-found li{ display:flex; align-items:center; gap:6px; padding:3px 12px 3px 4px; border-radius:999px; background:var(--option-bg); border:2px solid var(--card-edge); font-weight:800; font-size:.85rem; color:var(--ink); }
+.cs-found li i{ width:22px; height:22px; border-radius:50%; border:2px solid var(--card-edge); display:block; }
+.cs-sum{ text-align:center; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.3rem; color:var(--green-deep); min-height:1.6em; margin:0; }
+
+/* painting */
+.cs-animals{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:12px; }
+.cs-animal{ width:64px; height:64px; padding:3px; border-radius:16px; background:#fff; border:3px solid var(--card-edge); cursor:pointer; }
+.cs-animal img{ width:100%; height:100%; display:block; border-radius:10px; }
+.cs-animal[aria-pressed="true"]{ border-color:var(--green); box-shadow:0 4px 0 var(--green); }
+.cs-animal:focus-visible, .cs-color:focus-visible{ outline:4px solid var(--blue); outline-offset:2px; }
+.cs-paint{ display:grid; grid-template-columns:minmax(0,1fr) 150px; gap:16px; align-items:start; }
+.cs-canvaswrap{ position:relative; width:100%; max-width:640px; margin-inline:auto; border-radius:18px; overflow:hidden; border:3px solid var(--card-edge); background:#fff; touch-action:manipulation; }
+.cs-canvaswrap canvas{ width:100%; height:auto; display:block; cursor:crosshair; }
+.cs-palette{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.cs-color{ aspect-ratio:1/1; border-radius:50%; border:3px solid rgba(0,0,0,.18); cursor:pointer; padding:0; min-width:30px; }
+.cs-color[aria-pressed="true"]{ border-color:var(--ink); box-shadow:0 0 0 4px var(--gold); transform:scale(1.06); }
+.cs-paintside{ display:grid; gap:10px; }
+.cs-paintside h3{ margin:0; font-family:"Baloo 2",sans-serif; font-size:1.05rem; color:var(--ink); }
+.cs-paintbtns{ display:grid; gap:8px; }
+.cs-paintbtns .btn{ width:100%; }
+
+.cs-spark{ position:fixed; left:0; top:0; width:12px; height:12px; border-radius:3px; pointer-events:none; z-index:50; }
+
+@media (max-width:700px){
+  .cs-picker{ gap:8px; }
+  .cs-pick{ padding:10px 4px 10px; }
+  .cs-pick svg{ width:48px; height:48px; }
+  .cs-pick b{ font-size:1.02rem; }
+  .cs-pick small{ display:none; }
+  .cs-stage{ padding:14px; }
+  .cs-mixgrid{ grid-template-columns:1fr; gap:10px; }
+  .cs-paint{ grid-template-columns:1fr; }
+  .cs-palette{ grid-template-columns:repeat(8,1fr); }
+  .cs-paintbtns{ grid-template-columns:repeat(3,1fr); }
+  .cs-stage .cs-animals{ display:grid; grid-template-columns:repeat(4,64px); justify-content:center; }
+}
+@media (prefers-reduced-motion: reduce){
+  .cs-balloon, .cs-balloon.hint svg, .cs-pot.hint svg, .cs-bowl .paint.spin{ animation:none; }
+}
+
+.cs-stage [hidden]{ display:none !important; }

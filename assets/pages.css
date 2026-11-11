@@ -162,3 +162,6 @@
 .pc-actions{ display:flex; gap:8px; margin-top:10px; }
 .pc-mini{ font:inherit; font-weight:800; font-size:.8rem; padding:4px 12px; min-height:34px; border-radius:999px; cursor:pointer; border:2px solid var(--card-edge); background:var(--card); color:var(--ink-soft); }
 .pc-mini:disabled{ opacity:.6; cursor:default; }
+
+.media-colors{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.media-colors i{ aspect-ratio:1/1; border-radius:50%; display:block; border:3px solid var(--card-edge); }
