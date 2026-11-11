@@ -48,7 +48,12 @@
         </div>
         <p class="hello" data-member-only hidden>Welcome back! Pick something below.</p>
       </div>
-      <div class="hero-hog"><img src="/assets/hedgehog-big.webp" alt="Hog the Hedgehog, a watercolor hedgehog looking up" width="718" height="640"></div>
+      <div class="hero-hog"><div class="hero-video-wrap">
+        <video class="hero-video" id="hero-video" autoplay muted loop playsinline preload="auto" poster="/assets/video/hog-dance-poster.jpg" aria-label="Hog the Hedgehog dancing at a party" width="540" height="720">
+          <source src="/assets/video/hog-dance.mp4" type="video/mp4">
+        </video>
+        <button class="hero-video-btn" id="hero-video-btn" type="button" aria-label="Pause the video" aria-pressed="false">Pause</button>
+      </div></div>
     </div>
   </section>
 
@@ -151,6 +156,16 @@
 <script src="/assets/countries.js"></script>
 <script src="/assets/accounts.js"></script>
 <script src="/assets/top-videos.js"></script>
+<script>
+(function () {
+  var v = document.getElementById('hero-video'), b = document.getElementById('hero-video-btn'); if (!v || !b) return;
+  function sync() { var paused = v.paused; b.textContent = paused ? 'Play' : 'Pause'; b.setAttribute('aria-label', paused ? 'Play the video' : 'Pause the video'); b.setAttribute('aria-pressed', String(paused)); }
+  b.addEventListener('click', function () { if (v.paused) { v.play().catch(function () {}); } else { v.pause(); } });
+  v.addEventListener('play', sync); v.addEventListener('pause', sync);
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); }
+  sync();
+})();
+</script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
