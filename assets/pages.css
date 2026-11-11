@@ -85,3 +85,15 @@
   .media-cover{ max-width:200px; justify-self:start; }
   .media-photos{ max-width:340px; }
 }
+
+/* coloring books */
+.media-preview{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.media-preview img{ width:100%; height:auto; aspect-ratio:1/1; display:block; border-radius:14px; border:3px solid var(--card-edge); background:#fff; }
+.feature .actions button.btn[disabled]{ opacity:.6; cursor:wait; }
+.cb-tools{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+.cb-tools label{ font-weight:800; color:var(--ink); }
+.cb-tools select{ font:inherit; font-weight:700; padding:8px 12px; border-radius:12px; border:2px solid var(--card-edge); background:var(--card); color:var(--ink); min-height:44px; }
+.cb-tools .note{ flex:1 1 260px; }
+.cb-tools .note[hidden]{ display:none; }
+.pdf-status{ min-height:1.4em; margin:0; font-weight:800; color:var(--green-deep); }
+.pdf-status.err{ color:var(--coral); }
