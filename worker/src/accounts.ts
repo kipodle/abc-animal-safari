@@ -7,7 +7,7 @@ interface D1Stmt {
   all<T = any>(): Promise<{ results: T[] }>;
   run(): Promise<{ meta: { last_row_id: number; changes: number } }>;
 }
-interface D1 { prepare(q: string): D1Stmt; batch(s: D1Stmt[]): Promise<{ results: any[] }[]> }
+export interface D1 { prepare(q: string): D1Stmt; batch(s: D1Stmt[]): Promise<{ results: any[] }[]> }
 
 export interface AccountsEnv {
   DB: D1;
@@ -16,7 +16,7 @@ export interface AccountsEnv {
   CONTACT_EMAIL?: string;
   PBKDF2_ITERATIONS?: string;
 }
-type Cors = Record<string, string>;
+export type Cors = Record<string, string>;
 
 const COUNTRY_CODES = new Set(("AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ " +
   "CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR " +
@@ -32,12 +32,12 @@ const SESSION_DAYS = 30;
 const DAY = 86400000;
 
 /* ---------------- small helpers ---------------- */
-function json(body: unknown, status: number, headers: Cors, extra?: Record<string, string>): Response {
+export function json(body: unknown, status: number, headers: Cors, extra?: Record<string, string>): Response {
   return new Response(JSON.stringify(body), { status, headers: { ...headers, ...extra, "Content-Type": "application/json", "Cache-Control": "no-store" } });
 }
-const fail = (status: number, error: string, cors: Cors) => json({ error }, status, cors);
+export const fail = (status: number, error: string, cors: Cors) => json({ error }, status, cors);
 
-async function readJson(request: Request, max = 4000): Promise<any | null> {
+export async function readJson(request: Request, max = 4000): Promise<any | null> {
   if (!/^application\/json\b/i.test(request.headers.get("Content-Type") || "")) return null;
   try { const raw = await request.text(); return raw.length > max ? null : JSON.parse(raw); } catch { return null; }
 }
@@ -84,7 +84,7 @@ function getToken(request: Request): string {
 }
 
 /* Limits repeated tries (shared across all Worker copies because it lives in D1). */
-async function tooMany(db: D1, key: string, max: number, windowSec: number): Promise<boolean> {
+export async function tooMany(db: D1, key: string, max: number, windowSec: number): Promise<boolean> {
   const now = Date.now(), reset = now + windowSec * 1000;
   const row = await db.prepare(
     `INSERT INTO rate_limits (key, n, reset_at) VALUES (?, 1, ?)
@@ -95,10 +95,10 @@ async function tooMany(db: D1, key: string, max: number, windowSec: number): Pro
   return (row?.n || 0) > max;
 }
 
-interface UserRow { id: number; email: string; pass_hash: string; country: string; marketing: number; is_admin: number }
+export interface UserRow { id: number; email: string; pass_hash: string; country: string; marketing: number; is_admin: number }
 const publicUser = (u: UserRow) => ({ email: u.email, country: u.country, admin: !!u.is_admin });
 
-async function currentUser(request: Request, db: D1): Promise<UserRow | null> {
+export async function currentUser(request: Request, db: D1): Promise<UserRow | null> {
   const t = getToken(request);
   if (!t) return null;
   return db.prepare(`SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ? AND s.expires_at > ?`)
@@ -148,9 +148,15 @@ async function stats(db: D1) {
     members_total: c(0), members_7d: c(1), members_30d: c(2), members_marketing: c(3),
     logins_total: c(4), logins_7d: c(5), login_members_30d: c(6),
     visits_total: c(7), visits_7d: c(8), active_30d: c(9),
-    downloads_total: c(10), downloads_7d: c(11),
+    downloads_total: c(10), downloads_7d: c(11), ...(await orderStats(db)),
     top_letters: r[12].results, top_countries: r[13].results, daily,
   };
+}
+async function orderStats(db: D1) {
+  try {
+    const r = await db.prepare("SELECT COUNT(*) n, COALESCE(SUM(amount_cents),0) cents, MAX(currency) cur FROM orders WHERE status = 'paid' AND user_id NOT IN (SELECT id FROM users WHERE is_admin = 1)").first<{ n: number; cents: number; cur: string | null }>();
+    return { orders_paid: r?.n || 0, revenue_cents: r?.cents || 0, revenue_currency: (r?.cur || "usd").toUpperCase() };
+  } catch { return { orders_paid: 0, revenue_cents: 0, revenue_currency: "USD" }; } // orders table not created yet
 }
 async function members(db: D1) {
   const { results } = await db.prepare(

@@ -2,8 +2,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { handleAccounts, type AccountsEnv } from "./accounts";
+import { handleColoring, handleStripeWebhook, type ColoringEnv } from "./coloring";
 
-interface Env extends AccountsEnv {
+interface Env extends ColoringEnv {
   ANTHROPIC_API_KEY: string;
   MODEL?: string;
   ALLOWED_ORIGINS?: string;
@@ -222,8 +223,10 @@ export default {
     const path = new URL(request.url).pathname;
 
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+    if (path === "/stripe/webhook") return request.method === "POST" ? handleStripeWebhook(request, env) : json({ error: "not_found" }, 404, cors);
     if (path.startsWith("/account/")) {
       if (!allowedOrigins(env).includes(origin)) return json({ error: "forbidden" }, 403, cors);
+      if (path.startsWith("/account/coloring/")) return handleColoring(request, env, path, cors);
       return handleAccounts(request, env, path, cors);
     }
     if (request.method !== "POST" || !["/story", "/checkout", "/redeem"].includes(path)) return json({ error: "not_found" }, 404, cors);

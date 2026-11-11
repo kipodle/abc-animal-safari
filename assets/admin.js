@@ -72,7 +72,8 @@
       card('Members (signed up)', s.members_total, [['New in 7 days', s.members_7d], ['New in 30 days', s.members_30d], ['Agreed to updates', s.members_marketing]]),
       card('Logins', s.logins_total, [['Last 7 days', s.logins_7d], ['Different members, 30 days', s.login_members_30d]]),
       card('Return visits', s.visits_total, [['Last 7 days', s.visits_7d], ['Active members, 30 days', s.active_30d]]),
-      card('PDF downloads', s.downloads_total, [['Last 7 days', s.downloads_7d]])
+      card('PDF downloads', s.downloads_total, [['Last 7 days', s.downloads_7d]]),
+      card('Paid books', s.orders_paid || 0, [['Revenue', ((s.revenue_cents || 0) / 100).toFixed(2) + ' ' + (s.revenue_currency || 'USD')]])
     );
     out.append(grid);
 

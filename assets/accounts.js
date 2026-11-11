@@ -232,7 +232,7 @@
     get member() { return member; },
     get config() { return cfg; },
     onChange: function (fn) { listeners.push(fn); },
-    requireJoin: requireJoin, logout: logout,
+    requireJoin: requireJoin, logout: logout, api: api, apiBase: API,
     openSignup: function () { return openModal('signup', {}); },
     openLogin: function () { return openModal('login', {}); },
     openAccount: function () { return openModal('account', {}); },

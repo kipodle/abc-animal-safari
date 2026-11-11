@@ -130,5 +130,5 @@
     try { if (sel && /-(us|ca)$/i.test(navigator.language || '')) sel.value = 'letter'; } catch (e) { /* keep A4 */ }
     document.querySelectorAll('[data-book]').forEach(function (b) { b.addEventListener('click', function () { build(b.getAttribute('data-book')); }); });
   });
-  window.HogColoring = { build: build, _render: renderPages };
+  window.HogColoring = { build: build, _render: renderPages, kit: { PAPER: PAPER, INK: INK, GREEN: GREEN, rr: rr, text: text, frame: frame, newPage: newPage, loadImage: loadImage, loadScript: loadScript, nextFrame: nextFrame } };
 })();

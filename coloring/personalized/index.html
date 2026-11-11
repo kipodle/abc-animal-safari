@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Personalized coloring book – Hog the Hedgehog</title>
+<meta name="description" content="A personalized coloring book where every letter of your child's name is an animal to color in. Printable PDF from Hog the Hedgehog.">
+<link rel="canonical" href="https://hogthehedgehog.com/coloring/personalized/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Personalized coloring book – Hog the Hedgehog">
+<meta property="og:description" content="A coloring book where every letter of your child's name is an animal.">
+<meta property="og:url" content="https://hogthehedgehog.com/coloring/personalized/">
+<meta property="og:image" content="https://hogthehedgehog.com/assets/logo-square.png">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/accounts.css">
+<link rel="stylesheet" href="/assets/pages.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Hog the Hedgehog, home"><img class="logo-img" src="/assets/logo.png" alt="" width="81" height="72"><img class="wordmark" src="/assets/wordmark.png" alt="" width="122" height="64"></a>
+    <nav class="nav" aria-label="Main">
+      <a href="/">Home</a>
+      <a href="/games/">Games</a>
+      <a href="/learning/" aria-current="page">Learning resources</a>
+      <a href="/shop/">Shop</a>
+      <a href="/videos/">Videos</a>
+      <a href="/about/">About</a>
+      <a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Watch on YouTube</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="crumb"><a href="/">Home</a> / <a href="/learning/">Learning resources</a> / <a href="/coloring/">Coloring books</a> / Personalized</p>
+      <h1>Your name, in animals</h1>
+      <p class="lead">A personalized coloring book: type your child's name and every letter becomes an animal.</p>
+    </div>
+  </section>
+  <section class="wrap page-body">
+    <article class="feature pz-card">
+      <div class="pz-samples" aria-hidden="true">
+        <figure><img src="/assets/coloring/samples/E.svg" alt="" width="200" height="200" loading="lazy"><figcaption>E is for Elephant</figcaption></figure>
+        <figure><img src="/assets/coloring/samples/L.svg" alt="" width="200" height="200" loading="lazy"><figcaption>L is for Lion</figcaption></figure>
+        <figure><img src="/assets/coloring/samples/M.svg" alt="" width="200" height="200" loading="lazy"><figcaption>M is for Monkey</figcaption></figure>
+      </div>
+      <div>
+        <h2>Make it with your child's name</h2>
+        <p>Every letter of the name becomes an animal to color in. For Emma that is an Elephant, a Monkey, another Monkey and an Alligator. All 26 letters have their own animal.</p>
+        <label class="pz-label" for="pz-name">Child's first name</label>
+        <input id="pz-name" class="pz-input" type="text" maxlength="20" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Emma">
+        <p class="pz-hint note" id="pz-hint" aria-live="polite"></p>
+        <ul class="pz-chips" id="pz-chips" aria-label="Animals for this name"></ul>
+        <div class="pz-buyrow">
+          <div class="pz-price"><span id="pz-price">$7.99</span><small>one-time, PDF to print</small></div>
+          <label class="pz-paper" for="pz-paper">Paper <select id="pz-paper"><option value="a4">A4</option><option value="letter">US Letter</option></select></label>
+          <button class="btn" type="button" id="pz-buy">Buy and download</button>
+        </div>
+        <p class="note">You pay on Stripe's secure page. Your child's name is only used to make this book. After paying, download it as many times as you like from your account.</p>
+      </div>
+    </article>
+    <p class="pdf-status" id="pz-msg" role="status" aria-live="polite"></p>
+    <div id="pz-books-wrap" hidden>
+      <h2 class="pz-h">Your books</h2>
+      <ul class="pz-books" id="pz-books"></ul>
+    </div>
+    <div class="join-strip" data-guest-only hidden>
+      <p><strong>Log in to order.</strong> Sign up with a parent's email and country (or log in), then pay and download your book.</p>
+      <div class="row"><button class="btn" type="button" data-open-signup>Let's gooo!</button><button class="btn btn-light" type="button" data-open-login>Log in</button></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Hog the Hedgehog</span>
+    <nav aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="/games/">Games</a>
+      <a href="/learning/">Learning resources</a>
+      <a href="/shop/">Shop</a>
+      <a href="/videos/">Videos</a>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">YouTube</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/countries.js"></script>
+<script src="/assets/accounts.js"></script>
+<script src="/assets/coloring/coloring.js"></script>
+<script src="/assets/coloring/personalized.js"></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

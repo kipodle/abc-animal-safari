@@ -20,6 +20,8 @@ MODEL = "claude-opus-5-5"
 ALLOWED_ORIGINS = "https://hogthehedgehog.com,https://www.hogthehedgehog.com"
 SITE_URL = "https://hogthehedgehog.com"
 PRICE_CENTS = "199"
+# Personalized coloring book price, in cents (799 = 7.99)
+COLORING_PRICE_CENTS = "799"
 CURRENCY = "usd"
 # Login cookie is shared between hogthehedgehog.com and api.hogthehedgehog.com
 COOKIE_DOMAIN = ".hogthehedgehog.com"
