@@ -25,6 +25,9 @@
 }
 .media-badge b{ font-size:3.4rem; }
 .media-badge span{ font-size:1rem; color:var(--ink-soft); }
+.feature-book{ grid-template-columns:minmax(0,230px) minmax(0,1fr); }
+.media-cover{ display:block; justify-self:center; width:100%; max-width:230px; }
+.media-cover img{ width:100%; height:auto; display:block; border-radius:10px; border:3px solid var(--card-edge); box-shadow:0 8px 0 var(--card-edge), 0 10px 22px rgba(60,40,10,.18); }
 .media-hog{ display:flex; justify-content:center; }
 .media-hog img{ width:min(100%,230px); height:auto; display:block; }
 
@@ -78,5 +81,7 @@
   .media-badge{ aspect-ratio:auto; padding:18px; flex-direction:row; justify-content:flex-start; gap:12px; }
   .media-badge b{ font-size:2.4rem; }
   .media-hog img{ width:150px; }
+  .feature-book{ grid-template-columns:1fr; }
+  .media-cover{ max-width:200px; justify-self:start; }
   .media-photos{ max-width:340px; }
 }

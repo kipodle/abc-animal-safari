@@ -48,6 +48,12 @@ a.item:hover{ border-color:var(--green); }
 .thumbs{ display:flex; flex:0 0 auto; }
 .thumbs img{ width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid var(--card); margin-left:-9px; background:var(--card); }
 .thumbs img:first-child{ margin-left:0; }
+.shop-pick{ display:flex; align-items:center; gap:14px; padding:10px; border-radius:18px; text-decoration:none; color:var(--ink); background:color-mix(in srgb, var(--card) 88%, transparent); border:2px solid var(--card-edge); }
+.shop-pick:hover{ border-color:var(--green); }
+.shop-pick img{ width:96px; height:auto; flex:0 0 auto; border-radius:6px; border:2px solid var(--card-edge); box-shadow:0 3px 8px rgba(60,40,10,.18); display:block; }
+.shop-pick .txt{ display:flex; flex-direction:column; min-width:0; line-height:1.25; }
+.shop-pick b{ font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.2rem; }
+.shop-pick small{ font-weight:700; color:var(--ink-soft); font-size:.85rem; }
 .tile .btn{ margin-top:auto; align-self:flex-start; }
 .tile .note{ margin:0; font-size:.8rem; font-weight:700; color:var(--ink-soft); }
 
