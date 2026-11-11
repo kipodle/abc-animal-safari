@@ -25,6 +25,7 @@
   <div class="wrap">
     <a class="brand" href="/" aria-label="Hog the Hedgehog, home"><img class="logo-img" src="/assets/logo.png" alt="" width="81" height="72"><img class="wordmark" src="/assets/wordmark.png" alt="" width="122" height="64"></a>
     <nav class="nav" aria-label="Main">
+      <a href="/" aria-current="page">Home</a>
       <a href="/games/">Games</a>
       <a href="/learning/">Learning resources</a>
       <a href="/shop/">Shop</a>
@@ -94,13 +95,30 @@
   <section class="videos" id="videos" aria-labelledby="videos-h">
     <div class="wrap">
       <div class="videos-head">
-        <h2 id="videos-h">Watch Hog on YouTube</h2>
+        <h2 id="videos-h">Top 5 most popular videos</h2>
         <a class="btn" href="https://www.youtube.com/@HogthehedgehogTV?sub_confirmation=1" target="_blank" rel="noopener">Subscribe</a>
       </div>
       <div class="video-frame">
-        <iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=UUdfXXhI2Z1aVsd4BLow0Fuw" title="Hog the Hedgehog on YouTube: latest videos" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe id="top-player" src="https://www.youtube-nocookie.com/embed/ZvV1KXf6vYk" title="ABC Real Animals song, Hog the Hedgehog's most popular video" loading="lazy" allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
-      <p class="note">Latest videos from the <a href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Hog the Hedgehog channel</a>. Videos are played by YouTube.</p>
+      <ol class="top-list">
+        <li><a class="top-card" href="https://www.youtube.com/watch?v=ZvV1KXf6vYk" data-vid="ZvV1KXf6vYk" data-title="ABC Real Animals song" target="_blank" rel="noopener" aria-current="true">
+          <span class="top-thumb"><img src="https://i.ytimg.com/vi/ZvV1KXf6vYk/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span class="top-rank">1</span></span>
+          <span class="top-info"><b>ABC Real Animals song</b><small>6.5M views</small></span></a></li>
+        <li><a class="top-card" href="https://www.youtube.com/watch?v=bz-kRFqDvfk" data-vid="bz-kRFqDvfk" data-title="ABC Sea Animals song" target="_blank" rel="noopener">
+          <span class="top-thumb"><img src="https://i.ytimg.com/vi/bz-kRFqDvfk/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span class="top-rank">2</span></span>
+          <span class="top-info"><b>ABC Sea Animals song</b><small>4.8M views</small></span></a></li>
+        <li><a class="top-card" href="https://www.youtube.com/watch?v=bNWe8pgRNcc" data-vid="bNWe8pgRNcc" data-title="Learn ABC Sea Animals song" target="_blank" rel="noopener">
+          <span class="top-thumb"><img src="https://i.ytimg.com/vi/bNWe8pgRNcc/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span class="top-rank">3</span></span>
+          <span class="top-info"><b>Learn ABC Sea Animals song</b><small>2.5M views</small></span></a></li>
+        <li><a class="top-card" href="https://www.youtube.com/watch?v=5zniBdd4DGs" data-vid="5zniBdd4DGs" data-title="ABC Ocean Animals Song" target="_blank" rel="noopener">
+          <span class="top-thumb"><img src="https://i.ytimg.com/vi/5zniBdd4DGs/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span class="top-rank">4</span></span>
+          <span class="top-info"><b>ABC Ocean Animals Song</b><small>1.3M views</small></span></a></li>
+        <li><a class="top-card" href="https://www.youtube.com/watch?v=840tAlbSoIk" data-vid="840tAlbSoIk" data-title="Learn ABC Vehicles Song" target="_blank" rel="noopener">
+          <span class="top-thumb"><img src="https://i.ytimg.com/vi/840tAlbSoIk/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span class="top-rank">5</span></span>
+          <span class="top-info"><b>Learn ABC Vehicles Song</b><small>1.2M views</small></span></a></li>
+      </ol>
+      <p class="note">Tap a video to play it here. Videos are played by YouTube. <a href="/videos/">More on the Videos page</a>.</p>
     </div>
   </section>
 
@@ -116,6 +134,7 @@
   <div class="wrap">
     <span>© 2026 Hog the Hedgehog</span>
     <nav aria-label="Footer">
+      <a href="/">Home</a>
       <a href="/games/">Games</a>
       <a href="/learning/">Learning resources</a>
       <a href="/shop/">Shop</a>
@@ -129,6 +148,7 @@
 
 <script src="/assets/countries.js"></script>
 <script src="/assets/accounts.js"></script>
+<script src="/assets/top-videos.js"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

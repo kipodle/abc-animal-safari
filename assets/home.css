@@ -61,6 +61,7 @@ a.item:hover{ border-color:var(--green); }
 .videos{ padding-block:14px 8px; scroll-margin-top:16px; }
 .videos-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
 .videos h2{ margin:0; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.75rem; line-height:1.1; color:var(--ink); }
+.videos .top-list{ margin-top:14px; }
 .videos .note{ margin:14px 0 0; font-size:.85rem; font-weight:700; color:var(--ink-soft); }
 
 /* ---------- about strip ---------- */

@@ -24,6 +24,7 @@
   <div class="wrap">
     <a class="brand" href="/" aria-label="Hog the Hedgehog, home"><img class="logo-img" src="/assets/logo.png" alt="" width="81" height="72"><img class="wordmark" src="/assets/wordmark.png" alt="" width="122" height="64"></a>
     <nav class="nav" aria-label="Main">
+      <a href="/">Home</a>
       <a href="/games/">Games</a>
       <a href="/learning/">Learning resources</a>
       <a href="/shop/">Shop</a>
@@ -84,6 +85,7 @@
   <div class="wrap">
     <span>© 2026 Hog the Hedgehog</span>
     <nav aria-label="Footer">
+      <a href="/">Home</a>
       <a href="/games/">Games</a>
       <a href="/learning/">Learning resources</a>
       <a href="/shop/">Shop</a>
@@ -98,22 +100,6 @@
 <script src="/assets/countries.js"></script>
 <script src="/assets/accounts.js"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
-<script>
-(function () {
-  var frame = document.getElementById('top-player'); if (!frame) return;
-  var cards = document.querySelectorAll('.top-card');
-  Array.prototype.forEach.call(cards, function (a) {
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      frame.src = 'https://www.youtube-nocookie.com/embed/' + a.getAttribute('data-vid') + '?autoplay=1';
-      frame.title = a.getAttribute('data-title') + ' on YouTube';
-      Array.prototype.forEach.call(cards, function (c) { c.removeAttribute('aria-current'); });
-      a.setAttribute('aria-current', 'true');
-      var r = frame.getBoundingClientRect();
-      if (r.top < 0 || r.bottom > window.innerHeight) frame.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-  });
-})();
-</script>
+<script src="/assets/top-videos.js"></script>
 </body>
 </html>

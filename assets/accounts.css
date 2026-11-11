@@ -127,3 +127,7 @@ body.auth-open{ overflow:hidden; }
   .hdr-auth{ gap:5px; }
   .hdr-auth .btn{ padding:6px 10px; font-size:.8rem; }
 }
+
+/* header: room for Home + five tabs + Log in / Sign up on one row */
+.site-header > .wrap{ max-width:1180px; }
+@media (max-width:1140px){ .site-header .nav .btn{ display:none; } } /* YouTube is in the Videos tab, the footer and the Subscribe buttons */
