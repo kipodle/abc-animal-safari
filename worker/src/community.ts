@@ -127,28 +127,6 @@ export async function handleCommunity(request: Request, env: AccountsEnv, path: 
       return json({ ok: true }, 200, cors);
     }
 
-    if (path.startsWith("/account/community/admin/")) {
-      if (!u.is_admin) return fail(403, "This account is not an admin.", cors);
-      if (route === "GET /account/community/admin/reports") {
-        const { results } = await db.prepare(
-          `SELECT kind, target_id, COUNT(*) AS n, MIN(created_at) AS first_at FROM reports WHERE handled = 0 GROUP BY kind, target_id ORDER BY first_at ASC LIMIT 100`).all<any>();
-        const out = [];
-        for (const r of results) {
-          const row = r.kind === "post"
-            ? await db.prepare(`SELECT p.id AS post_id, p.title AS title, p.body, p.hidden, ${NAME} AS nickname ${FROM} WHERE p.id = ?`).bind(r.target_id).first<any>()
-            : await db.prepare(`SELECT r.post_id, '' AS title, r.body, r.hidden, COALESCE(pr.nickname,'Member') AS nickname FROM replies r LEFT JOIN profiles pr ON pr.user_id = r.user_id WHERE r.id = ?`).bind(r.target_id).first<any>();
-          out.push({ kind: r.kind, id: r.target_id, reports: r.n, first_at: r.first_at, post_id: row?.post_id ?? null, title: row?.title || "", text: row ? snippet(row.body) : "(already removed)", nickname: row?.nickname || "", hidden: !!row?.hidden });
-        }
-        return json({ reports: out }, 200, cors);
-      }
-      if (route === "POST /account/community/admin/dismiss") {
-        const b = await readJson(request);
-        const kind = b?.kind === "reply" ? "reply" : "post", id = Number(b?.id);
-        if (!Number.isInteger(id)) return fail(400, "Bad request.", cors);
-        await db.prepare("UPDATE reports SET handled = 1 WHERE kind = ? AND target_id = ?").bind(kind, id).run();
-        return json({ ok: true }, 200, cors);
-      }
-    }
   } catch (e) {
     console.error("community error", e);
     return fail(500, "Something went wrong. Please try again.", cors);

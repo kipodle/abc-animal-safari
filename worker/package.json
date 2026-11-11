@@ -7,7 +7,8 @@
     "deploy": "wrangler deploy",
     "make-admin": "node scripts/user-tool.mjs make-admin",
     "reset-password": "node scripts/user-tool.mjs reset-password",
-    "db:migrate:remote": "wrangler d1 migrations apply hog-accounts --remote"
+    "db:migrate:remote": "wrangler d1 migrations apply hog-accounts --remote",
+    "owner": "node scripts/owner-tool.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",

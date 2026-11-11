@@ -111,61 +111,6 @@ async function startSession(db: D1, userId: number, env: AccountsEnv): Promise<s
   return `${COOKIE}=${token}; ${cookieAttrs(env, SESSION_DAYS * 86400)}`;
 }
 
-/* ---------------- owner numbers ---------------- */
-async function stats(db: D1) {
-  const now = Date.now(), D7 = now - 7 * DAY, D30 = now - 30 * DAY;
-  const q = (sql: string, ...a: unknown[]) => db.prepare(sql).bind(...a);
-  const NA = "user_id NOT IN (SELECT id FROM users WHERE is_admin = 1)"; // the owner's own account is not counted
-  const r = await db.batch([
-    q("SELECT COUNT(*) c FROM users WHERE is_admin = 0"),
-    q("SELECT COUNT(*) c FROM users WHERE is_admin = 0 AND created_at > ?", D7),
-    q("SELECT COUNT(*) c FROM users WHERE is_admin = 0 AND created_at > ?", D30),
-    q("SELECT COUNT(*) c FROM users WHERE is_admin = 0 AND marketing = 1"),
-    q(`SELECT COUNT(*) c FROM events WHERE type = 'login' AND ${NA}`),
-    q(`SELECT COUNT(*) c FROM events WHERE type = 'login' AND ${NA} AND created_at > ?`, D7),
-    q(`SELECT COUNT(DISTINCT user_id) c FROM events WHERE type = 'login' AND ${NA} AND created_at > ?`, D30),
-    q(`SELECT COUNT(*) c FROM events WHERE type = 'visit' AND ${NA}`),
-    q(`SELECT COUNT(*) c FROM events WHERE type = 'visit' AND ${NA} AND created_at > ?`, D7),
-    q(`SELECT COUNT(DISTINCT user_id) c FROM events WHERE ${NA} AND created_at > ?`, D30),
-    q(`SELECT COUNT(*) c FROM downloads WHERE ${NA}`),
-    q(`SELECT COUNT(*) c FROM downloads WHERE ${NA} AND created_at > ?`, D7),
-    q(`SELECT letter, COUNT(*) n FROM downloads WHERE letter IS NOT NULL AND ${NA} GROUP BY letter ORDER BY n DESC, letter LIMIT 5`),
-    q("SELECT country, COUNT(*) n FROM users WHERE is_admin = 0 GROUP BY country ORDER BY n DESC, country LIMIT 10"),
-    q(`SELECT date(created_at/1000,'unixepoch') d, type, COUNT(*) n FROM events WHERE ${NA} AND created_at > ? GROUP BY d, type`, D30),
-    q(`SELECT date(created_at/1000,'unixepoch') d, COUNT(*) n FROM downloads WHERE ${NA} AND created_at > ? GROUP BY d`, D30),
-  ]);
-  const c = (i: number): number => r[i].results[0]?.c || 0;
-  const byDay: Record<string, { signups: number; logins: number; visits: number; downloads: number }> = {};
-  const bump = (d: string, k: "signups" | "logins" | "visits" | "downloads", n: number) => { (byDay[d] = byDay[d] || { signups: 0, logins: 0, visits: 0, downloads: 0 })[k] += n; };
-  r[14].results.forEach((x: any) => bump(x.d, x.type === "signup" ? "signups" : x.type === "login" ? "logins" : "visits", x.n));
-  r[15].results.forEach((x: any) => bump(x.d, "downloads", x.n));
-  const daily = [];
-  for (let i = 29; i >= 0; i--) {
-    const day = new Date(now - i * DAY).toISOString().slice(0, 10);
-    daily.push({ day, ...(byDay[day] || { signups: 0, logins: 0, visits: 0, downloads: 0 }) });
-  }
-  return {
-    members_total: c(0), members_7d: c(1), members_30d: c(2), members_marketing: c(3),
-    logins_total: c(4), logins_7d: c(5), login_members_30d: c(6),
-    visits_total: c(7), visits_7d: c(8), active_30d: c(9),
-    downloads_total: c(10), downloads_7d: c(11), ...(await orderStats(db)),
-    top_letters: r[12].results, top_countries: r[13].results, daily,
-  };
-}
-async function orderStats(db: D1) {
-  try {
-    const r = await db.prepare("SELECT COUNT(*) n, COALESCE(SUM(amount_cents),0) cents, MAX(currency) cur FROM orders WHERE status = 'paid' AND user_id NOT IN (SELECT id FROM users WHERE is_admin = 1)").first<{ n: number; cents: number; cur: string | null }>();
-    return { orders_paid: r?.n || 0, revenue_cents: r?.cents || 0, revenue_currency: (r?.cur || "usd").toUpperCase() };
-  } catch { return { orders_paid: 0, revenue_cents: 0, revenue_currency: "USD" }; } // orders table not created yet
-}
-async function members(db: D1) {
-  const { results } = await db.prepare(
-    `SELECT email, country, marketing, is_admin, created_at, last_login_at, last_seen_at FROM users ORDER BY created_at DESC LIMIT 50000`).all();
-  const iso = (t: number | null) => (t ? new Date(t).toISOString() : "");
-  return results.map((u: any) => ({ email: u.email, country: u.country, marketing_opt_in: !!u.marketing, is_admin: !!u.is_admin,
-    created_at: iso(u.created_at), last_login_at: iso(u.last_login_at), last_seen_at: iso(u.last_seen_at) }));
-}
-
 /* ---------------- routes ---------------- */
 export async function handleAccounts(request: Request, env: AccountsEnv, path: string, cors: Cors): Promise<Response> {
   const db = env.DB;
@@ -243,11 +188,6 @@ export async function handleAccounts(request: Request, env: AccountsEnv, path: s
       return json({ ok: true }, 200, cors);
     }
 
-    if (path.startsWith("/account/admin/")) {
-      if (!u.is_admin) return fail(403, "This account is not an admin.", cors);
-      if (route === "GET /account/admin/stats") return json(await stats(db), 200, cors);
-      if (route === "GET /account/admin/members") return json(await members(db), 200, cors);
-    }
   } catch (e) {
     console.error("accounts error", e);
     return fail(500, "Something went wrong. Please try again.", cors);
