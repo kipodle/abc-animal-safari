@@ -19,7 +19,7 @@ const SESSION_RE = /^cs_(test|live)_[A-Za-z0-9]{10,200}$/;
 const ORDER_RE = /^o_[0-9a-f]{32}$/;
 const toHex = (b: Uint8Array) => [...b].map((x) => x.toString(16).padStart(2, "0")).join("");
 const site = (env: ColoringEnv) => (env.SITE_URL || "https://hogthehedgehog.com").replace(/\/$/, "");
-const priceCents = (env: ColoringEnv) => Math.max(100, parseInt(env.COLORING_PRICE_CENTS || "799", 10) || 799);
+const priceCents = (env: ColoringEnv) => Math.max(50, parseInt(env.COLORING_PRICE_CENTS || "99", 10) || 99);
 const currency = (env: ColoringEnv) => (env.CURRENCY || "usd").toLowerCase();
 
 /** The name as typed (for the cover) and the A to Z letters that get an animal each. */

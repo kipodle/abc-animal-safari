@@ -4,7 +4,7 @@
 (function () {
   'use strict';
   var ANIMALS = { A: 'Alligator', B: 'Bear', C: 'Cat', D: 'Dog', E: 'Elephant', F: 'Frog', G: 'Giraffe', H: 'Hedgehog', I: 'Iguana', J: 'Jellyfish', K: 'Koala', L: 'Lion', M: 'Monkey', N: 'Narwhal', O: 'Owl', P: 'Panda', Q: 'Quail', R: 'Rabbit', S: 'Snake', T: 'Tiger', U: 'Urchin', V: 'Vulture', W: 'Whale', X: 'X-ray fish', Y: 'Yak', Z: 'Zebra' };
-  var K = null, cfg = { enabled: false, price_cents: 799, currency: 'usd' }, busy = false;
+  var K = null, cfg = { enabled: false, price_cents: 99, currency: 'usd' }, busy = false;
   function $(s) { return document.querySelector(s); }
   function Auth() { return window.HogAuth; }
   function msg(t, err) { var m = $('#pz-msg'); if (!m) return; m.textContent = t || ''; m.classList.toggle('err', !!err); }
