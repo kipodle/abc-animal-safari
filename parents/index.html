@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Parents' corner – Hog the Hedgehog</title>
+<meta name="description" content="A friendly members-only space for parents: motherhood, fatherhood, skincare, babies, school years and everything parenthood.">
+<link rel="canonical" href="https://hogthehedgehog.com/parents/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Parents' corner – Hog the Hedgehog">
+<meta property="og:description" content="A friendly members-only space for parents.">
+<meta property="og:url" content="https://hogthehedgehog.com/parents/">
+<meta property="og:image" content="https://hogthehedgehog.com/assets/logo-square.png">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/accounts.css">
+<link rel="stylesheet" href="/assets/pages.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Hog the Hedgehog, home"><img class="logo-img" src="/assets/logo.png" alt="" width="81" height="72"><img class="wordmark" src="/assets/wordmark.png" alt="" width="122" height="64"></a>
+    <nav class="nav" aria-label="Main">
+      <a href="/">Home</a>
+      <a href="/games/">Games</a>
+      <a href="/learning/">Learning resources</a>
+      <a href="/shop/">Shop</a>
+      <a href="/videos/">Videos</a>
+      <a href="/parents/" aria-current="page">Parents</a>
+      <a href="/about/">About</a>
+      <a class="btn btn-light" href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">Watch on YouTube</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="crumb"><a href="/">Home</a> / Parents' corner</p>
+      <h1>Parents' corner</h1>
+      <p class="lead">A friendly, members-only space for moms and dads: motherhood, fatherhood, skincare and everything in between.</p>
+    </div>
+  </section>
+  <section class="wrap page-body">
+    <div id="pc-gate" class="pc-card" hidden>
+      <h2>A friendly space for parents</h2>
+      <p>Chat with other moms and dads about motherhood, fatherhood, skincare and self-care, babies and toddlers, school years, health and everything in between. It is only for logged-in members, so every family here has signed up as a parent or guardian.</p>
+      <p class="pdf-status" id="pc-gate-msg" role="status"></p>
+      <div class="actions" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" type="button" data-open-signup>Sign up to join</button><button class="btn btn-light" type="button" data-open-login>Log in</button></div>
+    </div>
+
+    <div id="pc-nick" class="pc-card" hidden>
+      <h2>Choose a nickname</h2>
+      <p>Other parents will see this nickname instead of your email. Please do not use your real full name or your child's name.</p>
+      <form id="pc-nick-form" class="pc-form" novalidate>
+        <label class="pz-label" for="pc-nick-input">Nickname</label>
+        <input id="pc-nick-input" class="pz-input" type="text" maxlength="20" autocomplete="off" placeholder="Sunny Mum">
+        <p class="pdf-status" id="pc-nick-msg" role="status" aria-live="polite"></p>
+        <button class="btn" type="submit">Save and join</button>
+      </form>
+    </div>
+
+    <div id="pc-app" hidden>
+      <details class="pc-rules">
+        <summary>Community guidelines</summary>
+        <ul>
+          <li>Be kind. Every family is different and there is no one right way.</li>
+          <li>This is not medical advice. For anything about health, skin or your child's wellbeing, please ask a doctor, nurse or pharmacist.</li>
+          <li>Keep private things private: no children's names or photos, no addresses, schools or phone numbers.</li>
+          <li>No selling or promoting, and at most one link per post.</li>
+          <li>Press <b>Report</b> on anything that worries you. The site owner reviews reports and can remove posts.</li>
+        </ul>
+      </details>
+      <div class="pc-bar">
+        <div id="pc-tabs" class="pc-tabs" role="group" aria-label="Topics"></div>
+        <button class="btn" type="button" id="pc-new">Start a discussion</button>
+      </div>
+      <form id="pc-form" class="pc-card pc-form" hidden novalidate>
+        <label class="pz-label" for="pc-cat">Topic</label>
+        <select id="pc-cat" class="pc-select"></select>
+        <label class="pz-label" for="pc-title">Title</label>
+        <input id="pc-title" class="pz-input" type="text" maxlength="120" placeholder="What would you like to talk about?">
+        <label class="pz-label" for="pc-body">Your message</label>
+        <textarea id="pc-body" class="pc-textarea" rows="6" maxlength="5000" placeholder="Share your thoughts or ask a question…"></textarea>
+        <p class="pdf-status" id="pc-form-msg" role="status" aria-live="polite"></p>
+        <button class="btn" type="submit">Post</button>
+      </form>
+      <p class="pdf-status" id="pc-list-msg" role="status" aria-live="polite"></p>
+      <ul id="pc-list" class="pc-list"></ul>
+      <div style="text-align:center"><button class="btn btn-light" type="button" id="pc-more" hidden>Show more</button></div>
+    </div>
+
+    <div id="pc-thread" hidden>
+      <button class="btn btn-light" type="button" id="pc-back">Back to all discussions</button>
+      <div id="pc-thread-body"></div>
+      <form id="pc-reply-form" class="pc-card pc-form" novalidate>
+        <label class="pz-label" for="pc-reply-body">Your reply</label>
+        <textarea id="pc-reply-body" class="pc-textarea" rows="4" maxlength="3000" placeholder="Write a kind reply…"></textarea>
+        <p class="pdf-status" id="pc-reply-msg" role="status" aria-live="polite"></p>
+        <button class="btn" type="submit">Reply</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Hog the Hedgehog</span>
+    <nav aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="/games/">Games</a>
+      <a href="/learning/">Learning resources</a>
+      <a href="/shop/">Shop</a>
+      <a href="/videos/">Videos</a>
+      <a href="/parents/">Parents</a>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="https://www.youtube.com/@HogthehedgehogTV" target="_blank" rel="noopener">YouTube</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/countries.js"></script>
+<script src="/assets/accounts.js"></script>
+<script src="/assets/parents.js"></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "87a827f9827642d8ab81ee5fbfb684c7"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

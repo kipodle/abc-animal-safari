@@ -107,6 +107,32 @@
     const note = el('span', 'muted', 'Emails and countries. Only share with people who need it.');
     b.onclick = () => exportMembers(b, note);
     tools.append(b, note); ex.append(tools); out.append(ex);
+
+    const rp = el('div', 'panel'); rp.append(el('h2', '', "Parents' corner reports"));
+    const rlist = el('div'); rp.append(rlist); out.append(rp);
+    async function loadReports() {
+      rlist.replaceChildren(el('span', 'muted', 'Loading…'));
+      try {
+        const { reports } = await Auth.api('GET', '/account/community/admin/reports');
+        rlist.replaceChildren();
+        if (!reports.length) { rlist.append(el('span', 'muted', 'No reports waiting. All clear.')); return; }
+        reports.forEach((r) => {
+          const row = el('div', 'rep'); row.style.cssText = 'border:2px solid var(--card-edge,#F0DFC0);border-radius:14px;padding:10px 12px;margin:0 0 10px;';
+          const head = el('div'); head.append(el('b', '', (r.kind === 'post' ? 'Post' : 'Reply') + ' by ' + r.nickname), el('span', 'muted', '  ·  ' + r.reports + (r.reports === 1 ? ' report' : ' reports') + (r.hidden ? '  ·  already hidden' : '')));
+          row.append(head);
+          if (r.title) row.append(el('div', '', r.title));
+          const txt = el('div', 'muted', r.text); txt.style.cssText = 'white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 8px;'; row.append(txt);
+          const tools = el('div', 'tools');
+          if (r.post_id) { const a = el('a', 'btn btn-secondary', 'Open'); a.href = '/parents/#post-' + r.post_id; a.target = '_blank'; a.rel = 'noopener'; tools.append(a); }
+          const hide = el('button', 'btn btn-secondary', 'Remove'); hide.type = 'button';
+          hide.onclick = async () => { if (!confirm('Remove this ' + r.kind + ' for everyone?')) return; hide.disabled = true; try { await Auth.api('POST', '/account/community/delete', { kind: r.kind, id: r.id }); loadReports(); } catch (e) { alert(e.message); hide.disabled = false; } };
+          const keep = el('button', 'btn btn-secondary', 'Keep (dismiss)'); keep.type = 'button';
+          keep.onclick = async () => { keep.disabled = true; try { await Auth.api('POST', '/account/community/admin/dismiss', { kind: r.kind, id: r.id }); loadReports(); } catch (e) { alert(e.message); keep.disabled = false; } };
+          tools.append(hide, keep); row.append(tools); rlist.append(row);
+        });
+      } catch (e) { rlist.replaceChildren(el('span', 'muted', 'Could not load reports.')); }
+    }
+    loadReports();
     view.replaceChildren(out);
   }
 
