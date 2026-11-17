@@ -123,3 +123,16 @@ a.item:hover{ border-color:var(--green); }
   .tile-ico{ width:40px; height:40px; flex-basis:40px; font-size:1.35rem; }
   .tile > p{ display:none; }
 }
+
+/* newest shorts */
+.shorts{ padding-block:18px 8px; }
+.shorts .shorts-lead{ margin:-4px 0 12px; }
+.shorts-row{ list-style:none; margin:0; padding:0 0 8px; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:14px; }
+.short{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+.short-frame{ position:relative; aspect-ratio:9/16; border-radius:20px; overflow:hidden; background:#2b2118; border:2px solid var(--card-edge); box-shadow:0 6px 0 var(--card-edge); }
+.short-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.short-cap{ text-align:center; font-family:"Baloo 2",sans-serif; font-weight:800; font-size:1.05rem; color:var(--ink); text-shadow:0 0 8px var(--bg), 0 0 3px var(--bg); }
+@media (max-width:900px){
+  .shorts-row{ display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:12px; padding-bottom:14px; -webkit-overflow-scrolling:touch; }
+  .short{ flex:0 0 min(62vw,240px); scroll-snap-align:start; }
+}
